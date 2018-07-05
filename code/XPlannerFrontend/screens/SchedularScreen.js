@@ -11,7 +11,7 @@ import {
 
 import { MonoText } from '../components/StyledText';
 
-export default class HomeScreen extends React.Component {
+export default class SchedularScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };

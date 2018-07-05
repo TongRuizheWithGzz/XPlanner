@@ -1,46 +1,68 @@
-import React from 'react';
-import { View,Text } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import React from "react";
+import { View, Text } from "react-native";
+import {
+  createStackNavigator,
+  createBottomTabNavigator
+} from "react-navigation";
 
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import SchedularScreen from "../screens/SchedularScreen";
+import StoreScreen from "../screens/StoreScreen";
+import SettingsScreen from "../screens/SettingsScreen";
 
-const HomeStack = createStackNavigator({
-  Home: HomeScreen,
-});
-
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-      <View><Text>link</Text></View>
-  ),
+const HeaderStyles = {
+  initialRouteName: "Home",
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: "#f4511e"
+    },
+    headerTintColor: "#fff",
+    headerTitleStyle: {
+      fontWeight: "bold"
+    }
+  }
 };
 
-const LinksStack = createStackNavigator({
-  Links: LinksScreen,
+const SchedularStack = createStackNavigator({
+  Schedular: SchedularScreen
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+SchedularStack.navigationOptions = {
+  tabBarLabel: "Schedular",
   tabBarIcon: ({ focused }) => (
-      <View><Text>link</Text></View>
-  ),
+    <View>
+      <Text>Schedular</Text>
+    </View>
+  )
+};
+
+const StoreStack = createStackNavigator({
+  Store: StoreScreen
+});
+
+StoreStack.navigationOptions = {
+  tabBarLabel: "Store",
+  tabBarIcon: ({ focused }) => (
+    <View>
+      <Text>Store</Text>
+    </View>
+  )
 };
 
 const SettingsStack = createStackNavigator({
-    Settings: SettingsScreen,
+  Settings: SettingsScreen
 });
 
 SettingsStack.navigationOptions = {
-    tabBarLabel: 'Settings',
-    tabBarIcon: ({ focused }) => (
-        <View><Text>link</Text></View>
-    ),
+  tabBarLabel: "Settings",
+  tabBarIcon: ({ focused }) => (
+    <View>
+      <Text>Settings</Text>
+    </View>
+  )
 };
 
 export default createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
-  SettingsStack,
+  SchedularStack,
+  StoreStack,
+  SettingsStack
 });

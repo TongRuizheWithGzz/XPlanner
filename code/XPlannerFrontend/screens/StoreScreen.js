@@ -11,7 +11,7 @@ import {
 
 import { MonoText } from '../components/StyledText';
 
-export default class LinksScreen extends React.Component {
+export default class StoreScreen extends React.Component {
     static navigationOptions = {
         header: null,
     };
