@@ -1,7 +1,9 @@
 package com.codemover.xplanner.Security.Config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ConstConfig {
     @Value("${oauth2.jaccount.clientID}")
     public  String clientID;

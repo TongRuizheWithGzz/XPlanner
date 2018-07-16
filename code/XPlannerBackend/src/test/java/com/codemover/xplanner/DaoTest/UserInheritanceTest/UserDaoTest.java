@@ -1,6 +1,7 @@
 package com.codemover.xplanner.DaoTest.UserInheritanceTest;
 
 import com.codemover.xplanner.DAO.JAccountUserRepository;
+import com.codemover.xplanner.DAO.RoleRepository;
 import com.codemover.xplanner.DAO.UserRepository;
 import com.codemover.xplanner.DAO.WeixinUserRepository;
 import com.codemover.xplanner.Model.Entity.JAccountUser;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -41,6 +43,9 @@ public class UserDaoTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Before
     public void setUp() {
         JAccountUser jAccountUser = new JAccountUser();
@@ -52,7 +57,8 @@ public class UserDaoTest {
         jAccountUser.setStudentId("516030910193");
         jAccountUser.setjAccountName("tongruizhe");
 
-        Role role = new Role("NORMAL", "ROLE_JACCOUNT_USER");
+        Role role = roleRepository.findByRolename("ROLE_JACCOUNT_USER");
+
         HashSet<Role> roles = new HashSet<>();
         roles.add(role);
 
@@ -72,7 +78,6 @@ public class UserDaoTest {
         assertThat(roles.size()).isEqualTo(1);
         for (Role role : roles) {
             assertThat(role.getRolename()).isEqualTo("ROLE_JACCOUNT_USER");
-            assertThat(role.getStatus()).isEqualTo("NORMAL");
         }
     }
 
@@ -82,5 +87,11 @@ public class UserDaoTest {
         assertThat(weixinUser).isEqualTo(null);
     }
 
-
+    @Test
+    public void passwordCompareSuccessTest(){
+        User user=userRepository.findByUserName("tongruizhe");
+        String password=user.getUserPassword();
+        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
+        assertThat(encoder.matches("password",password));
+    }
 }

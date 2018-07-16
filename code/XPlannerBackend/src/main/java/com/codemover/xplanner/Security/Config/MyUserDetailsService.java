@@ -1,4 +1,5 @@
-package com.codemover.xplanner.Security.UserDetails;
+package com.codemover.xplanner.Security.Config;
+
 
 import com.codemover.xplanner.DAO.RoleRepository;
 import com.codemover.xplanner.DAO.UserRepository;
@@ -10,16 +11,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-@Service
-public class UserDetailsServiceImpl implements UserDetailsService {
-
+@Component
+public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
@@ -36,12 +35,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Collection<GrantedAuthority> grantedAuthority = new ArrayList<>();
 
         for (Role role : roles) {
-            if (role.getStatus().equals("NORMAL"))
-                grantedAuthority.add(new SimpleGrantedAuthority(role.getRolename()));
+            grantedAuthority.add(new SimpleGrantedAuthority(role.getRolename()));
         }
         return new org.springframework.security.core.userdetails.User(user.getUserName(),
                 user.getUserPassword(), grantedAuthority);
     }
+
 }
-
-

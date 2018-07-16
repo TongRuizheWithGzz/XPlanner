@@ -17,6 +17,7 @@ public class User {
     private Collection<Scheduleitme> scheduleitmesByUserId;
     private Collection<UserFoodEaten> userFoodEatensByUserId;
     private Set<Role> roles;
+    private boolean enabled;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,8 +63,12 @@ public class User {
     }
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
     public Set<Role> getRoles() {
         return roles;
     }
@@ -72,23 +77,6 @@ public class User {
         this.roles = roles;
     }
 
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return userId == user.userId &&
-                Objects.equals(userName, user.userName) &&
-                Objects.equals(userPassword, user.userPassword);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(userId, userName, userPassword);
-    }
 
     @OneToMany(mappedBy = "userByUserId", fetch = FetchType.LAZY)
     public Collection<Scheduleitme> getScheduleitmesByUserId() {
@@ -107,4 +95,15 @@ public class User {
     public void setUserFoodEatensByUserId(Collection<UserFoodEaten> userFoodEatensByUserId) {
         this.userFoodEatensByUserId = userFoodEatensByUserId;
     }
+
+    @Basic
+    @Column(name = "enabled")
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
 }

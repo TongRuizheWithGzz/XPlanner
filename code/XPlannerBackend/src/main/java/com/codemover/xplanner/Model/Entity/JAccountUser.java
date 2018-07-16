@@ -22,6 +22,11 @@ public class JAccountUser extends User {
     private String classNumber;
 
 
+    private String accessToken;
+
+    private String refreshToken;
+
+
     @Basic
     @Column(name = "jaccount_name")
     public String getjAccountName() {
@@ -72,5 +77,24 @@ public class JAccountUser extends User {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    @Basic
+    @Column(name = "access_token")
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+    @Basic
+    @Column(name = "refresh_token")
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
