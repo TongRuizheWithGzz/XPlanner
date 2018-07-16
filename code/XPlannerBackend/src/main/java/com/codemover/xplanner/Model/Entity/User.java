@@ -1,16 +1,22 @@
 package com.codemover.xplanner.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     private Integer userId;
     private String userName;
     private String userPassword;
+    private String avatarUrl;
     private Collection<Scheduleitme> scheduleitmesByUserId;
     private Collection<UserFoodEaten> userFoodEatensByUserId;
+    private Set<Role> roles;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +51,29 @@ public class User {
         this.userPassword = userPassword;
     }
 
+    @Basic
+    @Column(name = "avatar_url")
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,7 +99,7 @@ public class User {
         this.scheduleitmesByUserId = scheduleitmesByUserId;
     }
 
-    @OneToMany(mappedBy = "userByUserId",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userByUserId", fetch = FetchType.LAZY)
     public Collection<UserFoodEaten> getUserFoodEatensByUserId() {
         return userFoodEatensByUserId;
     }
