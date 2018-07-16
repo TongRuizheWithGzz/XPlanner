@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyUnauthorizedHandler myUnauthorizedHandler;
 
-    @Bean
+    @Bean("authenticationManager")
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
@@ -55,8 +55,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/loginByUsernamePassword/").permitAll()
+                .antMatchers("/api/print/").hasRole("JACCOUNT_USER")
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutUrl("/api/logout").deleteCookies("JSESSIONID");
     }
 }
+

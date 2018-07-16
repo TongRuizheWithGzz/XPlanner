@@ -16,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -30,20 +33,21 @@ public class UsernamePasswordLogin {
     @Autowired
     private MyUserDetailsService myUserDetailsService;
 
+    @Resource(name = "authenticationManager")
+    private AuthenticationManager authManager;
+
     @ResponseBody
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public HashMap<String, Object> loginByUsernamePassword(@RequestParam("username") String username,
-                                                           @RequestParam("password") String password)
+                                                           @RequestParam("password") String password,
+                                                           final HttpServletRequest request)
             throws AuthenticationException {
-        Authentication auth = authenticate(username, password);
-        final UserDetails userDetails = myUserDetailsService.loadUserByUsername(username);
-
-
+        UsernamePasswordAuthenticationToken authReq =
+                new UsernamePasswordAuthenticationToken(username, password);
+        Authentication auth = authManager.authenticate(authReq);
         SecurityContext sc = SecurityContextHolder.getContext();
-        if (sc != null) {
-            logger.warn("SecurityContextHolder has got an Authentication: '{}'", username);
-        }
         sc.setAuthentication(auth);
+
 
         HashMap<String, Object> response = new HashMap<>();
         response.put("errno", 0);
@@ -52,18 +56,4 @@ public class UsernamePasswordLogin {
     }
 
 
-    private Authentication authenticate(String username, String password) {
-
-
-        try {
-            Objects.requireNonNull(username);
-            Objects.requireNonNull(password);
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-
-        } catch (DisabledException e) {
-            throw new AuthenticationException("User is disabled!", e);
-        } catch (BadCredentialsException | NullPointerException e) {
-            throw new AuthenticationException("Bad credentials!", e);
-        }
-    }
 }
