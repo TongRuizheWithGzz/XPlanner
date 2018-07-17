@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Objects;
 
 @Controller
-@RequestMapping(value = "/api/loginByUsernamePassword")
 public class UsernamePasswordLogin {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -37,11 +36,12 @@ public class UsernamePasswordLogin {
     private AuthenticationManager authManager;
 
     @ResponseBody
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/auth/loginByUsernamePassword", method = RequestMethod.POST)
     public HashMap<String, Object> loginByUsernamePassword(@RequestParam("username") String username,
                                                            @RequestParam("password") String password,
                                                            final HttpServletRequest request)
             throws AuthenticationException {
+        logger.info("LoginByUsernamePassword, username:'{}',password:'{}'",username,password);
         UsernamePasswordAuthenticationToken authReq =
                 new UsernamePasswordAuthenticationToken(username, password);
         Authentication auth = authManager.authenticate(authReq);
