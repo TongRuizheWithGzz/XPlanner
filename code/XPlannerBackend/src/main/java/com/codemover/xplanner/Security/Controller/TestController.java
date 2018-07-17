@@ -11,9 +11,10 @@ import java.security.Principal;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping(value = "/api/print")
 public class TestController {
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+
+
+    @RequestMapping(value = "/api/auth/test", method = RequestMethod.GET)
     public HashMap<String, Object> print(Principal principal) {
         System.out.println(principal.getName());
         HashMap<String, Object> response = new HashMap<>();
