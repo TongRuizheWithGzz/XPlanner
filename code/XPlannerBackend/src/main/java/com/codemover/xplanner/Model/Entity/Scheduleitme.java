@@ -2,7 +2,6 @@ package com.codemover.xplanner.Model.Entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Objects;
 
 @Entity
 public class Scheduleitme {
@@ -11,7 +10,10 @@ public class Scheduleitme {
     private Timestamp endTime;
     private String description;
     private String address;
-    private User userByUserId;
+
+    private User user;
+
+    private Integer userId;
 
     @Id
     @Column(name = "scheduleItme_id")
@@ -65,31 +67,24 @@ public class Scheduleitme {
         this.address = address;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Scheduleitme that = (Scheduleitme) o;
-        return scheduleItmeId == that.scheduleItmeId &&
-                Objects.equals(startTime, that.startTime) &&
-                Objects.equals(endTime, that.endTime) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(address, that.address);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(scheduleItmeId, startTime, endTime, description, address);
-    }
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    public User getUserByUserId() {
-        return userByUserId;
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id",insertable = false,updatable = false)
+    public User getUser() {
+        return user;
     }
 
-    public void setUserByUserId(User userByUserId) {
-        this.userByUserId = userByUserId;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Basic
+    @Column(name="user_id")
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

@@ -78,7 +78,7 @@ public class User {
     }
 
 
-    @OneToMany(mappedBy = "userByUserId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     public Collection<Scheduleitme> getScheduleitmesByUserId() {
         return scheduleitmesByUserId;
     }

@@ -16,6 +16,8 @@ import java.util.HashMap;
 
 @Component
 public class MyUnauthorizedHandler implements AuthenticationEntryPoint {
+
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
