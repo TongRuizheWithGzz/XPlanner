@@ -21,11 +21,12 @@ create table food_type (
   primary key (food_type_id)
 );
 
+
 CREATE TABLE food (
-  food_id      INTEGER                                                              auto_increment,
+  food_id      INTEGER auto_increment,
   food_name    varchar(64) not null,
   calorie      INTEGER UNSIGNED,
-  dininghall   enum ('第一餐厅', '第二餐厅', '第三餐厅', '第四餐厅', '第五餐厅', '第六餐厅', '哈乐餐厅', '大智居') default '第一餐厅',
+  dininghall   varchar(20),
   food_type_id INTEGER,
   PRIMARY KEY (food_id),
   FOREIGN KEY (food_type_id) references food_type (food_type_id)

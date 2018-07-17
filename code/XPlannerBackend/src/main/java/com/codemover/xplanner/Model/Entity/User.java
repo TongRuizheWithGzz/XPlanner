@@ -1,16 +1,23 @@
 package com.codemover.xplanner.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     private Integer userId;
     private String userName;
     private String userPassword;
+    private String avatarUrl;
     private Collection<Scheduleitme> scheduleitmesByUserId;
     private Collection<UserFoodEaten> userFoodEatensByUserId;
+    private Set<Role> roles;
+    private boolean enabled;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,21 +52,31 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return userId == user.userId &&
-                Objects.equals(userName, user.userName) &&
-                Objects.equals(userPassword, user.userPassword);
+    @Basic
+    @Column(name = "avatar_url")
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(userId, userName, userPassword);
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
+
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
 
     @OneToMany(mappedBy = "userByUserId", fetch = FetchType.LAZY)
     public Collection<Scheduleitme> getScheduleitmesByUserId() {
@@ -70,7 +87,7 @@ public class User {
         this.scheduleitmesByUserId = scheduleitmesByUserId;
     }
 
-    @OneToMany(mappedBy = "userByUserId",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userByUserId", fetch = FetchType.LAZY)
     public Collection<UserFoodEaten> getUserFoodEatensByUserId() {
         return userFoodEatensByUserId;
     }
@@ -78,4 +95,15 @@ public class User {
     public void setUserFoodEatensByUserId(Collection<UserFoodEaten> userFoodEatensByUserId) {
         this.userFoodEatensByUserId = userFoodEatensByUserId;
     }
+
+    @Basic
+    @Column(name = "enabled")
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
 }
