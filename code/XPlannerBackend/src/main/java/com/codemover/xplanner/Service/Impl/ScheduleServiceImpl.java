@@ -26,7 +26,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             User user = userRepository.findByUserId(userId);
             response.put("errno", 0);
             response.put("errMsg", "QueryScheduleItem:ok");
-            response.put("scheduleItems", scheduleitmes);
+            /*response.put("scheduleItems", scheduleitmes);*/
             return response;
         } catch (DataAccessException e) {
             response.put("errno", 3);

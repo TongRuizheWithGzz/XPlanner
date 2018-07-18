@@ -1,6 +1,7 @@
 package com.codemover.xplanner.ServiceTest;
 
 
+import com.codemover.xplanner.Model.Entity.Scheduleitme;
 import com.codemover.xplanner.Service.Impl.TongquService;
 import com.google.gson.Gson;
 import org.junit.Test;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +44,15 @@ public class TongquServiceTest {
         Gson gson = new Gson();
         String json = gson.toJson(response);
         System.out.println(json);
+    }
+
+    @Test
+    public void dateEX() throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.sql.Timestamp start_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-18 15:37:00").getTime());
+        SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String startTtime = dFormat.format(new Date(start_time.getTime()));
+        System.out.println(startTtime);
     }
 
 }

@@ -59,16 +59,12 @@ public class ScheduleDaoTest {
         scheduleitme.setEndTime(end_time);
         scheduleitme.setDescription("软件工程");
         scheduleitme.setAddress("软件大楼");
-        scheduleitme.setHas_known_concrete_time(1);
         scheduleitme.setTitle("tongruizhe");
         User user = userRepository.findByUserName("lihu");
-        scheduleitme.setUserId(1);;
         System.out.println(user.getUserId());
         scheduleitme.setUser(user);
-
         scheduleItemRepository.save(scheduleitme);
         List<Scheduleitme> scheduleitme1 = scheduleItemRepository.findAll();
-        System.out.println(scheduleitme1.get(0).getUserId());
         System.out.println(scheduleitme1.get(0).getUser().getUserId());
     }
 
