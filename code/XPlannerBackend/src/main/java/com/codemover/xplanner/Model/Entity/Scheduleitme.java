@@ -11,11 +11,12 @@ public class Scheduleitme {
     private String description;
     private String address;
     private String title;
-    private int has_known_concrete_time;
+
+    private String imageUrl;
+    private boolean hasKnownConcreteTime;
 
     private User user;
 
-    private Integer userId;
 
     @Id
     @Column(name = "scheduleItme_id")
@@ -69,21 +70,11 @@ public class Scheduleitme {
         this.address = address;
     }
 
-    @Basic
-    @Column(name= "title")
-    public String getTitle(){return title;}
 
-    public void setTitle(String title){this.title = title;}
-
-    @Basic
-    @Column
-    public int getHas_known_concrete_time(){return has_known_concrete_time;}
-
-    public void setHas_known_concrete_time(int has_known_concrete_time){this.has_known_concrete_time = has_known_concrete_time;}
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id",insertable = false,updatable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     public User getUser() {
         return user;
     }
@@ -92,13 +83,34 @@ public class Scheduleitme {
         this.user = user;
     }
 
+
     @Basic
-    @Column(name="user_id")
-    public Integer getUserId() {
-        return userId;
+    @Column(name = "imageUrl")
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    @Basic
+    @Column(name = "title")
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Basic
+    @Column(name = "has_known_concrete_time")
+    public boolean isHasKnownConcreteTime() {
+        return hasKnownConcreteTime;
+    }
+
+    public void setHasKnownConcreteTime(boolean hasKnownConcreteTime) {
+        this.hasKnownConcreteTime = hasKnownConcreteTime;
     }
 }
