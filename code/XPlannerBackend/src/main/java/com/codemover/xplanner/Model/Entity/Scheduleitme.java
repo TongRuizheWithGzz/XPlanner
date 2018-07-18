@@ -10,6 +10,8 @@ public class Scheduleitme {
     private Timestamp endTime;
     private String description;
     private String address;
+    private String title;
+    private int has_known_concrete_time;
 
     private User user;
 
@@ -66,6 +68,18 @@ public class Scheduleitme {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Basic
+    @Column(name= "title")
+    public String getTitle(){return title;}
+
+    public void setTitle(String title){this.title = title;}
+
+    @Basic
+    @Column
+    public int getHas_known_concrete_time(){return has_known_concrete_time;}
+
+    public void setHas_known_concrete_time(int has_known_concrete_time){this.has_known_concrete_time = has_known_concrete_time;}
 
 
     @ManyToOne
