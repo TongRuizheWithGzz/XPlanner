@@ -1,4 +1,4 @@
-package com.codemover.xplanner.DaoTest.UserInheritanceTest;
+package com.codemover.xplanner.DaoTest.UserInheritanceTest.UserInheritanceTest;
 
 import com.codemover.xplanner.DAO.JAccountUserRepository;
 import com.codemover.xplanner.DAO.RoleRepository;
@@ -25,6 +25,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+/*import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;*/
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -94,4 +97,5 @@ public class UserDaoTest {
         BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
         assertThat(encoder.matches("password",password));
     }
+
 }

@@ -11,6 +11,7 @@ public class Scheduleitme {
     private String description;
     private String address;
     private String title;
+
     private String imageUrl;
     private boolean hasKnownConcreteTime;
 
@@ -68,6 +69,8 @@ public class Scheduleitme {
     public void setAddress(String address) {
         this.address = address;
     }
+
+
 
 
     @ManyToOne
