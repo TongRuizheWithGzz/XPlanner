@@ -11,6 +11,4 @@ import java.util.List;
 @Transactional
 public interface ScheduleItemRepository extends JpaRepository<Scheduleitme, Integer> {
 
-    List<Scheduleitme> findByUserId(Integer userId);
-
 }

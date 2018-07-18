@@ -1,10 +1,6 @@
 package com.codemover.xplanner.Model.Entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -14,8 +10,8 @@ public class User {
     private String userName;
     private String userPassword;
     private String avatarUrl;
-    private Collection<Scheduleitme> scheduleitmesByUserId;
-    private Collection<UserFoodEaten> userFoodEatensByUserId;
+    private Set<Scheduleitme> scheduleitmes;
+    private Set<UserFoodEaten> foodEatens;
     private Set<Role> roles;
     private boolean enabled;
 
@@ -79,21 +75,21 @@ public class User {
 
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    public Collection<Scheduleitme> getScheduleitmesByUserId() {
-        return scheduleitmesByUserId;
+    public Set<Scheduleitme> getScheduleitmes() {
+        return scheduleitmes;
     }
 
-    public void setScheduleitmesByUserId(Collection<Scheduleitme> scheduleitmesByUserId) {
-        this.scheduleitmesByUserId = scheduleitmesByUserId;
+    public void setScheduleitmes(Set<Scheduleitme> scheduleitmes) {
+        this.scheduleitmes = scheduleitmes;
     }
 
     @OneToMany(mappedBy = "userByUserId", fetch = FetchType.LAZY)
-    public Collection<UserFoodEaten> getUserFoodEatensByUserId() {
-        return userFoodEatensByUserId;
+    public Set<UserFoodEaten> getFoodEatens() {
+        return foodEatens;
     }
 
-    public void setUserFoodEatensByUserId(Collection<UserFoodEaten> userFoodEatensByUserId) {
-        this.userFoodEatensByUserId = userFoodEatensByUserId;
+    public void setFoodEatens(Set<UserFoodEaten> foodEatens) {
+        this.foodEatens = foodEatens;
     }
 
     @Basic

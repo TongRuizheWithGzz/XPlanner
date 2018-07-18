@@ -2,7 +2,9 @@ package com.codemover.xplanner.Service.Impl;
 
 
 import com.codemover.xplanner.DAO.ScheduleItemRepository;
+import com.codemover.xplanner.DAO.UserRepository;
 import com.codemover.xplanner.Model.Entity.Scheduleitme;
+import com.codemover.xplanner.Model.Entity.User;
 import com.codemover.xplanner.Service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -15,13 +17,13 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
 
     @Autowired
-    ScheduleItemRepository scheduleItemRepository;
+    UserRepository userRepository;
 
     @Override
     public HashMap<String, Object> findUserSchedule(Integer userId) {
         HashMap<String, Object> response = new HashMap<>();
         try {
-            List<Scheduleitme> scheduleitmes = scheduleItemRepository.findByUserId(userId);
+            User user = userRepository.findByUserId(userId);
             response.put("errno", 0);
             response.put("errMsg", "QueryScheduleItem:ok");
             response.put("scheduleItems", scheduleitmes);
