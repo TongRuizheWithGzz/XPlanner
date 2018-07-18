@@ -63,6 +63,7 @@ public class ScheduleDaoTest {
         User user = userRepository.findByUserName("lihu");
         System.out.println(user.getUserId());
         scheduleitme.setUser(user);
+        scheduleitme.setHasKnownConcreteTime(true);
         scheduleItemRepository.save(scheduleitme);
         List<Scheduleitme> scheduleitme1 = scheduleItemRepository.findAll();
         System.out.println(scheduleitme1.get(0).getUser().getUserId());
