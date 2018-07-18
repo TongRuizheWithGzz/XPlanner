@@ -19,11 +19,14 @@ public class TongquService {
     @Value("${api.tongqu.url}")
     private String tongquApiUrl;
 
+    @Value("${api.tongqu.detail}")
+    private String tongquDetailApiUrl;
 
     public HashMap<String, Object> getScheduleitemsFromTongqu(Integer offset, String orderBy) {
         HashMap<String, Object> response = new HashMap<>();
         String responseJson = getActsFromTongqu(offset, orderBy);
         try {
+            ScheduleItemDTOFactory.setTongquDetailApiUrl(tongquDetailApiUrl);
             ArrayList<ScheduleitmeDTO> scheduleitmeDTOS = ScheduleItemDTOFactory.createScheduleitme(responseJson);
             response.put("errno", 0);
             response.put("errMsg", "tongqu acts get:ok");
@@ -38,7 +41,7 @@ public class TongquService {
     }
 
     public String getActsFromTongqu(Integer offset, String orderBy) {
-        String url = buildUrl(offset, orderBy);
+        String url = ScheduleItemDTOFactory.buildUrl(offset, orderBy, tongquApiUrl);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response
                 = restTemplate.getForEntity(url, String.class);
@@ -46,14 +49,13 @@ public class TongquService {
 
     }
 
-    public String buildUrl(Integer offset, String orderBy) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(tongquApiUrl)
-                .queryParam("type", 0)
-                .queryParam("status", 0)
-                .queryParam("order", orderBy)
-                .queryParam("offset", offset);
-
-        return builder.toUriString();
+    public String getActDetailByIdFromWeSJTU(Integer actId) {
+        String url = ScheduleItemDTOFactory.buildUrlForActDetail(actId, tongquDetailApiUrl);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response
+                = restTemplate.getForEntity(url, String.class);
+        return response.getBody();
     }
+
 
 }

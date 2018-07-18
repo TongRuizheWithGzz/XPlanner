@@ -13,5 +13,3 @@ public class ScheduleitmeDTO {
     public boolean hasKnownConcretTime;
 
 }
-
-

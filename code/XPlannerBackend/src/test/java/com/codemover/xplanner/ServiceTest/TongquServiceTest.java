@@ -2,6 +2,7 @@ package com.codemover.xplanner.ServiceTest;
 
 
 import com.codemover.xplanner.Service.Impl.TongquService;
+import com.codemover.xplanner.Service.Util.ScheduleItemDTOFactory;
 import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,11 +21,7 @@ public class TongquServiceTest {
     @Autowired
     private TongquService tongquService;
 
-    @Test
-    public void canBuildRightUrlTest() {
-        String url = tongquService.buildUrl(0, "act.create_time");
-        assertThat(url).isEqualTo("https://tongqu.me/api/act/type?type=0&status=0&order=act.create_time&offset=0");
-    }
+
 
     @Test
     public void tongquOffsetParameterOffset0And1AreNotSame() {
@@ -41,5 +38,6 @@ public class TongquServiceTest {
         String json = gson.toJson(response);
         System.out.println(json);
     }
+
 
 }
