@@ -5,3 +5,4 @@ public class ParseScheduleitmeJsonException extends RuntimeException {
         super(message);
     }
 }
+

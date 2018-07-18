@@ -22,7 +22,6 @@ public class TongquServiceTest {
     private TongquService tongquService;
 
 
-
     @Test
     public void tongquOffsetParameterOffset0And1AreNotSame() {
         String response1 = tongquService.getActsFromTongqu(1, "act.create_time");
