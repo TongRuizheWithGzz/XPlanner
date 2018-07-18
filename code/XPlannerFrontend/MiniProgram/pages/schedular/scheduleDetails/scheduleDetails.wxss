@@ -1,0 +1,60 @@
+.tab{
+  text-align: center;
+  font-size: 18px;
+}
+.swiper-box{
+  height:800px;
+}
+.time{
+  padding-left: 6%;
+  padding-right: 6%;
+  
+  padding-top: 6%;
+  font-family: Courier New, Courier, monospace;
+  font-size: 15px;
+}
+.title {
+  padding-left: 6%;
+  padding-right: 6%;
+  padding-top: 3%;
+  font-size: 30px;
+}
+.description{
+  padding-left: 6%;
+  padding-right: 6%;
+  padding-top: 3%;
+  font-size: 17px;
+}
+.add{
+  padding-left: 6%;
+  padding-right: 6%;
+  font-size:14px;
+  padding-top: 10%;
+  font-family: Courier New, Courier, monospace;
+  color: #bfbfbf;
+}
+.address{
+  padding-left: 6%;
+  padding-right: 6%;
+  padding-top: 3%;
+  font-weight: bold;
+}
+.swiper-item{
+  display: flex;
+  flex-direction: column;
+}
+.item0{
+  color:#f7f;
+}
+.item1{
+  color:aqua;
+}
+.item2{
+  color:#ff7f00;
+}
+.item3{
+  color:#00ff00;
+}
+.item4{
+  color:aqua;
+}

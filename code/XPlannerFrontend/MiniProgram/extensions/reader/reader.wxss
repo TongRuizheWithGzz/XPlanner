@@ -1,0 +1,137 @@
+.weui-cells__title {
+  margin-top: 0.77em;
+  margin-bottom: 0.70em;
+  color: #999;
+  font-size: 14px;
+  text-align: center;
+}
+
+.weui-cells {
+  position: relative;
+  margin-top: 1.17647059em;
+  background-color: #fff;
+  line-height: 1.41176471;
+  font-size: 17px;
+}
+
+.weui-cells_after-title {
+  margin-top: 0;
+}
+
+.weui-cell {
+  padding: 10px 15px;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  border-bottom: 1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
+}
+
+.weui-cell__bd {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+.weui-textarea {
+  display: block;
+  width: 100%;
+  height: 4.75em;
+}
+
+.weui-btn {
+  margin-top: 15px;
+}
+
+.button-sp-area {
+  margin: 0 auto;
+  padding-top: 15px;
+  width: 60%;
+}
+
+.weui-uploader__bd {
+  margin-bottom: -10px;
+  margin-right: -9px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* padding-left: 38%; */
+}
+
+.weui-uploader__img {
+  display: block;
+  width: 79px;
+  height: 79px;
+}
+
+.weui-uploader__input-box {
+  float: left;
+  position: relative;
+  margin-right: 9px;
+  margin-bottom: 9px;
+  align-self: center;
+  width: 79px;
+  height: 79px;
+  border: 1px solid #d9d9d9;
+}
+
+.weui-uploader__input {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.weui-uploader__input-box:after, .weui-uploader__input-box:before {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  background-color: #d9d9d9;
+}
+
+.weui-uploader__input-box:before {
+  width: 2px;
+  height: 39.5px;
+}
+
+.weui-uploader__input-box:after {
+  width: 39.5px;
+  height: 2px;
+}
+
+.weui-navbar {
+  height: 28px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.weui-navbar .item_on {
+  font-weight: bold;
+  color: #000;
+  border-bottom: 2px solid #000;
+}
+
+.weui-navbar .default-item {
+  width: 20%;
+  text-align: center;
+  font-size: 33rpx;
+  color: #8a8a8a;
+  font-family: Courier New, Courier, monospace;
+  font-weight: bolder;
+}
+
+ .swiper-box {
+  height: 400px;
+} 

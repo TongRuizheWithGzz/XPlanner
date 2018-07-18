@@ -1,0 +1,23 @@
+.weui-article {
+  padding: 20px 15px;
+  font-size: 15px;
+}
+
+.weui-article__section {
+  margin-bottom: 1.5em;
+}
+
+.weui-article__h1 {
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 0.9em;
+}
+
+weui-article__p {
+  margin: 0 0 0.8em;
+}
+
+.weui-msg {
+  padding-top: 36px;
+  text-align: center;
+}

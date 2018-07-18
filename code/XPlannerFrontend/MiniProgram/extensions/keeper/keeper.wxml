@@ -1,0 +1,29 @@
+<view class="weui-cells__title">{{user_food_eaten[0].ate_time}}</view>
+
+<view wx:for="{{scheduleItems}}" wx:key='{{*this}}' data-id='{{index}}' bind:longpress='showCheck'>
+  <view hidden='{{true}}' class='top' bindtap='unfold'>
+    <text>{{index}}:00 PM</text>
+  </view>
+
+  <view class="item">
+    <checkbox hidden="{{showCheckbox}}" class="item-checkbox" color="deepskyblue"></checkbox>
+
+    <view class='list-item' catchtap='detail' data-id="{{index}}">
+      <text class='item-title'>{{item.title}}</text>
+      <text class='item-time'>
+            {{"FROM "+item.start_time + " TO " + item.end_time}}
+          </text>
+    </view>
+  </view>
+
+</view>
+
+<view class="weui-cells weui-cells_after-title">
+  <view class="weui-cell" wx:key="{{*this}}">
+    <view class="weui-cell__bd">{{item.food_name}}</view>
+    <view class="weui-cell__ft">{{item.calorie}}</view>
+  </view>
+</view>
+
+<image src="/icons/food.png" class="food" bindtap="gotoSelector"></image>
+<image src="/icons/camera.png" class="camera" bindtap="gotoCamera"></image>
