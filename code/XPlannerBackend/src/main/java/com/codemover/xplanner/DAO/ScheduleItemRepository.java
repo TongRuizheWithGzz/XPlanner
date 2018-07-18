@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Transactional
 public interface ScheduleItemRepository extends JpaRepository<Scheduleitme, Integer> {
-
+    void deleteByScheduleItmeId(int scheduleItemId);
+    List<Scheduleitme> findByUserAndStartTimeBetween(User user, Timestamp beginning,Timestamp endding);
 }

@@ -15,5 +15,5 @@ public interface ScheduleService {
 
     public HashMap<String, Object> modifyScheduleItem(Scheduleitme scheduleitme);
 
-
+    public HashMap<String, Object> getScheduledDays(Integer userId,int year,int month);
 }

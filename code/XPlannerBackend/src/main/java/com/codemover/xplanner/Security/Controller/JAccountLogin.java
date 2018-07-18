@@ -4,6 +4,7 @@ import com.codemover.xplanner.Model.Entity.JAccountUser;
 import com.codemover.xplanner.Security.Config.ConstConfig;
 import com.codemover.xplanner.Security.Exception.ParseProfileJsonException;
 import com.codemover.xplanner.Security.Util.UserFactory;
+import com.codemover.xplanner.Service.ScheduleService;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
@@ -36,6 +37,9 @@ public class JAccountLogin {
 
     @Autowired
     private ConstConfig constConfig;
+
+    @Autowired
+    private ScheduleService scheduleService;
 
     @ResponseBody
     @RequestMapping(value = "/getJAccountLoginUrl", method = RequestMethod.GET)
