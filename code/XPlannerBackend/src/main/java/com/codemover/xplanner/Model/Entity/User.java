@@ -83,7 +83,7 @@ public class User {
         this.scheduleitmes = scheduleitmes;
     }
 
-    @OneToMany(mappedBy = "userByUserId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     public Set<UserFoodEaten> getFoodEatens() {
         return foodEatens;
     }

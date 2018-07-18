@@ -2,7 +2,6 @@ package com.codemover.xplanner.Model.Entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Objects;
 
 @Entity
 @Table(name = "user_food_eaten", schema = "xplanner", catalog = "")
@@ -11,7 +10,7 @@ public class UserFoodEaten {
     private String foodName;
     private Integer calorie;
     private Timestamp ateTime;
-    private User userByUserId;
+    private User user;
 
     @Id
     @Column(name = "user_food_eaten_id")
@@ -54,30 +53,14 @@ public class UserFoodEaten {
         this.ateTime = ateTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserFoodEaten that = (UserFoodEaten) o;
-        return userFoodEatenId == that.userFoodEatenId &&
-                Objects.equals(foodName, that.foodName) &&
-                Objects.equals(calorie, that.calorie) &&
-                Objects.equals(ateTime, that.ateTime);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(userFoodEatenId, foodName, calorie, ateTime);
-    }
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    public User getUserByUserId() {
-        return userByUserId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserByUserId(User userByUserId) {
-        this.userByUserId = userByUserId;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
