@@ -50,7 +50,7 @@ public class ScheduleDaoTest {
     }
 
     @Test
-    public void aTest() throws ParseException {
+    public void canGetUserScheduleitemTest() throws ParseException {
         Scheduleitme scheduleitme = new Scheduleitme();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
         java.sql.Timestamp start_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-7-18 09:00:00").getTime());
@@ -63,6 +63,7 @@ public class ScheduleDaoTest {
         User user = userRepository.findByUserName("lihu");
         System.out.println(user.getUserId());
         scheduleitme.setUser(user);
+        scheduleitme.setHasKnownConcreteTime(true);
         scheduleItemRepository.save(scheduleitme);
         List<Scheduleitme> scheduleitme1 = scheduleItemRepository.findAll();
         System.out.println(scheduleitme1.get(0).getUser().getUserId());

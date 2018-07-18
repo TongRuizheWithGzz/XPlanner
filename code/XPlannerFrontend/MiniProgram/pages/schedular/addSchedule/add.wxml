@@ -1,0 +1,37 @@
+<view class='input'>
+
+  <view class='block'>
+    <text class='title'>Title</text>
+    <input value="{{title}}" placeholder='Give it a title' class='ip' placeholder-class='ph' bindinput='titleIp'/>
+  </view>
+
+  <view class='block'>
+    <text class='description'>Description</text>
+    <textarea value="{{description}}" placeholder='Write some description' class='ip' placeholder-class='ph'  bindinput='descriptionIp'/>
+  </view>
+
+  <view class='block'>
+    <text class='text1'>From</text>
+    <view class='choose'>
+      <picker value="{{startDate}}" mode='date' class='date' bindchange='changeSD'>{{startDate}}</picker>
+      <picker value="{{startTime}}" mode='time' class='time' bindchange='changeST'>{{startTime}}</picker>
+    </view>
+  </view>
+
+  <view class='block'>
+    <text class='text2'>To</text>
+    <view class='choose'>
+      <picker value="{{endDate}}" mode='date' class='date' bindchange='changeED'>{{endDate}}</picker>
+      <picker value="{{endTime}}" mode='time' class='time' bindchange='changeET'>{{endTime}}</picker>
+    </view>
+  </view>
+  
+  <view class='block'>
+    <view class='address'>
+      <text class='text3'>Address</text>
+      <input class='ip' placeholder='address of item' placeholder-class='ph' bindinput='addressIp' value="{{address}}"/>
+    </view>
+  </view>
+
+  <view bindtap='add' class='add'>add to list</view>
+</view>

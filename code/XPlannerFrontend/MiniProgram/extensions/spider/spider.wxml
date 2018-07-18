@@ -1,0 +1,14 @@
+<view hidden='{{hideFixTop}}' class='fixTop'>
+  <text>{{time}}:00 PM</text>
+</view>
+<view wx:for="{{scheduleItems}}" wx:key='key' data-id='{{index}}'>
+  <view hidden='{{index%3!=0}}' class='top'>
+    <text>{{index}}:00 PM</text>
+  </view>
+  <view class='list-item' bindtap='detail'>
+    <text class='item-title item{{index%4}}'>{{item.title}}</text>
+    <text class='item-time'>
+          {{"FROM "+item.start_time + " TO " + item.end_time}}
+        </text>
+  </view>
+</view>

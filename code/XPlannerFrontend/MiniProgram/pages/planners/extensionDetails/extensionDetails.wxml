@@ -1,0 +1,16 @@
+<view class="weui-article">
+  <view class="weui-article__h1">{{extension.name}}</view>
+  <view class="weui-article__section">
+    <view class="weui-article__p">
+      <image class="weui-article__img" src="/icons/pic_article.png" mode="aspectFit" style="height: 180px" />
+    </view>
+    <view class="weui-article__p">
+      {{extension.description}}
+    </view>
+    <view class="weui-article__p">
+      {{extension.content}}
+    </view>
+  </view>
+  <button wx:if="{{extension.visible}}" type="warn" bindtap="deleteExtension">删除{{extension.name}}扩展</button>
+  <button wx:if="{{!extension.visible}}" type="primary" bindtap="installExtension">安装{{extension.name}}扩展</button>
+</view>

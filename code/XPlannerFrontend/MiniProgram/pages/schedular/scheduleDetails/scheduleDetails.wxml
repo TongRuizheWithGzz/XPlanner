@@ -1,0 +1,12 @@
+<view class='tab'>{{day}}</view>
+<swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange='swipe'>
+  <block wx:for="{{items}}" wx:key='key'>
+    <swiper-item class="swiper-item">
+      <text class='time'>{{"FROM "+item.start_time + " TO " + item.end_time}}</text>
+      <text class='title item{{index}}'>{{item.title}}</text>
+      <text class='description'>{{item.description}}</text>
+      <text class='add'>Address</text>
+      <text class='address'>{{item.address}}</text>
+    </swiper-item>
+  </block>
+</swiper>
