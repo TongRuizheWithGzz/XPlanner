@@ -5,50 +5,10 @@ var selectedDate = "2018-1-10";
 var scheduleItems = require("../../data/scheduleItem");
 const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
 
-function getCurrentMonthDayList(year, month, date) {
-  // var tmp = [
-  //   [25, 26, 27, 28, 29, 30, 1],
-  //   [2, 3, 4, 5, 6, 7, 8],
-  //   [9, 10, 11, 12, 13, 14, 15],
-  //   [16, 17, 18, 19, 20, 21, 22],
-  //   [23, 24, 25, 26, 27, 28, 29],
-  //   [30, 31, 1, 2, 3, 4, 5]
-  // ];
-  var tmp = [
-    25, 26, 27, 28, 29, 30, 1,
-    2, 3, 4, 5, 6, 7, 8,
-    9, 10, 11, 12, 13, 14, 15,
-    16, 17, 18, 19, 20, 21, 22,
-    23, 24, 25, 26, 27, 28, 29,
-    30, 31, 1, 2, 3, 4, 5
-  ];
-  var result = [];
-  for (let i = 0; i < tmp.length; i++) {
-    var a = new Object();
-    a.day = tmp[i];
-    a.year = 2018;
-    a.selected = false; // 是否有选择过，是否有加载过对应数据
-    if (i < 6) {
-      a.month = 6;
-      a.currentMonth = false;
-    } else if (i > 36) {
-      a.month = 8;
-      a.currentMonth = false;
-    } else {
-      a.month = 7;
-      a.currentMonth = true; // 是否是当前月
-    }
-    result.push(a);
-  }
-  result[23].selected = true;
-  return result;
-}
-
 Page({
   data: {
     showCheck: true,
     tabs: ["今天", "明天"],
-    weekdays: ["日", "一", "二", "三", "四", "五", "六"],
     pageData: [{
       "data": "pageA"
     }, {
@@ -59,16 +19,17 @@ Page({
     index: 0,
     sliderOffset: 0,
     sliderLeft: 0,
-    scheduleItems: scheduleItems,
+    scheduleItems: [],
     height: 0,
     fix: false,
     hideFixTop: true,
     time: 0,
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    day: new Date().getDate(),
+    year: 2018,
+    month: 7,
+    day: 18,
     monthStr: MONTHS[new Date().getMonth()],
     dayList: [],
+    monthList: {},
   },
   onLoad: function () {
     var that = this;
@@ -83,55 +44,27 @@ Page({
 
     /* 获取选择的日期，向后端发送选择的日期，要求获取有日程的日子的数组和当天的日程列表 */
     var selected_date = selectedDate;
+    var selected_year = 2018;
+    var selected_month = 7;
     var selected_day = 18;
     var date_with_item = [3, 4, 5, 7, 17, 18, 19, 20, 21, 22, 28];
     var tmp_schedule = scheduleItems;
 
-    /* 设置月历的样式，注意所有有日程的日子均为蓝色，选中的日子为橙色 */
-    var tmp_day_list = [];
-    var new_day = 0;
-    const days_count = new Date(this.data.year, this.data.month, 0).getDate();
-    /* 设置普通日期 */
-    for (var i = 1; i <= days_count; i++) {
-      tmp_day_list.push({
-        month: 'current',
-        day: i,
-        color: "grey",
-        loaded: false, // 指示是否已加载相应日程数据
-        selected: false, // 指示是否选择
-        haveItems: false, // 指示是否有日程
-      });
-    }
-    /* 设置有日程的日期 */
-    for (var i = 0; i < date_with_item.length; i++) {
-      new_day = tmp_day_list[date_with_item[i] - 1].day;
-      tmp_day_list[date_with_item[i] - 1] = {
-        month: 'current',
-        day: new_day,
-        color: 'white',
-        background: '#46c4f3',
-        loaded: false,
-        selected: false,
-        haveItems: true,
-      };
-    }
-    /* 设置选中的日期 */
-    new_day = tmp_day_list[selected_day - 1].day;
-    var have_items = tmp_day_list[selected_day - 1].haveItems;
-    tmp_day_list[selected_day - 1] = {
-      month: 'current',
-      day: new_day,
-      color: 'white',
-      background: '#ffb72b',
-      loaded: false,
-      selected: true,
-      haveItems: have_items,
-    };
+    /* 生成本月对应的dayList */
+    var tmp_day_list = this.generateDayList(date_with_item, selected_year, selected_month, selected_day);
 
-
+    /* 生成monthList */
+    var tmp_month_list = new Object();
+    tmp_month_list[selected_year + "-" + selected_month] = tmp_day_list;
+    console.log(tmp_month_list);
 
     this.setData({
       dayList: tmp_day_list,
+      monthList: tmp_month_list,
+      year: selected_year,
+      month: selected_month,
+      day: selected_day,
+      scheduleItems: tmp_schedule,
       height: 86.796875 * (that.data.scheduleItems.length) + 540,
     })
   },
@@ -169,6 +102,54 @@ Page({
 
   unfold: function () {
     console.log("sb");
+  },
+
+  /*
+   * generateDayList
+   * 生成对应的dayList，用于控制月历的样式、对应日期日程信息的加载
+   */
+  generateDayList: function (date_with_item, selected_year, selected_month, selected_day) {
+    /* 设置月历的样式，注意所有有日程的日子均为蓝色，选中的日子为橙色 */
+    var tmp_day_list = [];
+    var new_day = 0;
+    const days_count = new Date(selected_year, selected_month, 0).getDate();
+    /* 设置普通日期 */
+    for (var i = 1; i <= days_count; i++) {
+      tmp_day_list.push({
+        month: 'current',
+        day: i,
+        color: "grey",
+        loaded: false, // 指示是否已加载相应日程数据
+        selected: false, // 指示是否选择
+        haveItems: false, // 指示是否有日程
+      });
+    }
+    /* 设置有日程的日期 */
+    for (var i = 0; i < date_with_item.length; i++) {
+      new_day = tmp_day_list[date_with_item[i] - 1].day;
+      tmp_day_list[date_with_item[i] - 1] = {
+        month: 'current',
+        day: new_day,
+        color: 'white',
+        background: '#46c4f3',
+        loaded: false,
+        selected: false,
+        haveItems: true,
+      };
+    }
+    /* 设置选中的日期 */
+    new_day = tmp_day_list[selected_day - 1].day;
+    var have_items = tmp_day_list[selected_day - 1].haveItems;
+    tmp_day_list[selected_day - 1] = {
+      month: 'current',
+      day: new_day,
+      color: 'white',
+      background: '#ffb72b',
+      loaded: false,
+      selected: true,
+      haveItems: have_items,
+    };
+    return tmp_day_list;
   },
 
   /*

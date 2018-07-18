@@ -1,38 +1,6 @@
-<!-- <view class="weui-navbar" scroll-x="true" scroll-into-view="{{topView}}">
-  <view class="{{activeIndex == 0 ?'item_on':''}} default-item" bindtap="tabClick">今天</view>
-  <view class="{{activeIndex == 1 ?'item_on':''}} default-item" bindtap="tabClick">明天</view>
-</view> -->
-
-<!-- Calendar -->
 <view class="calendar">
-  <calendar year="{{year}}" month="{{month}}" days-color="{{dayList}}" show-more-days="{{true}}" binddayClick="dayClick" bindnextMonth="nextMonth" bindprevMonth="prevMonth"/>
-  <!-- <view class="calendar-topbar">
-    <view class="calendar-prev-month">
-      <image class="calendar-prev-month-icon" src="/icons/left.png" bindtap="prevMonth" />
-    </view>
-    <view class="calendar-month">{{currentYear + " 年 " + currentMonth + " 月"}}</view>
-    <view class="calendar-next-month">
-      <image class="calendar-next-month-icon" src="/icons/right.png" bindtap="nextMonth" />
-    </view>
-  </view>
-  <view class="calendar-content">
-    <view class="calendar-weekday-name">
-      <view class="calendar-weekday-name-block" wx:for="{{weekdays}}" wx:key="{{*this}}">
-        <view>{{item}}</view>
-      </view>
-    </view>
-    <view class="calendar-weekday">
-      <view class="calendar-weekday-block" wx:for="{{dayList}}" wx:key="{{*this}}">
-        <view class="calendar-everyday-block">
-          <view wx:if="{{item.selected}}">sb</view>
-          <view wx:if="{{item.currentMonth}}">cu</view>
-          <view>
-            {{item.day}}
-          </view>
-        </view>
-      </view>
-    </view>
-  </view> -->
+   <calendar year="{{year}}" month="{{month}}" days-color="{{dayList}}" show-more-days="{{true}}" binddayClick="dayClick" bindnextMonth="nextMonth" bindprevMonth="prevMonth"/> 
+   <!-- <calendar year="{{year}}" month="{{month}}" days-color="{{monthList[year + '-' + month]}}" show-more-days="{{true}}" binddayClick="dayClick" bindnextMonth="nextMonth" bindprevMonth="prevMonth"/>  -->
 </view>
 
 <view hidden='{{true}}' class='fixTop' bindtap='unfold'>
@@ -42,28 +10,7 @@
 <swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:{{height+3}}px">
 
   <swiper-item class="swiper-item">
-    <!-- <view class='xplanner'>
-      <text class='line1'>XPLANNER</text>
-      <text class='line2'>An extensible and intelligent time schedule for your university life</text>
-    </view> -->
-    <!-- <view wx:for="{{scheduleItems}}" wx:key='key' data-id='{{index}}'>
-      <view hidden='{{true}}' class='top' bindtap='unfold'>
-        <text>{{index}}:00 PM</text>
-      </view>
-
-      <view class="item">
-        <checkbox hidden="{{showCheck}}"class="item-checkbox" color="deepskyblue"></checkbox>
-      
-        <view class='list-item' bindtap='detail' bind:longpress="">
-          <text class='item-title item{{index%4}}'>{{item.title}}</text>
-          <text class='item-time'>
-            {{"FROM "+item.start_time + " TO " + item.end_time}}
-          </text>
-        </view>
-      </view>
-
-    </view> -->
-    <!-- <view class="weui-panel"> -->
+    <!-- <view class="weui-panel">-->
     <!-- <view class="weui-panel__hd">已安装扩展</view> -->
     <view class="weui-panel__bd">
       <block wx:for="{{scheduleItems}}" wx:key="{{item.id}}">
