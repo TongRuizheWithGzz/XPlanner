@@ -27,6 +27,8 @@ Page({
     year: 2018,
     month: 7,
     day: 18,
+    showYear: 2018,
+    showMonth: 7,
     monthStr: MONTHS[new Date().getMonth()],
     dayList: [],
     monthList: {},
@@ -157,7 +159,28 @@ Page({
    * 月历向前翻页触发事件
    */
   prevMonth: function () {
+    var year = this.data.showYear;
+    var month = this.data.showMonth;
+    if (this.data.showMonth = 1) { // 判断是否是1月
+      year--;
+      month = 12;
+    } else {
+      month--;
+    }
 
+    if (!this.data.monthList[year + "-" + month]) { // 判断前端是否已经加载对应月的信息
+      console.log("sb");
+      /* 向后端发送前一个月的信息，获取对应的有日程的日期数组 */
+      var day_with_items = this.getDayWithItemsByMonth(year, month);
+      var tmp_month_list = this.data.monthList;
+      tmp_month_list[year + "-" + month] = day_with_items;
+      this.setData({
+        tmp_month_list,
+      });
+      console.log(this.data.showYear + " " + this.data.showMonth);
+    } else {
+      console.log(this.data.showYear + " " + this.data.showMonth);
+    }
   },
 
   /*
@@ -165,7 +188,21 @@ Page({
    * 月历向后翻页触发事件
    */
   nextMonth: function () {
+    if (this.data.showMonth = 12) {
+      var old_year = this.data.showYear;
 
+      /* 向后端发送前一个月的信息，获取对应的有日程的日期数组 */
+
+      this.setData({
+        showYear: old_year + 1,
+        showMonth: 1,
+      });
+    } else {
+      var old_month = this.data.showMonth;
+      this.setData({
+        showMonth: old_month + 1,
+      })
+    }
   },
 
   /*
@@ -173,41 +210,42 @@ Page({
    * 响应点击某天的事件
    */
   dayClick: function (e) {
-    var tmp_year = e.detail.year;
-    var tmp_month = e.detail.month;
-    var tmp_day = e.detail.day;
-    if (tmp_month == this.data.month) { // 如果点击的是本月的日期
-      if (this.data.dayList[tmp_day - 1].selected) { // 如果点击已经选中的日期
+    var new_year = e.detail.year;
+    var new_month = e.detail.month;
+    var new_day = e.detail.day;
+    var old_year = this.data.year;
+    var old_month = this.data.month;
+    var old_day = this.data.day;
+    var tmp_day_list = this.data.monthList[old_year + "-" + old_month];
+    if (new_month == old_month) { // 如果点击的是本月的日期
+      if (tmp_day_list[new_day - 1].selected) { // 如果点击已经选中的日期
         console.log("点击本月已经选中的日期");
         return;
-      } else if (!this.data.dayList[tmp_day - 1].loaded) { // 如果点击尚未加载的日期
+      } else if (!tmp_day_list[new_day - 1].loaded) { // 如果点击尚未加载的日期
         console.log("点击本月尚未加载日程的日期");
         /* 向后端请求相应日程 */
-        var tmp_items = this.getScheduleItemsByDay(tmp_year + "-" + tmp_month + "-" + tmp_day);
+        var tmp_items = this.getScheduleItemsByDay(new_year + "-" + new_month + "-" + new_day);
         tmp_items = tmp_items.concat(this.data.scheduleItems); // 合并新旧日程
-        console.log("得到新日程列表");
 
         /* 更新月历显示和日程 */
-        var tmp_day_list = this.data.dayList;
-        /* 更新旧日期的显示 */
-        tmp_day_list[this.data.day - 1] = this.getModifiedOldDay(tmp_day_list[this.data.day - 1]);
-        /* 更新新日期的显示 */
-        tmp_day_list[tmp_day - 1] = this.getModifiedNewDay(tmp_day_list[tmp_day - 1]);
+        tmp_day_list[old_day - 1] = this.getModifiedOldDay(tmp_day_list[old_day - 1]);
+        tmp_day_list[new_day - 1] = this.getModifiedNewDay(tmp_day_list[new_day - 1]);
+        var tmp_month_list = this.data.monthList;
+        tmp_month_list[old_year + "-" + old_month] = tmp_day_list;
         this.setData({
-          day: tmp_day,
-          dayList: tmp_day_list,
+          day: new_day,
+          monthList: tmp_month_list,
           scheduleItems: tmp_items,
         });
       } else { // 如果点击已经加载、未选中的日期
-        var tmp_day_list = this.data.dayList;
         console.log("点击已经加载、未选中的日期");
-        /* 更新旧日期的显示 */
-        tmp_day_list[this.data.day - 1] = this.getModifiedOldDay(tmp_day_list[this.data.day - 1]);
-        /* 更新新日期的显示 */
-        tmp_day_list[tmp_day - 1] = this.getModifiedNewDay(tmp_day_list[tmp_day - 1]);
+        tmp_day_list[old_day - 1] = this.getModifiedOldDay(tmp_day_list[old_day - 1]);
+        tmp_day_list[new_day - 1] = this.getModifiedNewDay(tmp_day_list[new_day - 1]);
+        var tmp_month_list = this.data.monthList;
+        tmp_month_list[old_year + "-" + old_month] = tmp_day_list;
         this.setData({
-          day: tmp_day,
-          dayList: tmp_day_list,
+          day: new_day,
+          monthList: tmp_month_list,
         });
       }
     } else { // 如果点击的不是本月的日期
@@ -219,7 +257,7 @@ Page({
    * getDayWithItems
    * 向后端发送代表某天的字符串，获取对应的月份的有日程的日子的数组，更新月历
    */
-  getDayWithItemsByDay: function (str) {
+  getDayWithItemsByMonth: function (year, month) {
     /* 此处为模拟 */
     return [];
   },
