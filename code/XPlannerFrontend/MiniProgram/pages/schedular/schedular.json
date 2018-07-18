@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "日程",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "calendar": "plugin://calendar/calendar"
+  }
+}

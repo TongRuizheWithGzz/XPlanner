@@ -1,0 +1,42 @@
+<view class="weui-navbar" scroll-x="true" scroll-into-view="{{topView}}">
+  <view data-id="{{0}}" class="{{activeIndex == 0 ?'item_on':''}} default-item" bindtap="tabClick">图片识别</view>
+  <view data-id="{{1}}" class="{{activeIndex == 1 ?'item_on':''}} default-item" bindtap="tabClick">文字识别</view>
+</view>
+<swiper bindchange="swipeContent" current="{{activeIndex}}" class="swiper-box">
+  <swiper-item>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <view class="weui-uploader">
+            <view class="weui-uploader__bd">
+              <view class="weui-uploader__files" id="uploaderFiles">
+                <block wx:for="{{files}}" wx:key="*this">
+                  <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                    <image class="weui-uploader__img" src="{{item}}" mode="aspectFill" />
+                  </view>
+                </block>
+              </view>
+              <view class="weui-uploader__input-box">
+                <view class="weui-uploader__input" bindtap="choosePicture">
+                  <image src="/icons/plus.png"></image>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </swiper-item>
+  <swiper-item>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <textarea class="weui-textarea" placeholder="请输入文本" maxlength="200" bindinput="getInputText" />
+        </view>
+      </view>
+    </view>
+    <view class="button-sp-area">
+      <button class="weui-btn" bindtap="showResult" type="primary">提交文本</button>
+    </view>
+  </swiper-item>
+</swiper>

@@ -1,0 +1,46 @@
+<view class="calendar">
+   <calendar year="{{year}}" month="{{month}}" days-color="{{dayList}}" show-more-days="{{true}}" binddayClick="dayClick" bindnextMonth="nextMonth" bindprevMonth="prevMonth"/> 
+   <!-- <calendar year="{{year}}" month="{{month}}" days-color="{{monthList[year + '-' + month]}}" show-more-days="{{true}}" binddayClick="dayClick" bindnextMonth="nextMonth" bindprevMonth="prevMonth"/>  -->
+</view>
+
+<view hidden='{{true}}' class='fixTop' bindtap='unfold'>
+  <text>{{time}}:00 PM</text>
+</view>
+
+<swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:{{height+3}}px">
+
+  <swiper-item class="swiper-item">
+    <!-- <view class="weui-panel">-->
+    <!-- <view class="weui-panel__hd">已安装扩展</view> -->
+    <view class="weui-panel__bd">
+      <block wx:for="{{scheduleItems}}" wx:key="{{item.id}}">
+        <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bind:longpress="" data-id="{{item.id}}" bindtap="detail">
+          <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+            <image class="weui-media-box__thumb" src="/icons/timg.jpg" />
+          </view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+            <view class="weui-media-box__title">
+              <view>
+                <image src="/icons/item.png" class="schedule-icon" />{{item.title}}
+              </view>
+            </view>
+            <view class="weui-media-box__desc">
+              <image src="/icons/time.png" class="schedule-icon" />{{"开始时间 "+item.start_time}}
+              <view class="schedule-end-time">
+                {{"结束时间 " + item.end_time}}
+              </view>
+            </view>
+            <view class="weui-media-box__desc">
+              <image src="/icons/address.png" class="schedule-icon" />{{item.address}}
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+    <!-- </view> -->
+  </swiper-item>
+  <swiper-item>
+    show week
+  </swiper-item>
+</swiper>
+<image src="/icons/plus-circle.png" class="add-schedule" bindtap="addSchedule"></image>

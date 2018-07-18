@@ -1,0 +1,42 @@
+<view class="weui-navbar" scroll-x="true" scroll-into-view="{{topView}}">
+  <view class="{{activeIndex == 0 ?'item_on':''}} default-item" bindtap="tabClick">推荐</view>
+  <view class="{{activeIndex == 1 ?'item_on':''}} default-item" bindtap="tabClick">已安装</view>
+</view>
+<swiper current="{{activeIndex}}" class="swiper-box" duration="100" bindchange="bindChange">
+  <!-- 推荐扩展 -->
+  <swiper-item class="swiper-item">
+    <!-- 幻灯片 -->
+    <swiper indicator-dots="true" autoplay="true" circular="true" interval="2000" duration="500" previous-margin="0px" next-margin="0px">
+      <block wx:for="{{extensions}}" wx:key="{{item.id}}" wx:if="{{!item.visible}}">
+        <swiper-item>
+          <view class="swiper-item {{item.id}}">
+            <image src="/icons/pic_article.png"></image>
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
+    <!-- 宫格 -->
+    <view class="weui-cells__title">今日推荐插件</view>
+    <block wx:for="{{extensions}}" wx:key="{{item.id}}">
+      <navigator wx:if="{{!item.visible}}" url="/pages/planners/extensionDetails/extensionDetails?id={{item.id}}" class="weui-grid" hover-class="weui-grid_active">
+        <image class="weui-grid__icon" src="{{item.icon}}" />
+        <view class="weui-grid__label">{{item.name}}</view>
+      </navigator>
+    </block>
+  </swiper-item>
+  <!-- 已安装扩展 -->
+  <swiper-item class="swiper-item">
+    <view class="weui-grids">
+      <block wx:for="{{extensions}}" wx:key="{{item.id}}">
+        <navigator wx:if="{{item.visible}}" url="{{item.extension_path}}" class="weui-grid" hover-class="weui-grid_active">
+          <view wx:if="{{item.messages > 0}}" class="weui-badge" style="position: absolute;top: 1.0em;right: 1.8em;">
+            {{item.messages}}
+          </view>
+          <image class="weui-grid__icon" src="{{item.icon}}" />
+          <view class="weui-grid__label">{{item.name}}</view>
+        </navigator>
+      </block>
+    </view>
+    <button class="manage-btn" bindtap="gotoManagement">管理已安装扩展</button>
+  </swiper-item>
+</swiper>
