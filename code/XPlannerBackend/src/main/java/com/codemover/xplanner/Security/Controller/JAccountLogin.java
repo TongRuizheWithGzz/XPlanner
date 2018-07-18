@@ -2,7 +2,7 @@ package com.codemover.xplanner.Security.Controller;
 
 import com.codemover.xplanner.Model.Entity.JAccountUser;
 import com.codemover.xplanner.Security.Config.ConstConfig;
-import com.codemover.xplanner.Security.Exception.ErrorProfileResponseException;
+import com.codemover.xplanner.Security.Exception.ParseProfileJsonException;
 import com.codemover.xplanner.Security.Util.UserFactory;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -19,7 +19,6 @@ import org.apache.oltu.oauth2.common.token.OAuthToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,8 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.util.HashMap;
-
-import static com.codemover.xplanner.Security.Config.ConstConfig.*;
 
 @Controller
 @RequestMapping(value = "api/loginByJAccount")
@@ -118,7 +115,7 @@ public class JAccountLogin {
             logger.error("error occurred in authorize", e);
             responseToFrontEnd.put("errMsg", "loginByJAccount:fail");
             return responseToFrontEnd;
-        } catch (ParseException | ErrorProfileResponseException e) {
+        } catch (ParseException | ParseProfileJsonException e) {
             logger.error("error occurred in handling the profile response", e);
             responseToFrontEnd.put("errMsg", "loginByJAccount:fail");
             return responseToFrontEnd;

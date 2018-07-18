@@ -33,6 +33,7 @@ public class JAccountUser extends User {
         return jAccountName;
     }
 
+
     public void setjAccountName(String jAccountName) {
         this.jAccountName = jAccountName;
     }

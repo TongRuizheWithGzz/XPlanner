@@ -7,5 +7,5 @@ import javax.transaction.Transactional;
 @Transactional
 
 public interface UserRepository extends UserBaseRepository<User> {
-
+    User findByUserId(Integer userId);
 }
