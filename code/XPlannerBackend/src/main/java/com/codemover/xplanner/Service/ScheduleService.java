@@ -9,10 +9,6 @@ public interface ScheduleService {
 
     public HashMap<String, Object> findUserSchedule(String username);
 
-    public HashMap<String,Object>  findScheduleitemByDay(Integer year,Integer month,Integer day,String username);
-
-    public HashMap<String,Object> queryDateHavingScheduleitemByYearAndMonth(String username,Integer year,Integer month);
-
 
     public HashMap<String, Object> addScheduleItem(Scheduleitme scheduleitme);
 
@@ -20,5 +16,5 @@ public interface ScheduleService {
 
     public HashMap<String, Object> modifyScheduleItem(Scheduleitme scheduleitme);
 
-
+    public HashMap<String, Object> getScheduledDays(String username,int year,int month);
 }
