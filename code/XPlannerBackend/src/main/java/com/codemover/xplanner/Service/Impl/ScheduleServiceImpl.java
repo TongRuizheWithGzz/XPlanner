@@ -29,11 +29,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     ScheduleItemRepository scheduleItemRepository;
 
     @Override
-    public HashMap<String, Object> findUserSchedule(Integer userId) {
+    public HashMap<String, Object> findUserSchedule(String username) {
 
         HashMap<String, Object> response = new HashMap<>();
         try {
-            User user = userRepository.findByUserId(userId);
+            User user = userRepository.findByUserName(username);
             Set<Scheduleitme> scheduleitmes = user.getScheduleitmes();
             Set<ScheduleitmeDTO> scheduleitmeDTOS = ScheduleItemDTOFactory.createScheduleitmeDTOsFromScheduleitmes(scheduleitmes);
             response.put("errno", 0);
@@ -93,7 +93,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public HashMap<String, Object> getScheduledDays(Integer userId, int year, int month) {
+    public HashMap<String, Object> getScheduledDays(String username, int year, int month) {
         HashMap<String,Object> response = new HashMap<>();
         try {
             Calendar calendar = Calendar.getInstance();
@@ -112,7 +112,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
             Timestamp endding = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
 
-            User user = userRepository.findByUserId(userId);
+            User user = userRepository.findByUserName(username);
 
             List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetween(user, beginning, endding);
             response.put("errno",0);

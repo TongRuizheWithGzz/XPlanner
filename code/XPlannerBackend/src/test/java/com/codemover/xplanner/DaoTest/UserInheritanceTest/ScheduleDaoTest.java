@@ -126,7 +126,7 @@ public class ScheduleDaoTest {
 
         List<Scheduleitme> list = scheduleItemRepository.findAll();
 
-        User user = userRepository.findByUserId(2);
+        User user = userRepository.findByUserName("lihu");
         List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetween(user,beginning,endding);
         System.out.println(scheduleitmeList.size());
     }
