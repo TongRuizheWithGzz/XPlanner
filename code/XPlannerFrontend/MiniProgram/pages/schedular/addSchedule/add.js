@@ -4,13 +4,24 @@ Page({
    * 页面的初始数据
    */
   data: {
-    startDate:"choose date",
-    startTime: "choose time",
-    endDate: "choose date",
-    endTime: "choose time",
+    startDate:"选择日期",
+    startTime: "选择时间",
+    endDate: "选择日期",
+    endTime: "选择时间",
     title:"",
     description:"",
     address:""
+  },
+  onLoad:function(option){
+    this.setData({
+      startDate: "选择日期",
+      startTime: "选择时间",
+      endDate: "选择日期",
+      endTime: "选择时间",
+      title: "",
+      description: "",
+      address: ""
+    })
   },
   titleIp:function(e){
     this.setData({
@@ -48,8 +59,13 @@ Page({
     })
   },
   add:function(){
-    wx.navigateBack({
-      
+    wx.redirectTo({
+      url: '',
+    })
+  },
+  discard:function(){
+    wx.redirectTo({
+      url: '',
     })
   }
 })

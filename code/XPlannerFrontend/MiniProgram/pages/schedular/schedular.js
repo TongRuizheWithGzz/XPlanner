@@ -31,6 +31,7 @@ Page({
     fix: false,
     hideFixTop: true,
     time: 0,
+
     year: 2018,
     month: 7,
     day: 18,
@@ -57,7 +58,13 @@ Page({
     var selected_year = 2018;
     var selected_month = 7;
     var selected_day = 18;
-    var date_with_item = [3, 4, 5, 7, 17, 18, 19, 20, 21, 22, 28];
+    // var date_with_item = [17, 18, 20];
+    var date_with_item = {
+      17: [1, 0],
+      18: [3, 0],
+      20: [2, 0]
+    }
+    // console.log(date_with_item_2[20][0]);
     var tmp_schedule = scheduleItems;
     var tmp_show_items = this.filterScheduleItems(tmp_schedule, selected_date);
 
@@ -138,9 +145,23 @@ Page({
       });
     }
     /* 设置有日程的日期 */
-    for (var i = 0; i < date_with_item.length; i++) {
-      new_day = tmp_day_list[date_with_item[i] - 1].day;
-      tmp_day_list[date_with_item[i] - 1] = {
+    // for (var i = 0; i < date_with_item.length; i++) {
+    //   new_day = tmp_day_list[date_with_item[i] - 1].day;
+    //   tmp_day_list[date_with_item[i] - 1] = {
+    //     month: 'current',
+    //     day: new_day,
+    //     color: 'white',
+    //     background: '#46c4f3',
+    //     loaded: false,
+    //     selected: false,
+    //     haveItems: true,
+    //   };
+    // }
+    console.log(date_with_item);
+    for (var item in date_with_item) {
+      console.log(item);
+      new_day = tmp_day_list[item - 1].day;
+      tmp_day_list[item - 1] = {
         month: 'current',
         day: new_day,
         color: 'white',
@@ -239,120 +260,116 @@ Page({
     }
   },
 
-  /*
-   * dayClick
-   * 响应点击某天的事件
-   */
-  dayClick: function (e) {
-    var new_year = e.detail.year;
-    var new_month = e.detail.month;
-    var new_day = e.detail.day;
-    var old_year = this.data.year;
-    var old_month = this.data.month;
-    var old_day = this.data.day;
-    var show_year = this.data.showYear;
-    var show_month = this.data.showMonth;
-    var new_date = getDateStr(new_year, new_month, new_day);
-    if (new_month == old_month && show_month == old_month && new_year == old_year && show_year == old_year) { // 如果点击的是本月的日期
-      var tmp_day_list = this.data.monthList[old_year + "-" + old_month];
-      if (tmp_day_list[new_day - 1].selected) { // 如果点击已经选中的日期
-        console.log("点击本月已经选中的日期");
-        return;
-      } else if (!tmp_day_list[new_day - 1].loaded) { // 如果点击尚未加载的日期
-        console.log("点击本月尚未加载日程的日期");
-        /* 向后端请求相应日程 */
-        var tmp_items = this.getScheduleItemsByDay(new_date);
-        var tmp_show_items = tmp_items;
-        tmp_items = tmp_items.concat(this.data.scheduleItems); // 合并新旧日程
+  // dayClick: function (e) {
+  //   var new_year = e.detail.year;
+  //   var new_month = e.detail.month;
+  //   var new_day = e.detail.day;
+  //   var old_year = this.data.year;
+  //   var old_month = this.data.month;
+  //   var old_day = this.data.day;
+  //   var show_year = this.data.showYear;
+  //   var show_month = this.data.showMonth;
+  //   var new_date = getDateStr(new_year, new_month, new_day);
+  //   if (new_month == old_month && show_month == old_month && new_year == old_year && show_year == old_year) { // 如果点击的是本月的日期
+  //     var tmp_day_list = this.data.monthList[old_year + "-" + old_month];
+  //     if (tmp_day_list[new_day - 1].selected) { // 如果点击已经选中的日期
+  //       console.log("点击本月已经选中的日期");
+  //       return;
+  //     } else if (!tmp_day_list[new_day - 1].loaded) { // 如果点击尚未加载的日期
+  //       console.log("点击本月尚未加载日程的日期");
+  //       /* 向后端请求相应日程 */
+  //       var tmp_items = this.getScheduleItemsByDay(new_date);
+  //       var tmp_show_items = tmp_items;
+  //       tmp_items = tmp_items.concat(this.data.scheduleItems); // 合并新旧日程
 
-        /* 更新月历显示和日程 */
-        tmp_day_list[old_day - 1] = this.getModifiedOldDay(tmp_day_list[old_day - 1]);
-        tmp_day_list[new_day - 1] = this.getModifiedNewDay(tmp_day_list[new_day - 1]);
-        var tmp_month_list = this.data.monthList;
-        tmp_month_list[old_year + "-" + old_month] = tmp_day_list;
-        this.setData({
-          day: new_day,
-          selectedDate: new_date,
-          showItems: tmp_show_items,
-          monthList: tmp_month_list,
-          scheduleItems: tmp_items,
-        });
-      } else { // 如果点击已经加载、未选中的日期
-        console.log("点击本月已经加载、未选中的日期");
-        console.log(this.data.scheduleItems);
-        var tmp_show_items = this.filterScheduleItems(this.data.scheduleItems, new_date);
-        console.log(tmp_show_items);
+  //       /* 更新月历显示和日程 */
+  //       tmp_day_list[old_day - 1] = this.getModifiedOldDay(tmp_day_list[old_day - 1]);
+  //       tmp_day_list[new_day - 1] = this.getModifiedNewDay(tmp_day_list[new_day - 1]);
+  //       var tmp_month_list = this.data.monthList;
+  //       tmp_month_list[old_year + "-" + old_month] = tmp_day_list;
+  //       this.setData({
+  //         day: new_day,
+  //         selectedDate: new_date,
+  //         showItems: tmp_show_items,
+  //         monthList: tmp_month_list,
+  //         scheduleItems: tmp_items,
+  //       });
+  //     } else { // 如果点击已经加载、未选中的日期
+  //       console.log("点击本月已经加载、未选中的日期");
+  //       console.log(this.data.scheduleItems);
+  //       var tmp_show_items = this.filterScheduleItems(this.data.scheduleItems, new_date);
+  //       console.log(tmp_show_items);
 
-        tmp_day_list[old_day - 1] = this.getModifiedOldDay(tmp_day_list[old_day - 1]);
-        tmp_day_list[new_day - 1] = this.getModifiedNewDay(tmp_day_list[new_day - 1]);
-        var tmp_month_list = this.data.monthList;
-        tmp_month_list[old_year + "-" + old_month] = tmp_day_list;
+  //       tmp_day_list[old_day - 1] = this.getModifiedOldDay(tmp_day_list[old_day - 1]);
+  //       tmp_day_list[new_day - 1] = this.getModifiedNewDay(tmp_day_list[new_day - 1]);
+  //       var tmp_month_list = this.data.monthList;
+  //       tmp_month_list[old_year + "-" + old_month] = tmp_day_list;
 
-        this.setData({
-          day: new_day,
-          selectedDate: new_date,
-          showItems: tmp_show_items,
-          monthList: tmp_month_list,
-        });
-      }
-    } else if (old_month != new_month && old_month == show_month && show_year == old_year) { // 如果点击的是本页上显示的非本月的日期
-      console.log("点击本页上显示的非本月的日期");
-    } else { // 如果点击的是非选中日期所在页的日期
-      if (show_month == new_month) { // 如果点击非选中日期所在页上的主月日期
-        console.log("点击非选中日期所在页上的主月日期");
-        var tmp_day_list = this.data.monthList[new_year + "-" + new_month];
-        if (!tmp_day_list[new_day - 1].loaded) { // 若未加载
-          /* 向后端请求相应日程 */
-          var tmp_items = this.getScheduleItemsByDay(new_date);
-          var tmp_show_items = tmp_items;
-          console.log(new_year + "-" + new_month + "-" + new_day);
-          console.log(tmp_items);
-          tmp_items = tmp_items.concat(this.data.scheduleItems); // 合并新旧日程
+  //       this.setData({
+  //         day: new_day,
+  //         selectedDate: new_date,
+  //         showItems: tmp_show_items,
+  //         monthList: tmp_month_list,
+  //       });
+  //     }
+  //   } else if (old_month != new_month && old_month == show_month && show_year == old_year) { // 如果点击的是本页上显示的非本月的日期
+  //     console.log("点击本页上显示的非本月的日期");
+  //   } else { // 如果点击的是非选中日期所在页的日期
+  //     if (show_month == new_month) { // 如果点击非选中日期所在页上的主月日期
+  //       console.log("点击非选中日期所在页上的主月日期");
+  //       var tmp_day_list = this.data.monthList[new_year + "-" + new_month];
+  //       if (!tmp_day_list[new_day - 1].loaded) { // 若未加载
+  //         /* 向后端请求相应日程 */
+  //         var tmp_items = this.getScheduleItemsByDay(new_date);
+  //         var tmp_show_items = tmp_items;
+  //         console.log(new_year + "-" + new_month + "-" + new_day);
+  //         console.log(tmp_items);
+  //         tmp_items = tmp_items.concat(this.data.scheduleItems); // 合并新旧日程
 
-          /* 更新monthList */
-          var new_day_list = this.data.monthList[show_year + "-" + show_month];
-          new_day_list[new_day - 1] = this.getModifiedNewDay(new_day_list[new_day - 1]);
-          var old_day_list = this.data.monthList[old_year + "-" + old_month];
-          old_day_list[old_day - 1] = this.getModifiedOldDay(old_day_list[old_day - 1]);
-          var tmp_month_list = this.data.monthList;
-          tmp_month_list[new_year + "-" + new_month] = new_day_list;
-          tmp_month_list[old_year + "-" + old_month] = old_day_list;
+  //         /* 更新monthList */
+  //         var new_day_list = this.data.monthList[show_year + "-" + show_month];
+  //         new_day_list[new_day - 1] = this.getModifiedNewDay(new_day_list[new_day - 1]);
+  //         var old_day_list = this.data.monthList[old_year + "-" + old_month];
+  //         old_day_list[old_day - 1] = this.getModifiedOldDay(old_day_list[old_day - 1]);
+  //         var tmp_month_list = this.data.monthList;
+  //         tmp_month_list[new_year + "-" + new_month] = new_day_list;
+  //         tmp_month_list[old_year + "-" + old_month] = old_day_list;
 
-          this.setData({
-            year: new_year,
-            month: new_month,
-            day: new_day,
-            selectedDate: new_date,
-            scheduleItems: tmp_items,
-            showItems: tmp_show_items,
-            monthList: tmp_month_list,
-          })
-        } else { // 若已加载
-          var tmp_show_items = this.filterScheduleItems(this.data.scheduleItems, new_date);
-          console.log(tmp_show_items);
+  //         this.setData({
+  //           year: new_year,
+  //           month: new_month,
+  //           day: new_day,
+  //           selectedDate: new_date,
+  //           scheduleItems: tmp_items,
+  //           showItems: tmp_show_items,
+  //           monthList: tmp_month_list,
+  //         })
+  //       } else { // 若已加载
+  //         var tmp_show_items = this.filterScheduleItems(this.data.scheduleItems, new_date);
+  //         console.log(tmp_show_items);
 
-          var new_day_list = this.data.monthList[show_year + "-" + show_month];
-          new_day_list[new_day - 1] = this.getModifiedNewDay(new_day_list[new_day - 1]);
-          var old_day_list = this.data.monthList[old_year + "-" + old_month];
-          old_day_list[old_day - 1] = this.getModifiedOldDay(old_day_list[old_day - 1]);
-          var tmp_month_list = this.data.monthList;
-          tmp_month_list[new_year + "-" + new_month] = new_day_list;
-          tmp_month_list[old_year + "-" + old_month] = old_day_list;
+  //         var new_day_list = this.data.monthList[show_year + "-" + show_month];
+  //         new_day_list[new_day - 1] = this.getModifiedNewDay(new_day_list[new_day - 1]);
+  //         var old_day_list = this.data.monthList[old_year + "-" + old_month];
+  //         old_day_list[old_day - 1] = this.getModifiedOldDay(old_day_list[old_day - 1]);
+  //         var tmp_month_list = this.data.monthList;
+  //         tmp_month_list[new_year + "-" + new_month] = new_day_list;
+  //         tmp_month_list[old_year + "-" + old_month] = old_day_list;
 
-          this.setData({
-            year: new_year,
-            month: new_month,
-            day: new_day,
-            selectedDate: new_date,
-            showItems: tmp_show_items,
-            monthList: tmp_month_list,
-          })
-        }
-      } else { // 如果点击非选中日期所在页上的非主月日期
-        console.log("点击非选中日期所在页上的非主月日期");
-      }
-    }
-  },
+  //         this.setData({
+  //           year: new_year,
+  //           month: new_month,
+  //           day: new_day,
+  //           selectedDate: new_date,
+  //           showItems: tmp_show_items,
+  //           monthList: tmp_month_list,
+  //         })
+  //       }
+  //     } else { // 如果点击非选中日期所在页上的非主月日期
+  //       console.log("点击非选中日期所在页上的非主月日期");
+  //     }
+  //   }
+  // },
 
   /*
    * getDayWithItems
@@ -360,7 +377,11 @@ Page({
    */
   getDayWithItemsByMonth: function (year, month) {
     /* 此处为模拟 */
-    return [12, 13, 20];
+    return {
+      12: [2, 0],
+      13: [1, 0],
+      20: [1, 0],
+    };
   },
 
   /*
@@ -388,11 +409,14 @@ Page({
           "address": "二餐",
           "scheduleItem_id": 5,
           "user_id": 1
-        },
+        }
+      ];
+    } else if (str == "2018-07-17") {
+      return [
         {
           "title": "上学",
-          "start_time": "2018-07-20",
-          "end_time": "2018-07-20",
+          "start_time": "2018-07-17",
+          "end_time": "2018-07-17",
           "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
           "address": "二餐",
           "scheduleItem_id": 6,
@@ -419,20 +443,35 @@ Page({
           "scheduleItem_id": 8,
           "user_id": 1
         },
+      ];
+    } else if (str == "2018-06-20") {
+      return [
         {
           "title": "运动",
-          "start_time": "2018-06-12 08:00",
-          "end_time": "2018-06-12 10:00",
+          "start_time": "2018-06-20 08:00",
+          "end_time": "2018-06-20 10:00",
           "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
           "address": "二餐",
           "scheduleItem_id": 9,
           "user_id": 1
         },
-      ]
+      ];
+    } else if (str == "2018-06-13") {
+      return [
+        {
+          "title": "运动",
+          "start_time": "2018-06-13 08:00",
+          "end_time": "2018-06-13 10:00",
+          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+          "address": "二餐",
+          "scheduleItem_id": 10,
+          "user_id": 1
+        },
+      ];
     } else {
       console.log("no record!");
+      return [];
     }
-    return [];
   },
 
   /*
@@ -465,6 +504,10 @@ Page({
     return day_obj;
   },
 
+  /*
+   * filterScheduleItems
+   * 从日程的列表中获得相应日期的日程数组
+   */
   filterScheduleItems: function (items, date) {
     var result = [];
     for (var i = 0; i < items.length; i++) {
@@ -476,6 +519,10 @@ Page({
     return result;
   },
 
+  /*
+   * dayClick
+   * 响应点击某天的事件
+   */
   selectDay: function (e) {
     var new_year = e.detail.year;
     var new_month = e.detail.month;

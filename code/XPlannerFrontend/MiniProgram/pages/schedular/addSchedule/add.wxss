@@ -1,62 +1,79 @@
 .input{
   height: 100%;
-  padding-left: 22px;
   display:flex;
   flex-direction: column;
-  justify-content: space-around;
   background-color: #ffffff;
 }
-.block{
-  width:80%;
-  padding-bottom: 6%;
+.block,.inter{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border-top: 2px solid #dbdbdb;
+  padding-left: 5%;
+  height: 60px;
+}
+.block1{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-bottom: 1px solid #dbdbdb;
+  padding-left: 5%;
+  padding-top:3%;
+  height:174px;
 }
 .ip, .ph{
-  border-bottom: 1px solid #dbdbdb;
-  font-family: Courier New, Courier, monospace;
-  font-size: 14px;
+  font-size: 18px;
+  width:265px;
+  height: 100%;
+  text-align: right;
 }
-.choose{
-  display:flex;
-  flex-direction: row;
-  justify-content: space-around;
-  font-family: Courier New, Courier, monospace;
-  font-size: 14px;  
-  color: #bfbfbf;
+.ip1{
+  padding-top: 10px;
+  width:283px;
 }
-.title{
-  font-size:22px;
-  color:fuchsia;
-}
-.description{
-  font-size:22px;
-  color:aqua;  
+.title ,.description ,.text1, .text2, .text3{
+  font-size:18px;
+  left: 20px;
+  right:10px;
+  width:100px;
 }
 
-.text1{
-  font-size:22px;
-  color:darkorange;
-}
-
-.text2{
-  font-size:22px;
-  color:chocolate;
-}
-.text3{
-  font-size:22px;
-  color:lawngreen;
-}
 .date, .time{
-  border-radius: 2px;
-  text-align: center;
-  width:130px;
+  text-align: right;
+  width:132px;
   color: #707070;
-  text-decoration: underline;
-  
 }
-.time{
-  padding-left: 9px;  
+.inter{
+  font-size:16px;
+  color:#8a8a8a;
+  background-color: #f0f0f0;
+  vertical-align: center;
+  padding-left: 5%;
+  padding-bottom: 0px;
+  height: 45px;
 }
-.add{
-  font-weight:bold;
-  text-decoration: underline;
+.icon{
+  height:25px;
+  width:25px;
+  padding-right: 15px;
+}
+.buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 5%;
+  align-items: center;
+  width:385px;
+}
+.button{
+  border: 3px solid #c8c8c8;
+  border-radius: 10px;
+  height: 40px;
+  width: 170px;
+  color: #989898;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

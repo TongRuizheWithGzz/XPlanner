@@ -15,9 +15,9 @@
     <view class="weui-panel__bd">
       <block wx:for="{{showItems}}" wx:key="{{item.scheduleItem_id}}">
         <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bind:longpress="" data-id="{{item.id}}" bindtap="detail">
-          <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+          <!-- <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="/icons/timg.jpg" />
-          </view>
+          </view> -->
           <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
             <view class="weui-media-box__title">
               <view>
