@@ -1,5 +1,5 @@
 <view class="calendar">
-  <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{monthList[showYear + '-' + showMonth]}}" show-more-days="{{true}}" binddayClick="dayClick" bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
+  <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{monthList[showYear + '-' + showMonth]}}" show-more-days="{{true}}" binddayClick="selectDay" bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
 </view>
 
 <view hidden='{{true}}' class='fixTop' bindtap='unfold'>

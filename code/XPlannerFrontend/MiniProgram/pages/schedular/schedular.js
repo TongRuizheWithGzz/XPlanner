@@ -488,13 +488,25 @@ Page({
     var new_date = getDateStr(new_year, new_month, new_day);
     var tmp_month_list = this.data.monthList;
 
-    if (new_month == old_month &&
-      new_year == old_year &&
-      show_month == old_month &&
-      show_year == old_year) {
+    if ((new_day == old_day && new_month == old_month && // 判断是否点击同一天
+      new_year == old_year && show_month == old_month &&
+      show_year == old_year) ||
+      (show_month == old_month && show_year == old_year && // 判断是否点击同页上不同月份的日期
+        new_month != old_month) ||
+      ((show_month != old_month || show_year != old_year)) && // 判断是否点击非已选择日期所在页上非主月日期
+      (show_month != new_month)) {
+      console.log("Do nothing.");
       return;
     }
 
+    this.setData({
+      year: new_year,
+      month: new_month,
+      day: new_day,
+      selectedDate: new_date,
+    });
+
+    /* 设置控制日程显示的showItems和scheduleItems */
     var new_day_list = this.data.monthList[new_year + "-" + new_month];
     if (!new_day_list[new_day - 1].loaded) { // 判断是否已经加载
       var tmp_items = this.getScheduleItemsByDay(new_date);
@@ -511,11 +523,20 @@ Page({
       })
     }
 
-    new_day_list[old_day - 1] = this.getModifiedOldDay(new_day_list[old_day - 1]);
-    tmp_month_list[old_year + "-" + old_month] = new_day_list;
-    if (!(new_month == old_month &&
-      new_year == old_year)) { // 判断是否在当前月内选择
+    /* 设置控制月历显示的monthList */
+    if (new_month == old_month && new_year == old_year) { // 判断是否在当前月内选择
+      new_day_list[old_day - 1] = this.getModifiedOldDay(new_day_list[old_day - 1]);
+      new_day_list[new_day - 1] = this.getModifiedNewDay(new_day_list[new_day - 1]);
+      tmp_month_list[old_year + "-" + old_month] = new_day_list;
+    } else {
+      var old_day_list = this.data.monthList[old_year + "-" + old_month];
+      old_day_list[old_day - 1] = this.getModifiedOldDay(old_day_list[old_day - 1]);
+      new_day_list[new_day - 1] = this.getModifiedNewDay(new_day_list[new_day - 1]);
+      tmp_month_list[old_year + "-" + old_month] = old_day_list;
+      tmp_month_list[new_year + "-" + new_month] = new_day_list;
     }
-
+    this.setData({
+      monthList: tmp_month_list,
+    });
   }
 })
