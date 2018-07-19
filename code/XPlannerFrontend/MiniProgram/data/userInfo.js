@@ -1,5 +1,5 @@
 var userInfo = {
-  id: 0,
+  id: 1,
   name: "shit",
   avatar: "/icons/timg.jpg"
 }

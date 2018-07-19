@@ -1,8 +1,8 @@
 var extensions = require("/data/extensions");
-// var userInfo = require("/data/userInfo");
+var userInfo = require("/data/userInfo");
 var scheduleItems = require("/data/scheduleItem");
 
-function handleDatafromBackEnd(extensions_raw) {
+function warpExtensions(extensions_raw) {
   var result = [];
   for (var i = 0; i < extensions_raw.length; i++) {
     var tmp = new Object();
@@ -20,6 +20,26 @@ function handleDatafromBackEnd(extensions_raw) {
   return result;
 }
 
+function warpScheduleItems(scheduleItem_raw) {
+  var result = [];
+  for (var i = 0; i < scheduleItem_raw.length; i++) {
+    var tmp = new Object();
+    tmp.title = scheduleItem_raw[i].title;
+    tmp.start_time = scheduleItem_raw[i].start_time;
+    tmp.end_time = scheduleItem_raw[i].end_time;
+    tmp.description = scheduleItem_raw[i].description;
+    tmp.address = scheduleItem_raw[i].address;
+    tmp.scheduleItem_id = scheduleItem_raw[i].scheduleItem_id;
+    tmp.user_id = scheduleItem_raw[i].user_id;
+    tmp.start_concret_time = tmp.start_time.slice(11, 16);
+    tmp.end_concret_time = tmp.end_time.slice(11, 16);
+    // console.log(tmp.start_concret_time);
+    result.push(tmp);
+  }
+  console.log("Global scheduleItems");
+  console.log(result);
+  return result;
+}
 
 //app.js
 App({
@@ -55,12 +75,17 @@ App({
         }
       }
     });
-    // console.log(this.globalData.userInfo);
+
+    /* 向后端发送选择的日期，获取当月有日程的日期的数组和当天的日期，设置globalData，注意要使用包装函数 */
+    /* 另外，使用wx.getStorage获取存储的选区的日期，也需要设置globalData */
+
   },
   globalData: {
-    userInfo: null,
-    extensions: handleDatafromBackEnd(extensions),
+    date: "2018-07-18",
+    userInfo: userInfo,
+    extensions: warpExtensions(extensions),
     userFoodEaten: [],
-    scheduleItems: scheduleItems,
+    scheduleItems: warpScheduleItems(scheduleItems),
+    // dayWithItems: {17: [1, 0], 18: [3, 0], 20: [2, 0]},
   }
 })

@@ -2,6 +2,7 @@
   "pages": [
     "pages/schedular/schedular",
     "pages/schedular/scheduleDetails/scheduleDetails",
+    "pages/schedular/addSchedule/add",
     "pages/planners/planners",
     "pages/planners/management/management",
     "pages/planners/extensionDetails/extensionDetails",
@@ -12,8 +13,7 @@
     "extensions/keeper/selector/selector",
     "extensions/keeper/camera/camera",
     "extensions/keeper/output/output",
-    "extensions/spider/spider",
-    "pages/schedular/addSchedule/add"
+    "extensions/spider/spider"
   ],
   "tabBar": {
     "color": "#515151",

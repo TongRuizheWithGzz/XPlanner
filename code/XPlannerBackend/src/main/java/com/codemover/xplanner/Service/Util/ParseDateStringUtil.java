@@ -10,7 +10,14 @@ public class ParseDateStringUtil {
         try {
             return Integer.parseInt(dayString);
         } catch (NumberFormatException e) {
-            String validToken = parseChineseStringInHundred(dayString);
+            try {
+
+                String validToken = parseChineseStringInHundred(dayString);
+                DateUtil dateUtil = new DateUtil();
+                return dateUtil.String2Int(validToken);
+            } catch (NumberFormatException e2) {
+                throw e2;
+            }
 
         }
     }
@@ -34,7 +41,7 @@ public class ParseDateStringUtil {
 
         switch (ChineseNumber.length()) {
             case (1): {
-                if (strings.contains(ChineseNumber))
+                if (strings.contains(ChineseNumber) || ChineseNumber.equals("十"))
                     return ChineseNumber;
             }
             case (2): {
