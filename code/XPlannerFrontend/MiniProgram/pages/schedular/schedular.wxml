@@ -14,7 +14,7 @@
     <!-- <view class="weui-panel__hd">已安装扩展</view> -->
     <view class="weui-panel__bd">
       <block wx:for="{{showItems}}" wx:key="{{item.scheduleItem_id}}">
-        <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bind:longpress="" data-id="{{item.id}}" bindtap="detail">
+        <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bind:longpress="removeSchedule" data-id="{{item.id}}" bindtap="detail">
           <!-- <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="/icons/timg.jpg" />
           </view> -->
@@ -33,6 +33,7 @@
             <view class="weui-media-box__desc">
               <image src="/icons/address.png" class="schedule-icon" />{{item.address}}
             </view>
+            <!-- <view bindtap="removeSchedule">sbbbbbbbbbbbbbbbbbbb</view> -->
           </view>
         </view>
       </block>

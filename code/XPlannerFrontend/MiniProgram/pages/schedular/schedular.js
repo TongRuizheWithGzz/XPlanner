@@ -108,6 +108,19 @@ Page({
       url: '/pages/schedular/addSchedule/add',
     })
   },
+
+  /*
+   * removeSchedule
+   * 移除日程
+   */
+  removeSchedule(e) {
+    console.log("sb");
+    /* 更改scheduleItems和showItems */
+    var tmp_items = this.data.scheduleItems;
+    var tmp_show_items = this.data.showItems;
+    console.log(e.currentTarget.dataset.id);
+  },
+
   onPageScroll: function (e) {
     if (e.scrollTop > 228) {
       this.setData({
