@@ -1,5 +1,5 @@
 {
-  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarBackgroundColor": "yellow",
   "navigationBarTextStyle": "black",
-  "navigationBarTitleText": "添加日程"
+  "navigationBarTitleText": "日程"
 }

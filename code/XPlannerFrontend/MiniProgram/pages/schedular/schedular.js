@@ -1,9 +1,14 @@
 var app = getApp();
 var sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
-var moment = require("../../component/moment");
-var selectedDate = "2018-1-10";
-var scheduleItems = require("../../data/scheduleItem");
+var scheduleItems = app.globalData.scheduleItems;
 const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
+
+function getDateStr(year, month, day) {
+  if (month < 10) month = "0" + month;
+  if (day < 10) day = "0" + day;
+  console.log("" + year + "-" + month + "-" + day);
+  return "" + year + "-" + month + "-" + day;
+}
 
 Page({
   data: {
@@ -19,14 +24,18 @@ Page({
     index: 0,
     sliderOffset: 0,
     sliderLeft: 0,
-    scheduleItems: [],
+    showItems: [],
     height: 0,
     fix: false,
     hideFixTop: true,
     time: 0,
+
     year: 2018,
     month: 7,
     day: 18,
+    selectedDate: "2018-07-18",
+    showYear: 2018,
+    showMonth: 7,
     monthStr: MONTHS[new Date().getMonth()],
     dayList: [],
     monthList: {},
@@ -43,12 +52,16 @@ Page({
     });
 
     /* 获取选择的日期，向后端发送选择的日期，要求获取有日程的日子的数组和当天的日程列表 */
-    var selected_date = selectedDate;
+    var selected_date = "2018-07-18";
     var selected_year = 2018;
     var selected_month = 7;
     var selected_day = 18;
-    var date_with_item = [3, 4, 5, 7, 17, 18, 19, 20, 21, 22, 28];
-    var tmp_schedule = scheduleItems;
+    var date_with_item = {
+      17: [1, 0],
+      18: [3, 0],
+      20: [2, 0]
+    }
+    var tmp_show_items = this.filterScheduleItems(app.globalData.scheduleItems, selected_date);
 
     /* 生成本月对应的dayList */
     var tmp_day_list = this.generateDayList(date_with_item, selected_year, selected_month, selected_day);
@@ -64,8 +77,9 @@ Page({
       year: selected_year,
       month: selected_month,
       day: selected_day,
-      scheduleItems: tmp_schedule,
-      height: 86.796875 * (that.data.scheduleItems.length) + 540,
+      selectedDate: selected_date,
+      showItems: tmp_show_items,
+      height: 86.796875 * (app.globalData.scheduleItems.length) + 540,
     })
   },
   bindChange: function (e) {
@@ -83,11 +97,59 @@ Page({
         this.data.tabs[this.data.activeIndex],
     })
   },
+
+  /*
+   * addSchedule
+   * 添加日程
+   */
   addSchedule() {
     wx.navigateTo({
       url: '/pages/schedular/addSchedule/add',
     })
   },
+
+  /*
+   * removeSchedule
+   * 移除日程
+   */
+  removeSchedule(e) {
+    /* 更改scheduleItems */
+    var tmp_items = app.globalData.scheduleItems;
+    var tmp_show_items = this.data.showItems;
+    console.log(e.currentTarget.dataset.scheduleItemId);
+    for (var i = 0; i < tmp_items.length; i++) {
+      if (tmp_items[i].scheduleItem_id == e.currentTarget.dataset.scheduleItemId) {
+        console.log("Removing ");
+        console.log(tmp_items[i]);
+        tmp_items.splice(i, 1);
+      }
+    }
+    app.globalData.scheduleItems = tmp_items;
+
+    /* 更改removeSchedule */
+    for (var i = 0; i < tmp_show_items.length; i++) {
+      if (tmp_show_items[i].scheduleItem_id == e.currentTarget.dataset.scheduleItemId) {
+        tmp_show_items.splice(i, 1);
+        if (tmp_show_items.length == 0) {
+          /* 设置monthList */
+          var tmp_month_list = this.data.monthList;
+          var tmp_day_list = tmp_month_list[this.data.year + "-" + this.data.month];
+          tmp_day_list[this.data.day - 1].haveItems = false;
+          tmp_month_list[this.data.year + "-" + this.data.month] = tmp_day_list;
+          this.setData({
+            showItems: tmp_show_items,
+            monthList: tmp_month_list,
+          });
+        } else {
+          this.setData({
+            showItems: tmp_show_items
+          })
+        }
+      }
+    }
+    return;
+  },
+
   onPageScroll: function (e) {
     if (e.scrollTop > 228) {
       this.setData({
@@ -125,9 +187,11 @@ Page({
       });
     }
     /* 设置有日程的日期 */
-    for (var i = 0; i < date_with_item.length; i++) {
-      new_day = tmp_day_list[date_with_item[i] - 1].day;
-      tmp_day_list[date_with_item[i] - 1] = {
+    console.log(date_with_item);
+    for (var item in date_with_item) {
+      console.log(item);
+      new_day = tmp_day_list[item - 1].day;
+      tmp_day_list[item - 1] = {
         month: 'current',
         day: new_day,
         color: 'white',
@@ -138,6 +202,8 @@ Page({
       };
     }
     /* 设置选中的日期 */
+    if (selected_day == 0)
+      return tmp_day_list;
     new_day = tmp_day_list[selected_day - 1].day;
     var have_items = tmp_day_list[selected_day - 1].haveItems;
     tmp_day_list[selected_day - 1] = {
@@ -145,7 +211,7 @@ Page({
       day: new_day,
       color: 'white',
       background: '#ffb72b',
-      loaded: false,
+      loaded: true,
       selected: true,
       haveItems: have_items,
     };
@@ -157,7 +223,35 @@ Page({
    * 月历向前翻页触发事件
    */
   prevMonth: function () {
+    var year = this.data.showYear;
+    var month = this.data.showMonth;
+    if (month == 1) { // 判断是否是1月
+      year--;
+      month = 12;
+    } else {
+      month--;
+    }
 
+    if (!this.data.monthList[year + "-" + month]) { // 判断前端是否已经加载对应月的信息
+      /* 向后端发送前一个月的信息，获取对应的有日程的日期数组 */
+      var day_with_items = this.getDayWithItemsByMonth(year, month);
+      var tmp_month_list = this.data.monthList;
+      tmp_month_list[year + "-" + month] = this.generateDayList(day_with_items, year, month, 0);
+      this.setData({
+        monthList: tmp_month_list,
+        showYear: year,
+        showMonth: month,
+      });
+      console.log(this.data.showYear + " " + this.data.showMonth);
+      console.log(this.data.monthList);
+    } else {
+      this.setData({
+        showYear: year,
+        showMonth: month,
+      });
+      console.log(this.data.showYear + " " + this.data.showMonth);
+      console.log(this.data.monthList);
+    }
   },
 
   /*
@@ -165,72 +259,138 @@ Page({
    * 月历向后翻页触发事件
    */
   nextMonth: function () {
+    var year = this.data.showYear;
+    var month = this.data.showMonth;
+    if (month == 12) { // 判断是否是1月
+      year++;
+      month = 1;
+    } else {
+      month++;
+    }
 
-  },
-
-  /*
-   * dayClick
-   * 响应点击某天的事件
-   */
-  dayClick: function (e) {
-    var tmp_year = e.detail.year;
-    var tmp_month = e.detail.month;
-    var tmp_day = e.detail.day;
-    if (tmp_month == this.data.month) { // 如果点击的是本月的日期
-      if (this.data.dayList[tmp_day - 1].selected) { // 如果点击已经选中的日期
-        console.log("点击本月已经选中的日期");
-        return;
-      } else if (!this.data.dayList[tmp_day - 1].loaded) { // 如果点击尚未加载的日期
-        console.log("点击本月尚未加载日程的日期");
-        /* 向后端请求相应日程 */
-        var tmp_items = this.getScheduleItemsByDay(tmp_year + "-" + tmp_month + "-" + tmp_day);
-        tmp_items = tmp_items.concat(this.data.scheduleItems); // 合并新旧日程
-        console.log("得到新日程列表");
-
-        /* 更新月历显示和日程 */
-        var tmp_day_list = this.data.dayList;
-        /* 更新旧日期的显示 */
-        tmp_day_list[this.data.day - 1] = this.getModifiedOldDay(tmp_day_list[this.data.day - 1]);
-        /* 更新新日期的显示 */
-        tmp_day_list[tmp_day - 1] = this.getModifiedNewDay(tmp_day_list[tmp_day - 1]);
-        this.setData({
-          day: tmp_day,
-          dayList: tmp_day_list,
-          scheduleItems: tmp_items,
-        });
-      } else { // 如果点击已经加载、未选中的日期
-        var tmp_day_list = this.data.dayList;
-        console.log("点击已经加载、未选中的日期");
-        /* 更新旧日期的显示 */
-        tmp_day_list[this.data.day - 1] = this.getModifiedOldDay(tmp_day_list[this.data.day - 1]);
-        /* 更新新日期的显示 */
-        tmp_day_list[tmp_day - 1] = this.getModifiedNewDay(tmp_day_list[tmp_day - 1]);
-        this.setData({
-          day: tmp_day,
-          dayList: tmp_day_list,
-        });
-      }
-    } else { // 如果点击的不是本月的日期
-      console.log("点击的不是本月的日期");
+    if (!this.data.monthList[year + "-" + month]) { // 判断前端是否已经加载对应月的信息
+      /* 向后端发送后一个月的信息，获取对应的有日程的日期数组 */
+      var day_with_items = this.getDayWithItemsByMonth(year, month);
+      var tmp_month_list = this.data.monthList;
+      tmp_month_list[year + "-" + month] = this.generateDayList(day_with_items, year, month, 0);
+      this.setData({
+        monthList: tmp_month_list,
+        showYear: year,
+        showMonth: month,
+      });
+      console.log(this.data.showYear + " " + this.data.showMonth);
+      console.log(this.data.monthList);
+    } else {
+      this.setData({
+        showYear: year,
+        showMonth: month,
+      });
+      console.log(this.data.showYear + " " + this.data.showMonth);
+      console.log(this.data.monthList);
     }
   },
 
   /*
    * getDayWithItems
-   * 向后端发送代表某天的字符串，获取对应的月份的有日程的日子的数组，更新月历
+   * 向后端发送代表某天的字符串，获取对应的月份的有日程的日子的数组
    */
-  getDayWithItemsByDay: function (str) {
+  getDayWithItemsByMonth: function (year, month) {
     /* 此处为模拟 */
-    return [];
+    return {
+      12: [2, 0],
+      13: [1, 0],
+      20: [1, 0],
+    };
   },
 
   /*
    * getScheduleItemsByDay
-   * 向后端发送代表某天的字符串，获取对应的日期的日程列表，更新日程和月历
+   * 向后端发送代表某天的字符串，获取对应的日期的日程列表
    */
   getScheduleItemsByDay: function (str) {
     /* 此处为模拟 */
-    return [];
+    if (str == "2018-07-20") {
+      return [
+        {
+          "title": "上学",
+          "start_time": "2018-07-20",
+          "end_time": "2018-07-20",
+          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+          "address": "二餐",
+          "scheduleItem_id": 4,
+          "user_id": 1
+        },
+        {
+          "title": "运动",
+          "start_time": "2018-07-20",
+          "end_time": "2018-07-20",
+          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+          "address": "二餐",
+          "scheduleItem_id": 5,
+          "user_id": 1
+        }
+      ];
+    } else if (str == "2018-07-17") {
+      return [
+        {
+          "title": "上学",
+          "start_time": "2018-07-17",
+          "end_time": "2018-07-17",
+          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+          "address": "二餐",
+          "scheduleItem_id": 6,
+          "user_id": 1
+        },
+      ];
+    } else if (str == "2018-06-12") {
+      return [
+        {
+          "title": "运动",
+          "start_time": "2018-06-12 08:00",
+          "end_time": "2018-06-12 10:00",
+          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+          "address": "二餐",
+          "scheduleItem_id": 7,
+          "user_id": 1
+        },
+        {
+          "title": "上学",
+          "start_time": "2018-06-12 08:00",
+          "end_time": "2018-06-12 10:00",
+          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+          "address": "二餐",
+          "scheduleItem_id": 8,
+          "user_id": 1
+        },
+      ];
+    } else if (str == "2018-06-20") {
+      return [
+        {
+          "title": "运动",
+          "start_time": "2018-06-20 08:00",
+          "end_time": "2018-06-20 10:00",
+          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+          "address": "二餐",
+          "scheduleItem_id": 9,
+          "user_id": 1
+        },
+      ];
+    } else if (str == "2018-06-13") {
+      return [
+        {
+          "title": "运动",
+          "start_time": "2018-06-13 08:00",
+          "end_time": "2018-06-13 10:00",
+          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+          "address": "二餐",
+          "scheduleItem_id": 10,
+          "user_id": 1
+        },
+      ];
+    } else {
+      console.log("no record!");
+      return [];
+    }
   },
 
   /*
@@ -261,5 +421,85 @@ Page({
       day_obj.background = '#fff'; // ?
     }
     return day_obj;
+  },
+
+  /*
+   * filterScheduleItems
+   * 从日程的列表中获得相应日期的日程数组
+   */
+  filterScheduleItems: function (items, date) {
+    var result = [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].start_time.slice(0, 10) == date) {
+        console.log(items[i].start_time.slice(0, 10) + "%");
+        result.push(items[i]);
+      }
+    }
+    return result;
+  },
+
+  /*
+   * dayClick
+   * 响应点击某天的事件
+   */
+  selectDay: function (e) {
+    var new_year = e.detail.year;
+    var new_month = e.detail.month;
+    var new_day = e.detail.day;
+    var old_year = this.data.year;
+    var old_month = this.data.month;
+    var old_day = this.data.day;
+    var show_year = this.data.showYear;
+    var show_month = this.data.showMonth;
+    var new_date = getDateStr(new_year, new_month, new_day);
+    var tmp_month_list = this.data.monthList;
+
+    if ((new_day == old_day && new_month == old_month && // 判断是否点击同一天
+      new_year == old_year && show_month == old_month &&
+      show_year == old_year) ||
+      (show_month == old_month && show_year == old_year && // 判断是否点击同页上不同月份的日期
+        new_month != old_month) ||
+      ((show_month != old_month || show_year != old_year)) && // 判断是否点击非已选择日期所在页上非主月日期
+      (show_month != new_month)) {
+      console.log("Do nothing.");
+      return;
+    }
+
+    this.setData({
+      year: new_year,
+      month: new_month,
+      day: new_day,
+      selectedDate: new_date,
+    });
+
+    /* 设置控制日程显示的showItems和scheduleItems */
+    var new_day_list = this.data.monthList[new_year + "-" + new_month];
+    if (!new_day_list[new_day - 1].loaded) { // 判断是否已经加载
+      var tmp_items = this.getScheduleItemsByDay(new_date);
+      var tmp_show_items = tmp_items;
+      tmp_items = tmp_items.concat(app.globalData.scheduleItems);
+      app.globalData.scheduleItems = tmp_items;
+    } else {
+      var tmp_show_items = this.filterScheduleItems(app.globalData.scheduleItems, new_date);
+    }
+    this.setData({
+      showItems: tmp_show_items,
+    })
+
+    /* 设置控制月历显示的monthList */
+    if (new_month == old_month && new_year == old_year) { // 判断是否在当前月内选择
+      new_day_list[old_day - 1] = this.getModifiedOldDay(new_day_list[old_day - 1]);
+      new_day_list[new_day - 1] = this.getModifiedNewDay(new_day_list[new_day - 1]);
+      tmp_month_list[old_year + "-" + old_month] = new_day_list;
+    } else {
+      var old_day_list = this.data.monthList[old_year + "-" + old_month];
+      old_day_list[old_day - 1] = this.getModifiedOldDay(old_day_list[old_day - 1]);
+      new_day_list[new_day - 1] = this.getModifiedNewDay(new_day_list[new_day - 1]);
+      tmp_month_list[old_year + "-" + old_month] = old_day_list;
+      tmp_month_list[new_year + "-" + new_month] = new_day_list;
+    }
+    this.setData({
+      monthList: tmp_month_list,
+    });
   }
 })

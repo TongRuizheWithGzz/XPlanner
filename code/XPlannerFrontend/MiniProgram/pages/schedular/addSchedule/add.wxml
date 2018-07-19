@@ -1,37 +1,47 @@
 <view class='input'>
-
-  <view class='block'>
-    <text class='title'>Title</text>
-    <input value="{{title}}" placeholder='Give it a title' class='ip' placeholder-class='ph' bindinput='titleIp'/>
+  <view class='inter'>
+    <image src="/icons/des.png" class="icon"></image>
+    <text>描述</text>
   </view>
 
   <view class='block'>
-    <text class='description'>Description</text>
-    <textarea value="{{description}}" placeholder='Write some description' class='ip' placeholder-class='ph'  bindinput='descriptionIp'/>
+    <text class='title'>标题</text>
+    <input value="{{title}}" placeholder='事项标题' class='ip' placeholder-class='ph' bindinput='titleIp' />
+  </view>
+
+  <view class='block1'>
+    <text class='description'>描述</text>
+    <textarea value="{{description}}" placeholder='事项文字' class='ip1' placeholder-class='ph' bindinput='descriptionIp' />
+  </view>
+  <view class='inter'>
+    <image src="/icons/time.png" class="icon"></image>
+    <text>时间</text>
   </view>
 
   <view class='block'>
-    <text class='text1'>From</text>
-    <view class='choose'>
-      <picker value="{{startDate}}" mode='date' class='date' bindchange='changeSD'>{{startDate}}</picker>
-      <picker value="{{startTime}}" mode='time' class='time' bindchange='changeST'>{{startTime}}</picker>
-    </view>
+    <text class='text1'>开始时间</text>
+    <picker value="{{startDate}}" mode='date' class='date' bindchange='changeSD'>{{startDate}}</picker>
+    <picker value="{{startTime}}" mode='time' class='time' bindchange='changeST'>{{startTime}}</picker>
   </view>
 
   <view class='block'>
-    <text class='text2'>To</text>
-    <view class='choose'>
-      <picker value="{{endDate}}" mode='date' class='date' bindchange='changeED'>{{endDate}}</picker>
-      <picker value="{{endTime}}" mode='time' class='time' bindchange='changeET'>{{endTime}}</picker>
-    </view>
+    <text class='text2'>结束时间</text>
+    <picker value="{{endDate}}" mode='date' class='date' bindchange='changeED'>{{endDate}}</picker>
+    <picker value="{{endTime}}" mode='time' class='time' bindchange='changeET'>{{endTime}}</picker>
   </view>
-  
-  <view class='block'>
-    <view class='address'>
-      <text class='text3'>Address</text>
-      <input class='ip' placeholder='address of item' placeholder-class='ph' bindinput='addressIp' value="{{address}}"/>
-    </view>
+  <view class='inter'>
+    <image src="/icons/loc.png" class="icon"></image>
+    <text>地点</text>
   </view>
 
-  <view bindtap='add' class='add'>add to list</view>
+  <view class='block'>
+    <text class='text3'>地址</text>
+    <input class='ip' placeholder='事项地址' placeholder-class='ph' bindinput='addressIp' value="{{address}}" />
+  </view>
+
+  <view class='buttons'>
+    <view class='button' bindtap='save'><text>保存</text></view>
+    <view class='button' bindtap='discard'><text>放弃</text></view>
+  </view>
+
 </view>

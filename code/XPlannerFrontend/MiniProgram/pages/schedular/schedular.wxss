@@ -1,36 +1,5 @@
-page {
+/* page {
   height: 100%;
-}
-
-.weui-navbar {
-  height: 28px;
-  background-color: #fff;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.weui-navbar .default-item {
-  width: 20%;
-  text-align: center;
-  font-size: 33rpx;
-  color: #8a8a8a;
-  font-family: Courier New, Courier, monospace;
-  font-weight: bolder;
-}
-
-.weui-navbar .item_on {
-  font-weight: bold;
-  color: #000;
-  border-bottom: 2px solid #000;
-}
-
-.weui-navbar-slider {
-  position: absolute;
-  width: 160rpx;
-  content: "";
-  left: 12.5rpx;
-  transition: transform 0.3s;
 }
 
 .swiper-box {
@@ -64,9 +33,7 @@ page {
 }
 
 .xplanner {
-  /* flex-direction: column; *//* display: flex; *//* background-color: black; */
   height: 200px;
-  /* justify-content: center; *//* align-items: center; */
 }
 
 .line1 {
@@ -81,7 +48,7 @@ page {
   width: 70%;
   text-align: center;
   font-family: Courier New, Courier, monospace;
-}
+} */
 
 .add-schedule {
   float: right;
@@ -95,7 +62,7 @@ page {
   width: 40px;
 }
 
-.item0 {
+/* .item0 {
   color: #f7f;
 }
 
@@ -149,7 +116,7 @@ page {
   padding-left: 5%;
   color: deepskyblue;
   zoom: 70%;
-}
+} */
 
 .weui-panel {
   background-color: #fff;
@@ -261,97 +228,7 @@ page {
   padding-left: 19px;
 }
 
-/* calendar */
-
 .calendar {
   background-color: #fff;
   border-bottom: 1px solid #ececec;
 }
-
-.calendar-topbar {
-  display: flex;
-  flex-direction: row;
-  background-color: #fff;
-  justify-content: center;
-  height: 25px;
-}
-
-.calendar-prev-month {
-  width: 50px;
-}
-
-.calendar-prev-month-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.calendar-next-month {
-  width: 50px;
-}
-
-.calendar-next-month-icon {
-  width: 20px;
-  height: 20px;
-  float: right;
-}
-
-.calendar-content {
-  background-color: #fff;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.calendar-weekday-name {
-  display: flex;
-  flex-direction: row;
-  height: 30px;
-}
-
-.calendar-weekday-name-block {
-  width: 14.29%;
-  text-align: center;
-  font-size: 12px;
-  padding-top: 5px;
-}
-
-.calendar-weekday {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-/* .calendar-weekday-perweek-block {
-  display: flex;
-  flex-direction: row;
-  height: 30px;
-}
-
-.calendar-weekday-everyday-block {
-  width: 14.29%;
-  text-align: center;
-  font-size: 12px;
-  padding-top: 5px;
-}
-
-.selected-day-block {
-  border-bottom: 1px solid #999;
-} */
-
-.calendar-weekday-block {
-  width: 14.28%;
-  height: 28px;
-  text-align: center;
-  font-size: 12px;
-  padding-top: 5px;
-}
-
-.calendar-everyday-block {}
-
-.calendar-everyday-block-normal {}
-
-.calendar-everyday-block-not-current-month {}
-
-.calendar-everyday-block-selected {
-  
-}
-
-.calendar-everyday-block-have-item {}
