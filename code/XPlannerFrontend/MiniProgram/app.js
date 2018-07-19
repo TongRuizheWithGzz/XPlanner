@@ -43,7 +43,7 @@ function warpScheduleItems(scheduleItem_raw) {
 
 //app.js
 App({
-  onLaunch: function() {
+  onLaunch: function () {
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -82,10 +82,13 @@ App({
   },
   globalData: {
     date: "2018-07-18",
+    year: 2018,
+    month: 7,
+    day: 18,
     userInfo: userInfo,
     extensions: warpExtensions(extensions),
     userFoodEaten: [],
     scheduleItems: warpScheduleItems(scheduleItems),
-    // dayWithItems: {17: [1, 0], 18: [3, 0], 20: [2, 0]},
+    dayWithItem: { 17: [1, 0], 18: [3, 0], 20: [2, 0] } // 似乎只要用一次
   }
 })
