@@ -13,11 +13,12 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+//@DataJpaTest
+//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ReaderTest {
 
     @Before
@@ -71,5 +72,11 @@ public class ReaderTest {
         String time = df.format(calendar.getTime());
 
         System.out.println(time);
+    }
+
+    @Test
+    public void ChineseToolTest(){
+        HashMap<String,String> tm = chineseTool.default_time("下周日");
+        System.out.println(tm.get("start_time"));
     }
 }
