@@ -14,11 +14,9 @@ import org.springframework.stereotype.Service;
 
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -47,7 +45,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             return response;
         }
     }
-
 
 
     @Override
@@ -95,13 +92,47 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
-    @Override
 
+    @Override
+    public HashMap<String, Object> findSchedule4OneDay(String username, int year, int month, int day) {
+        HashMap<String,Object> response = new HashMap<>();
+        try{
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.setLenient(false);
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month - 1);//注意,Calendar对象默认一月为0
+            calendar.set(Calendar.DATE,day);
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Timestamp beginning = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+            calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+            calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+
+            Timestamp endding = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+            User user = userRepository.findByUserName(username);
+            List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user, beginning, endding);
+            response.put("errno",0);
+            response.put("errMsg", "OneDaySchedule:ok");
+            response.put("scheduleitems",scheduleitmeList);
+            return response;
+        }catch (Exception e){
+            response.put("errno", 3);
+            response.put("errMsg", "OneDaySchedule:failed");
+            return response;
+        }
+    }
+
+    @Override
     public HashMap<String, Object> getScheduledDays(String username, int year, int month) {
         HashMap<String,Object> response = new HashMap<>();
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.clear();
+            calendar.setLenient(false);
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month - 1);//注意,Calendar对象默认一月为0
 
@@ -119,15 +150,37 @@ public class ScheduleServiceImpl implements ScheduleService {
             User user = userRepository.findByUserName(username);
 
             List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetween(user, beginning, endding);
+
+            Map<Integer,int[]> date_map = new HashMap<>();
+            for(int i = 0;i<scheduleitmeList.size();i++){
+                Timestamp timestamp_tmp = scheduleitmeList.get(i).getStartTime();
+                SimpleDateFormat df_tmp = new SimpleDateFormat("yyyy-MM-dd HH:mm");//定义格式，不显示毫秒
+                String str = df_tmp.format(timestamp_tmp);
+                Date date_tmp = df_tmp.parse(str);
+                calendar.setTime(date_tmp);
+                int day = calendar.get(Calendar.DATE);
+
+                int[] val = date_map.get(day);
+                if(val!=null){
+                    val[0]++;
+                }
+                else {
+                    date_map.put(day,new int[]{1});
+                }
+            }
             response.put("errno",0);
             response.put("errMsg","GetScheduledDays:ok");
+            response.put("datemap",date_map);
             return response;
         }catch (DataAccessException e){
             response.put("errno", 3);
             response.put("errMsg", "GetScheduledDays:failed");
             return response;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            response.put("errno", 3);
+            response.put("errMsg", "GetScheduledDays:failed");
+            return response;
         }
     }
-
-
 }

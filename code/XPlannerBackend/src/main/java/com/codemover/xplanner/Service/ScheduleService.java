@@ -9,6 +9,7 @@ public interface ScheduleService {
 
     public HashMap<String, Object> findUserSchedule(String username);
 
+    public HashMap<String,Object> findSchedule4OneDay(String username,int year,int month,int day);
 
     public HashMap<String, Object> addScheduleItem(Scheduleitme scheduleitme);
 
