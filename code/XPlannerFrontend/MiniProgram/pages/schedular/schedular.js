@@ -3,7 +3,11 @@ var sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
 var scheduleItems = app.globalData.scheduleItems;
 const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
 
-function getDateStr(year, month, day) {
+/*
+ * getDateStrWithZero
+ * 2019, 7, 9 -> 2019-07-09
+ */
+function getDateStrWithZero(year, month, day) {
   if (month < 10) month = "0" + month;
   if (day < 10) day = "0" + day;
   console.log("" + year + "-" + month + "-" + day);
@@ -30,10 +34,6 @@ Page({
     hideFixTop: true,
     time: 0,
 
-    year: 2018,
-    month: 7,
-    day: 18,
-    selectedDate: "2018-07-18",
     showYear: 2018,
     showMonth: 7,
     monthStr: MONTHS[new Date().getMonth()],
@@ -52,32 +52,18 @@ Page({
     });
 
     /* 获取选择的日期，向后端发送选择的日期，要求获取有日程的日子的数组和当天的日程列表 */
-    var selected_date = "2018-07-18";
-    var selected_year = 2018;
-    var selected_month = 7;
-    var selected_day = 18;
-    var date_with_item = {
-      17: [1, 0],
-      18: [3, 0],
-      20: [2, 0]
-    }
-    var tmp_show_items = this.filterScheduleItems(app.globalData.scheduleItems, selected_date);
+    var tmp_show_items = this.filterScheduleItems(app.globalData.scheduleItems, app.globalData.date);
 
     /* 生成本月对应的dayList */
-    var tmp_day_list = this.generateDayList(date_with_item, selected_year, selected_month, selected_day);
+    var tmp_day_list = this.generateDayList(app.globalData.dayWithItem, app.globalData.year, app.globalData.month, app.globalData.day);
 
     /* 生成monthList */
     var tmp_month_list = new Object();
-    tmp_month_list[selected_year + "-" + selected_month] = tmp_day_list;
+    tmp_month_list[app.globalData.year + "-" + app.globalData.month] = tmp_day_list;
     console.log(tmp_month_list);
 
     this.setData({
-      dayList: tmp_day_list,
       monthList: tmp_month_list,
-      year: selected_year,
-      month: selected_month,
-      day: selected_day,
-      selectedDate: selected_date,
       showItems: tmp_show_items,
       height: 86.796875 * (app.globalData.scheduleItems.length) + 540,
     })
@@ -431,7 +417,6 @@ Page({
     var result = [];
     for (var i = 0; i < items.length; i++) {
       if (items[i].start_time.slice(0, 10) == date) {
-        console.log(items[i].start_time.slice(0, 10) + "%");
         result.push(items[i]);
       }
     }
@@ -446,12 +431,12 @@ Page({
     var new_year = e.detail.year;
     var new_month = e.detail.month;
     var new_day = e.detail.day;
-    var old_year = this.data.year;
-    var old_month = this.data.month;
-    var old_day = this.data.day;
+    var old_year = app.globalData.year;
+    var old_month = app.globalData.month;
+    var old_day = app.globalData.day;
     var show_year = this.data.showYear;
     var show_month = this.data.showMonth;
-    var new_date = getDateStr(new_year, new_month, new_day);
+    var new_date = getDateStrWithZero(new_year, new_month, new_day);
     var tmp_month_list = this.data.monthList;
 
     if ((new_day == old_day && new_month == old_month && // 判断是否点击同一天
@@ -465,16 +450,15 @@ Page({
       return;
     }
 
-    this.setData({
-      year: new_year,
-      month: new_month,
-      day: new_day,
-      selectedDate: new_date,
-    });
+    app.globalData.year = new_year;
+    app.globalData.month = new_month;
+    app.globalData.day = new_day;
+    app.globalData.date = new_date;
 
     /* 设置控制日程显示的showItems和scheduleItems */
     var new_day_list = this.data.monthList[new_year + "-" + new_month];
     if (!new_day_list[new_day - 1].loaded) { // 判断是否已经加载
+      console.log("加载日程");
       var tmp_items = this.getScheduleItemsByDay(new_date);
       var tmp_show_items = tmp_items;
       tmp_items = tmp_items.concat(app.globalData.scheduleItems);

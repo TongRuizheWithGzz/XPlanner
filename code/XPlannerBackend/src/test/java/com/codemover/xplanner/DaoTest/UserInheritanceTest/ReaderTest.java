@@ -1,6 +1,7 @@
 package com.codemover.xplanner.DaoTest.UserInheritanceTest;
 
 import com.codemover.xplanner.Service.Util.ChineseTool;
+import com.codemover.xplanner.Service.Util.ParseDateStringUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,46 +16,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
-//@DataJpaTest
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+
+
 public class ReaderTest {
 
     @Before
-    public void setup(){
+    public void setup() {
 
     }
 
-    private ChineseTool chineseTool = new ChineseTool();
 
     @Test
-    public void Chinese2Int(){
-        /*DateUtil dateUtil = new DateUtil();
-        System.out.println(dateUtil.String2Int("八十七"));*/
-
-        String hint = "十";
-        if(hint.length()==2 && hint.charAt(hint.length()-2)=='十'){
-            hint = "一"+hint;
-        }
-        int value = 0;
-        int sectionNumber = 0;
-        for(int i =0; i<hint.length();i++){
-            int v = chineseTool.getIntMap().get(hint.charAt(i));
-            if(v == 10 && !(hint.length()==1)){
-                sectionNumber = v * sectionNumber;
-                value = value + sectionNumber;
-            }else if( i == hint.length()-1){
-                value = value + v;
-            }else{
-                sectionNumber = v;
-            }
-        }
-        System.out.println(value);
-    }
-
-    @Test
-    public void getTime(){
+    public void getTime() {
         Calendar calendar = Calendar.getInstance();
 
         //<--------------------- get time ---------------------->
@@ -64,19 +41,65 @@ public class ReaderTest {
 
 
         //<--------------------- reset time ---------------------->
-        calendar.set(year,month,day,9,30,0);
+        calendar.set(year, month, day, 9, 30, 0);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         int dayow = calendar.get(Calendar.DAY_OF_WEEK);
-        calendar.set(year,month,-6,9,30,0);
+        calendar.set(year, month, -6, 9, 30, 0);
         String time = df.format(calendar.getTime());
 
         System.out.println(time);
     }
 
-    @Test
-    public void ChineseToolTest(){
-        HashMap<String,String> tm = chineseTool.default_time("下周日");
-        System.out.println(tm.get("start_time"));
+
+
+    @Test(expected = NumberFormatException.class)
+    public void invalidDayTest0() {
+        ParseDateStringUtil.parseDay("9-8");
     }
+
+    @Test(expected = NumberFormatException.class)
+    public void invalidDayTest2() {
+        ParseDateStringUtil.parseDay("八十三四");
+    }
+
+    @Test
+    public void invalidDayTest3() {
+        Integer result = ParseDateStringUtil.parseDay("八十三");
+        assertThat(result).isEqualTo(83);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void invalidDayTest4() {
+        Integer result = ParseDateStringUtil.parseDay("八百三十四");
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void invalidDayTest5() {
+        Integer result = ParseDateStringUtil.parseDay("三十十");
+    }
+
+    @Test
+    public void invalidDayTest6() {
+        Integer result = ParseDateStringUtil.parseDay("十");
+        assertThat(result).isEqualTo(10);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void invalidDayTest7() {
+        Integer result = ParseDateStringUtil.parseDay("其实");
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void invalidDayTest8() {
+        Integer result = ParseDateStringUtil.parseDay("十十");
+    }
+
+    @Test
+    public void invalidDayTest9() {
+        Integer result = ParseDateStringUtil.parseDay("一十二");
+        assertThat(result).isEqualTo(12);
+    }
+
+
 }

@@ -21,6 +21,9 @@ public class DatetimeUtilTest {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Timestamp timestamp=new Timestamp(date.getTime());
+        Timestamp timestamp = new Timestamp(date.getTime());
     }
 }
+
+
+
