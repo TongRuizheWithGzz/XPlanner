@@ -58,7 +58,7 @@ Page({
     })
   },
   onShow: function () {
-    console.log("on show");
+    // console.log("on show");
     if (app.globalData.ifAddSchedule) { // 从add页面返回并且添加了日程
       if (app.globalData.ifSameDay) { // 添加的日程和目前显示的日期是相同的
         if (this.data.showItems.length == 0) { // 当前日期原来没有日程
@@ -83,7 +83,7 @@ Page({
         tmp_month_list[time.Zero2WithoutZero(new_item_date.slice(0, 7))][parseInt(new_item_date.slice(8, 10)) - 1].haveItems = true;
         tmp_month_list[time.Zero2WithoutZero(new_item_date.slice(0, 7))][parseInt(new_item_date.slice(8, 10)) - 1].background = '#46c4f3';
         tmp_month_list[time.Zero2WithoutZero(new_item_date.slice(0, 7))][parseInt(new_item_date.slice(8, 10)) - 1].color = 'white';
-        console.log(tmp_month_list);
+        // console.log(tmp_month_list);
         this.setData({
           monthList: tmp_month_list,
         })
@@ -91,7 +91,7 @@ Page({
       app.globalData.ifAddSchedule = false;
       app.globalData.ifSameDay = false;
     } else { // 普通显示或者放弃添加日程
-      console.log("no thing happen after on show");
+      // console.log("no thing happen after on show");
     }
   },
 
@@ -119,6 +119,10 @@ Page({
     wx.navigateTo({
       url: '/pages/schedular/addSchedule/add',
     })
+  },
+
+  changeSchedule() {
+
   },
 
   /*
@@ -467,10 +471,10 @@ Page({
         new_month != old_month) ||
       ((show_month != old_month || show_year != old_year)) && // 判断是否点击非已选择日期所在页上非主月日期
       (show_month != new_month)) {
-      console.log("monthlist");
-      console.log(tmp_month_list);
-      console.log("scheduleItems");
-      console.log(app.globalData.scheduleItems);
+      // console.log("monthlist");
+      // console.log(tmp_month_list);
+      // console.log("scheduleItems");
+      // console.log(app.globalData.scheduleItems);
       console.log("Do nothing.");
       return;
     }
@@ -488,6 +492,8 @@ Page({
       console.log("加载日程");
       var tmp_items = this.getScheduleItemsByDay(new_date);
       var tmp_show_items = tmp_items;
+      if (tmp_show_items.length == 0) // 如果原来没有日程（即后端发送的数组长为0）
+        tmp_show_items = this.filterScheduleItems(app.globalData.scheduleItems, new_date);
       tmp_items = tmp_items.concat(app.globalData.scheduleItems);
       app.globalData.scheduleItems = tmp_items;
     } else {

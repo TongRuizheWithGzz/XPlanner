@@ -37,8 +37,8 @@ function warpScheduleItems(scheduleItem_raw) {
     // console.log(tmp.start_concret_time);
     result.push(tmp);
   }
-  console.log("Global scheduleItems");
-  console.log(result);
+  // console.log("Global scheduleItems");
+  // console.log(result);
   return result;
 }
 
