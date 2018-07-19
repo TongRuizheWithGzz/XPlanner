@@ -1,7 +1,7 @@
 var scheduleItem = [{
     "title": "吃午饭",
-    "start_time": "2018-07-18",
-    "end_time": "2018-07-18",
+    "start_time": "2018-07-18 10:00",
+    "end_time": "2018-07-18 11:00",
     "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
     "address": "二餐",
     "scheduleItem_id": 1,
@@ -9,8 +9,8 @@ var scheduleItem = [{
   },
   {
     "title": "上学",
-    "start_time": "2018-07-18",
-    "end_time": "2018-07-18",
+    "start_time": "2018-07-18 12:00",
+    "end_time": "2018-07-18 13:00",
     "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
     "address": "二餐",
     "scheduleItem_id": 2,
@@ -18,67 +18,13 @@ var scheduleItem = [{
   },
   {
     "title": "运动",
-    "start_time": "2018-07-18",
-    "end_time": "2018-07-18",
+    "start_time": "2018-07-18 13:00",
+    "end_time": "2018-07-18 15:00",
     "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
     "address": "二餐",
     "scheduleItem_id": 3,
     "user_id": 1
   },
-  // {
-  //   "title": "上学",
-  //   "start_time": "2018-07-20",
-  //   "end_time": "2018-07-20",
-  //   "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-  //   "address": "二餐",
-  //   "scheduleItem_id": 4,
-  //   "user_id": 1
-  // },
-  // {
-  //   "title": "运动",
-  //   "start_time": "2018-07-20",
-  //   "end_time": "2018-07-20",
-  //   "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-  //   "address": "二餐",
-  //   "scheduleItem_id": 5,
-  //   "user_id": 1
-  // },
-  // {
-  //   "title": "上学",
-  //   "start_time": "2018-07-20",
-  //   "end_time": "2018-07-20",
-  //   "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-  //   "address": "二餐",
-  //   "scheduleItem_id": 6,
-  //   "user_id": 1
-  // },
-  // {
-  //   "title": "运动",
-  //   "start_time": "2018-06-12 08:00",
-  //   "end_time": "2018-06-12 10:00",
-  //   "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-  //   "address": "二餐",
-  //   "scheduleItem_id": 7,
-  //   "user_id": 1
-  // },
-  // {
-  //   "title": "上学",
-  //   "start_time": "2018-06-12 08:00",
-  //   "end_time": "2018-06-12 10:00",
-  //   "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-  //   "address": "二餐",
-  //   "scheduleItem_id": 8,
-  //   "user_id": 1
-  // },
-  // {
-  //   "title": "运动",
-  //   "start_time": "2018-06-12 08:00",
-  //   "end_time": "2018-06-12 10:00",
-  //   "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-  //   "address": "二餐",
-  //   "scheduleItem_id": 9,
-  //   "user_id": 1
-  // },
 ];
 
 module.exports = scheduleItem;

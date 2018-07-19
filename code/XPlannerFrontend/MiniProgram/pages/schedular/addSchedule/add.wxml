@@ -14,7 +14,7 @@
     <textarea value="{{description}}" placeholder='事项文字' class='ip1' placeholder-class='ph' bindinput='descriptionIp' />
   </view>
   <view class='inter'>
-    <image src="/icons/time2.png" class="icon"></image>
+    <image src="/icons/time.png" class="icon"></image>
     <text>时间</text>
   </view>
 
@@ -40,8 +40,8 @@
   </view>
 
   <view class='buttons'>
-    <view class='button' catchtap='save'><text>保存</text></view>
-    <view class='button' catchtap='discard'><text>放弃</text></view>
+    <view class='button' bindtap='save'><text>保存</text></view>
+    <view class='button' bindtap='discard'><text>放弃</text></view>
   </view>
 
 </view>
