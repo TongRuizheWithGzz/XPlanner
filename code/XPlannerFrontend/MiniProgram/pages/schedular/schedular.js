@@ -114,11 +114,42 @@ Page({
    * 移除日程
    */
   removeSchedule(e) {
-    console.log("sb");
     /* 更改scheduleItems和showItems */
     var tmp_items = this.data.scheduleItems;
     var tmp_show_items = this.data.showItems;
-    console.log(e.currentTarget.dataset.id);
+    console.log(e.currentTarget.dataset.scheduleItemId);
+    var tmp_items = this.data.scheduleItems;
+    var tmp_show_items = this.data.showItems;
+    for (var i = 0; i < tmp_items.length; i++) {
+      if (tmp_items[i].scheduleItem_id == e.currentTarget.dataset.scheduleItemId) {
+        console.log("Removing ");
+        console.log(tmp_items[i]);
+        tmp_items.splice(i, 1);
+      }
+    }
+    for (var i = 0; i < tmp_show_items.length; i++) {
+      if (tmp_show_items[i].scheduleItem_id == e.currentTarget.dataset.scheduleItemId) {
+        tmp_show_items.splice(i, 1);
+        if (tmp_show_items.length == 0) {
+          /* 设置monthList */
+          var tmp_month_list = this.data.monthList;
+          var tmp_day_list = tmp_month_list[this.data.year + "-" + this.data.month];
+          tmp_day_list[this.data.day - 1].haveItems = false;
+          tmp_month_list[this.data.year + "-" + this.data.month] = tmp_day_list;
+          this.setData({
+            scheduleItems: tmp_items,
+            showItems: tmp_show_items,
+            monthList: tmp_month_list,
+          });
+        } else {
+          this.setData({
+            scheduleItemId: tmp_items,
+            showItems: tmp_show_items
+          })
+        }
+      }
+    }
+    return;
   },
 
   onPageScroll: function (e) {
@@ -158,18 +189,6 @@ Page({
       });
     }
     /* 设置有日程的日期 */
-    // for (var i = 0; i < date_with_item.length; i++) {
-    //   new_day = tmp_day_list[date_with_item[i] - 1].day;
-    //   tmp_day_list[date_with_item[i] - 1] = {
-    //     month: 'current',
-    //     day: new_day,
-    //     color: 'white',
-    //     background: '#46c4f3',
-    //     loaded: false,
-    //     selected: false,
-    //     haveItems: true,
-    //   };
-    // }
     console.log(date_with_item);
     for (var item in date_with_item) {
       console.log(item);

@@ -6,7 +6,7 @@
   <text>{{time}}:00 PM</text>
 </view>
 
-<swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:1000px">
+<swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:{{showItems.length * 111}}px">
   <!-- <swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:{{height+3}}px"> -->
 
   <swiper-item class="swiper-item">
@@ -14,26 +14,25 @@
     <!-- <view class="weui-panel__hd">已安装扩展</view> -->
     <view class="weui-panel__bd">
       <block wx:for="{{showItems}}" wx:key="{{item.scheduleItem_id}}">
-        <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bind:longpress="removeSchedule" data-id="{{item.id}}" bindtap="detail">
+        <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bind:longpress="removeSchedule" data-id="{{item.id}}" data-schedule-item-id="{{item.scheduleItem_id}}" bindtap="detail" >
           <!-- <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="/icons/timg.jpg" />
           </view> -->
           <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
             <view class="weui-media-box__title">
               <view>
-                <image src="/icons/item.png" class="schedule-icon" />{{item.title}}
+                <image src="/icons/des.png" class="schedule-icon" />{{item.title}}
               </view>
             </view>
             <view class="weui-media-box__desc">
-              <image src="/icons/time.png" class="schedule-icon" />{{"开始时间 "+item.start_time}}
+              <image src="/icons/time.png" class="schedule-icon time-icon" />{{"开始时间 "+item.start_time}}
               <view class="schedule-end-time">
                 {{"结束时间 " + item.end_time}}
               </view>
             </view>
             <view class="weui-media-box__desc">
-              <image src="/icons/address.png" class="schedule-icon" />{{item.address}}
+              <image src="/icons/loc.png" class="schedule-icon" />{{item.address}}
             </view>
-            <!-- <view bindtap="removeSchedule">sbbbbbbbbbbbbbbbbbbb</view> -->
           </view>
         </view>
       </block>
