@@ -7,8 +7,7 @@ public class DateUtil {
 
     public HashMap<String,String> default_time(String hint){
         HashMap<String,String> response = new HashMap<>();
-
-        return response;
+        return chineseTool.default_time(hint);
     }
 
     public int String2Int(String hint){

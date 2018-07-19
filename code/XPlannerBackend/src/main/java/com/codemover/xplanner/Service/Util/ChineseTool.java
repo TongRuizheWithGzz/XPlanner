@@ -146,13 +146,12 @@ public class ChineseTool {
                 calendar.set(year,month,day-1,10,00,0);
                 end_time = df.format(calendar.getTime());
                 break;
-
+                default:break;
         }
         response.put("start_time",start_time);
         response.put("end_time",end_time);
         response.put("errmsg","200");
         return response;
     }
-
 
 }
