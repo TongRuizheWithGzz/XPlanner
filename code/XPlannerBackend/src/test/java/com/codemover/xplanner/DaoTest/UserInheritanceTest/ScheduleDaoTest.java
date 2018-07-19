@@ -6,7 +6,6 @@ import com.codemover.xplanner.Model.Entity.JAccountUser;
 import com.codemover.xplanner.Model.Entity.Role;
 import com.codemover.xplanner.Model.Entity.Scheduleitme;
 import com.codemover.xplanner.Model.Entity.User;
-import com.codemover.xplanner.Service.ScheduleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +58,17 @@ public class ScheduleDaoTest {
         scheduleitme.setUser(user);
         scheduleitme.setHasKnownConcreteTime(true);
         scheduleItemRepository.save(scheduleitme);
+        Scheduleitme scheduleitme1 = new Scheduleitme();
+        java.sql.Timestamp start_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-18 06:00").getTime());
+        scheduleitme1.setStartTime(start_time1);
+        java.sql.Timestamp end_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-18 10:30").getTime());
+        scheduleitme1.setEndTime(end_time1);
+        scheduleitme1.setDescription("软件工程");
+        scheduleitme1.setAddress("软件大楼");
+        scheduleitme1.setTitle("tongruizhe");
+        scheduleitme1.setUser(user);
+        scheduleitme1.setHasKnownConcreteTime(true);
+        scheduleItemRepository.save(scheduleitme1);
     }
 
     @Test
@@ -104,7 +114,7 @@ public class ScheduleDaoTest {
     }
 
     @Test
-    public void dateTest(){
+    public void dateTest() throws ParseException {
         int year = 2018;
         int month = 7;
 
@@ -128,6 +138,93 @@ public class ScheduleDaoTest {
 
         User user = userRepository.findByUserName("lihu");
         List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetween(user,beginning,endding);
-        System.out.println(scheduleitmeList.size());
+
+        Map<Integer,int[]> date_map = new HashMap<>();
+        for(int i = 0;i<scheduleitmeList.size();i++){
+            Timestamp timestamp_tmp = scheduleitmeList.get(i).getStartTime();
+            SimpleDateFormat df_tmp = new SimpleDateFormat("yyyy-MM-dd HH:mm");//定义格式，不显示毫秒
+            String str = df_tmp.format(timestamp_tmp);
+            Date date_tmp = df_tmp.parse(str);
+            calendar.setTime(date_tmp);
+            int day = calendar.get(Calendar.DATE);
+
+            int[] val = date_map.get(day);
+            if(val!=null){
+                val[0]++;
+            }
+            else {
+                date_map.put(day,new int[]{1});
+            }
+        }
+        System.out.println(date_map.get(18)[0]);
     }
+
+    @Test
+    public void date_validString(){
+        try{
+        String str = "2018-2-29 12:00";
+        SimpleDateFormat df_tmp = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        df_tmp.setLenient(false);
+        Date date = df_tmp.parse(str);}
+        catch (ParseException e){
+            System.out.println("Invalid time");
+        }
+    }
+
+    @Test
+    public void date_validYearMonthDay(){
+        int year = 2018;
+        int month = 12;
+        int day = 30;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.setLenient(false);
+
+        try{
+            calendar.set(Calendar.YEAR,year);
+            calendar.set(Calendar.MONTH,month-1);//注意,Calendar对象默认一月为0
+            calendar.set(Calendar.DATE,day);
+            System.out.println(calendar.getTime());
+        }catch (Exception e){
+            System.out.println("Invalid time");
+        }
+    }
+
+    @Test
+    public void OneDaySchedule(){
+        int year = 2018;
+        int month = 7;
+        int day = 18;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.setLenient(false);
+        try{
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month - 1);//注意,Calendar对象默认一月为0
+            calendar.set(Calendar.DATE,day);
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            //String str = simpleDateFormat.format(calendar.getTime());
+            Timestamp beginning = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+            calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+            calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+
+            Timestamp endding = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+            User user = userRepository.findByUserName("lihu");
+            List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user, beginning, endding);
+            Iterator<Scheduleitme> it = scheduleitmeList.iterator();
+            while(it.hasNext()){
+                System.out.println(it.next().getStartTime());
+            }
+        }catch (Exception e){
+            System.out.println("Invalid Time");
+        }
+
+    }
+
 }

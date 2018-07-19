@@ -13,4 +13,5 @@ import java.util.List;
 public interface ScheduleItemRepository extends JpaRepository<Scheduleitme, Integer> {
     void deleteByScheduleItmeId(int scheduleItemId);
     List<Scheduleitme> findByUserAndStartTimeBetween(User user, Timestamp beginning,Timestamp endding);
+    List<Scheduleitme> findByUserAndStartTimeBetweenOrderByStartTimeAsc(User user, Timestamp beginning,Timestamp endding);
 }

@@ -75,6 +75,13 @@
             <version>1.3</version>
             <scope>test</scope>
         </dependency>
+        <!-- spider -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.10.2</version>
+        </dependency>
+
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
