@@ -47,9 +47,9 @@ public class ScheduleDaoTest {
     public void setup() throws ParseException {
         Scheduleitme scheduleitme = new Scheduleitme();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        java.sql.Timestamp start_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-18 09:00").getTime());
+        java.sql.Timestamp start_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-18 05:00").getTime());
         scheduleitme.setStartTime(start_time);
-        java.sql.Timestamp end_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-18 11:30").getTime());
+        java.sql.Timestamp end_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-18 06:00").getTime());
         scheduleitme.setEndTime(end_time);
         scheduleitme.setDescription("软件工程");
         scheduleitme.setAddress("软件大楼");
@@ -69,6 +69,57 @@ public class ScheduleDaoTest {
         scheduleitme1.setUser(user);
         scheduleitme1.setHasKnownConcreteTime(true);
         scheduleItemRepository.save(scheduleitme1);
+    }
+
+    @Test
+    public void TimeStamp_Valid_Test() throws ParseException {
+        Scheduleitme scheduleitme = new Scheduleitme();
+        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        java.sql.Timestamp start_time1 = new java.sql.Timestamp(simpleDateFormat1.parse("2018-07-18 05:30").getTime());
+        scheduleitme.setStartTime(start_time1);
+        java.sql.Timestamp end_time1 = new java.sql.Timestamp(simpleDateFormat1.parse("2018-07-18 09:40").getTime());
+        scheduleitme.setEndTime(end_time1);
+        scheduleitme.setDescription("软件工程");
+        scheduleitme.setAddress("软件大楼");
+        scheduleitme.setTitle("tongruizhe");
+        User user1 = userRepository.findByUserName("lihu");
+        scheduleitme.setUser(user1);
+        scheduleitme.setHasKnownConcreteTime(true);
+
+        Timestamp start_time = scheduleitme.getStartTime();
+        Timestamp end_time = scheduleitme.getEndTime();
+
+        //get the date
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(scheduleitme.getStartTime().getTime()));
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH)+1;
+        int day = calendar.get(Calendar.DATE);
+        calendar.clear();
+
+        //get beginning
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);//注意,Calendar对象默认一月为0
+        calendar.set(Calendar.DATE,day);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp beginning = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+
+        //get endding
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+        Timestamp endding = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+
+        //get scheduleList
+        User user = scheduleitme.getUser();
+        List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user, beginning, endding);
+
+        //compare timestamp
+        for(int i=0;i<scheduleitmeList.size();i++){
+            Scheduleitme tmp = scheduleitmeList.get(i);
+            if(start_time.before(tmp.getEndTime()) && end_time.after(tmp.getStartTime()))System.out.println("false");
+        }
+        System.out.println("true");
     }
 
 

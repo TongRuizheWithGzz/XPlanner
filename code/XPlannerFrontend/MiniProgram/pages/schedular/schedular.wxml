@@ -1,23 +1,13 @@
 <view class="calendar">
-  <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{monthList[showYear + '-' + showMonth]}}" show-more-days="{{true}}" binddayClick="selectDay" bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
+  <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{dayList}}" show-more-days="{{true}}" binddayClick="selectDay" bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
 </view>
 
-<view hidden='{{true}}' class='fixTop' bindtap='unfold'>
-  <text>{{time}}:00 PM</text>
-</view>
-
-<swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:{{showItems.length * 111}}px">
-  <!-- <swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:{{height+3}}px"> -->
+<!-- <swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:{{showItems.length * 111}}px">
 
   <swiper-item class="swiper-item">
-    <!-- <view class="weui-panel">-->
-    <!-- <view class="weui-panel__hd">已安装扩展</view> -->
     <view class="weui-panel__bd">
       <block wx:for="{{showItems}}" wx:key="{{item.scheduleItem_id}}">
         <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bind:longpress="removeSchedule" data-id="{{item.id}}" data-schedule-item-id="{{item.scheduleItem_id}}" bindtap="detail" >
-          <!-- <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-            <image class="weui-media-box__thumb" src="/icons/timg.jpg" />
-          </view> -->
           <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
             <view class="weui-media-box__title">
               <view>
@@ -37,10 +27,37 @@
         </view>
       </block>
     </view>
-    <!-- </view> -->
   </swiper-item>
   <swiper-item>
     show week
   </swiper-item>
-</swiper>
-<image src="/icons/plus-circle.png" class="add-schedule" bindtap="addSchedule"></image>
+</swiper> -->
+<view class='items'>
+  <view class='list' bindtap='unselect'>
+
+    <view wx:for="{{showItems}}" wx:key="{{*this}}" class="{{showSelect == index ? 'se-item':'item'}}" catchtap='select' data-index='{{index}}'>
+      <view class='left'>
+        <view class='start_time'>{{item.start_concret_time}}</view>
+        <view class='end_time'>{{item.end_concret_time}}</view>
+      </view>
+      <view class='line'></view>
+      <view class="{{showSelect == index ? 'se-right':'right'}}">
+        <view class="{{showSelect == index ? 'se-title':'title'}}">{{item.title}}</view>
+        <view wx:if="{{showSelect == index}}" class='address'>
+          <image src="/icons/loc.png" style="height:15px;width:15px;margin-right:3px;"></image>
+          <text>{{item.address}}</text>
+        </view>
+        <view wx:if="{{showSelect == index}}" class='description'>
+          <image src="/icons/des.png" style="height:13px;width:13px;margin-right:5px;"></image>
+          <text>{{item.description}}</text>
+        </view>
+      </view>
+      <view wx:if="{{showSelect == index}}" class='buttons'>
+        <image src='/icons/detail.png' class='button' catchtap='detail' data-index="{{index}}"></image>
+        <image src='/icons/edit.png' class='button' catchtap='edit' data-index="{{index}}"></image>
+        <image src='/icons/delete.png' class='button' catchtap='delete' data-index="{{index}}"></image>
+      </view>
+    </view>
+  </view>
+</view>
+<image src="/icons/plus-circle.png" class="add-schedule" bindtap="add"></image>
