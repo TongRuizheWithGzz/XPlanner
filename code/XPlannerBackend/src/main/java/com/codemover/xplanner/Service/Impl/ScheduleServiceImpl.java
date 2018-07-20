@@ -51,11 +51,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     public HashMap<String, Object> addScheduleItem(Scheduleitme scheduleitme) {
         HashMap<String,Object> response = new HashMap<>();
         try{
-            if(!IsValidTime(scheduleitme)){
+            /*if(!IsValidTime(scheduleitme)){
                 response.put("errno", 3);
                 response.put("errMsg", "AddScheduleItem:failed");
                 return response;
-            }
+            }*/
             scheduleItemRepository.save(scheduleitme);
             response.put("errno",0);
             response.put("errMsg","AddScheduleItem:ok");
@@ -86,11 +86,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     public HashMap<String, Object> modifyScheduleItem(Scheduleitme scheduleitme) {
         HashMap<String,Object> response = new HashMap<>();
         try{
-            if(!IsValidTime(scheduleitme)){
+            /*if(!IsValidTime(scheduleitme)){
                 response.put("errno", 3);
                 response.put("errMsg", "ModifyScheduleItem:failed");
                 return response;
-            }
+            }*/
             scheduleItemRepository.save(scheduleitme);
             response.put("errno",0);
             response.put("errMsg","ModifyScheduleItem:ok");
