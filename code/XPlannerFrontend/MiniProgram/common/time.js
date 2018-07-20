@@ -10,6 +10,11 @@ var time = {
         return "" + year + "-" + month + "-" + day;
     },
 
+    getMonthStringWithZero: function (year, month) {
+        if (month < 10) month = "0" + month;
+        return "" + year + "-" + month;
+    },
+
     /*
      * Zero2WithoutZero
      * 2018-07 -> 2018-7

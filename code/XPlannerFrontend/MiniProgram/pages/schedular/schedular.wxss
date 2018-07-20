@@ -142,8 +142,8 @@
 
 .item, .se-item {
   background-color: white;
-  height: 85px;
-  margin: 18px 120px 18px 10px;
+  height: 90px;
+  margin: 18px 115px 18px 10px;
   display: flex;
   transition: height 0.3s, margin 0.3s;
   flex-direction: row;
@@ -210,7 +210,7 @@
 }
 
 .address {
-  margin-top:12px;
+  margin-top:7px;
   font-weight: light;
   color: #a3a3a3;
 }
@@ -220,7 +220,7 @@
 }
 
 .se-title {
-  font-size: 18px;
+  font-size: 17px;
   transition: all 0.3s;
 }
 
@@ -229,7 +229,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  margin-left: 5%;
+  margin-left: 30px;
 }
 
 .button {
