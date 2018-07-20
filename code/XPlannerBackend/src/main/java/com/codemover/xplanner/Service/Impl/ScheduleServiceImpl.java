@@ -13,6 +13,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,11 +47,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
-
     @Override
     public HashMap<String, Object> addScheduleItem(Scheduleitme scheduleitme) {
         HashMap<String,Object> response = new HashMap<>();
         try{
+            if(!IsValidTime(scheduleitme)){
+                response.put("errno", 3);
+                response.put("errMsg", "AddScheduleItem:failed");
+                return response;
+            }
             scheduleItemRepository.save(scheduleitme);
             response.put("errno",0);
             response.put("errMsg","AddScheduleItem:ok");
@@ -81,6 +86,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     public HashMap<String, Object> modifyScheduleItem(Scheduleitme scheduleitme) {
         HashMap<String,Object> response = new HashMap<>();
         try{
+            if(!IsValidTime(scheduleitme)){
+                response.put("errno", 3);
+                response.put("errMsg", "ModifyScheduleItem:failed");
+                return response;
+            }
             scheduleItemRepository.save(scheduleitme);
             response.put("errno",0);
             response.put("errMsg","ModifyScheduleItem:ok");
@@ -92,6 +102,42 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
+    public boolean IsValidTime(Scheduleitme scheduleitme){
+        Timestamp start_time = scheduleitme.getStartTime();
+        Timestamp end_time = scheduleitme.getEndTime();
+
+        //get the date
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(scheduleitme.getStartTime().getTime()));
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH)+1;
+        int day = calendar.get(Calendar.DATE);
+        calendar.clear();
+
+        //get beginning
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);//注意,Calendar对象默认一月为0
+        calendar.set(Calendar.DATE,day);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp beginning = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+
+        //get endding
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+        Timestamp endding = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+
+        //get scheduleList
+        User user = scheduleitme.getUser();
+        List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user, beginning, endding);
+
+        //compare timestamp
+        for(int i=0;i<scheduleitmeList.size();i++){
+            Scheduleitme tmp = scheduleitmeList.get(i);
+            if(start_time.before(tmp.getEndTime()) && end_time.after(tmp.getStartTime()))return false;
+        }
+        return true;
+    }
 
     @Override
     public HashMap<String, Object> findSchedule4OneDay(String username, int year, int month, int day) {
@@ -107,7 +153,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Timestamp beginning = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
 
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
             calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
             calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
             calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
