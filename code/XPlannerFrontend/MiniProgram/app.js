@@ -21,7 +21,7 @@ function warpExtensions(extensions_raw) {
 }
 
 function warpScheduleItems(scheduleItem_raw) {
-  var result = [];
+  var array = [];
   for (var i = 0; i < scheduleItem_raw.length; i++) {
     var tmp = new Object();
     tmp.title = scheduleItem_raw[i].title;
@@ -34,12 +34,9 @@ function warpScheduleItems(scheduleItem_raw) {
     tmp.start_concret_time = tmp.start_time.slice(11, 16);
     tmp.end_concret_time = tmp.end_time.slice(11, 16);
     tmp.start_date = tmp.start_time.slice(0, 10);
-    // console.log(tmp.start_concret_time);
-    result.push(tmp);
+    array.push(tmp);
   }
-  // console.log("Global scheduleItems");
-  // console.log(result);
-  return result;
+  return array;
 }
 
 //app.js
@@ -90,7 +87,7 @@ App({
     extensions: warpExtensions(extensions),
     userFoodEaten: [],
     scheduleItems: warpScheduleItems(scheduleItems),
-    dayWithItem: { 17: [1, 0], 18: [3, 0], 20: [2, 0] }, // 似乎只要用一次
+    dayWithItem: { 17: [1], 18: [3], 20: [2] }, // 似乎只要用一次
     ifAddSchedule: false, // 指示schedular显示时是否从add页面返回
     ifSameDay: false, // 指示添加的日程是否和当天是否是一天
   }

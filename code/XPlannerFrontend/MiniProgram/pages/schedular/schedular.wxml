@@ -1,5 +1,5 @@
 <view class="calendar">
-  <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{monthList[showYear + '-' + showMonth]}}" show-more-days="{{true}}" binddayClick="selectDay" bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
+  <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{dayList}}" show-more-days="{{true}}" binddayClick="selectDay" bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
 </view>
 
 <!-- <swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:{{showItems.length * 111}}px">
@@ -53,9 +53,9 @@
         </view>
       </view>
       <view wx:if="{{showSelect == index}}" class='buttons'>
-        <image src='/icons/detail.png' class='button' catchtap='detail' data-id="{{index}}"></image>
-        <image src='/icons/edit.png' class='button' catchtap='edit'></image>
-        <image src='/icons/delete.png' class='button' catchtap='delete'></image>
+        <image src='/icons/detail.png' class='button' catchtap='detail' data-index="{{index}}"></image>
+        <image src='/icons/edit.png' class='button' catchtap='edit' data-index="{{index}}"></image>
+        <image src='/icons/delete.png' class='button' catchtap='delete' data-index="{{index}}"></image>
       </view>
     </view>
   </view>

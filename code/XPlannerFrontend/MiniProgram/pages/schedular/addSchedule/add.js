@@ -1,4 +1,5 @@
 var app = getApp();
+var scheduleItems = app.globalData.scheduleItems;
 
 Page({
   data: {
@@ -9,8 +10,8 @@ Page({
     title: "",
     description: "",
     address: "",
-    // start_time: "",
-    // end_time: ""
+    start_time: "",
+    end_time: ""
   },
   onLoad: function (option) {
     this.setData({
@@ -72,14 +73,13 @@ Page({
     item.scheduleItem_id = 19;
     item.start_concret_time = this.data.startTime;
     item.end_concret_time = this.data.endTime;
-    // item.start_date = this
 
     var tmp = app.globalData.scheduleItems;
     tmp.push(item);
     app.globalData.scheduleItems = tmp;
     app.globalData.ifAddSchedule = true;
     app.globalData.ifSameDay = (app.globalData.date == item.start_time.slice(0, 10));
-    console.log(app.globalData.scheduleItems);
+    // console.log(app.globalData.scheduleItems);
     wx.navigateBack({
       delta: 1,
     })
