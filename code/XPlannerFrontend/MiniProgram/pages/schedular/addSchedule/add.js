@@ -8,7 +8,9 @@ Page({
     endTime: "选择时间",
     title: "",
     description: "",
-    address: ""
+    address: "",
+    // start_time: "",
+    // end_time: ""
   },
   onLoad: function (option) {
     this.setData({
@@ -56,24 +58,28 @@ Page({
       endTime: e.detail.value,
     })
   },
-  add: function () {
+  save: function () {
     var item = {
       title: this.data.title,
-      start_time: this.data.start_time,
-      end_time: this.data.end_time,
+      start_time: this.data.startDate + " " + this.data.startTime,
+      end_time: this.data.endDate + " " + this.data.endTime,
       description: this.data.description,
       address: this.data.address,
       user_id: app.globalData.userInfo.id,
     };
 
-    /* 向后端发送请求，获取schduleItem_id */
+    /* 向后端发送请求，获取schduleItem_id，增加对应的项目，注意可能有错误处理 */
     item.scheduleItem_id = 19;
-    console.log("add");
-    console.log(item);
+    item.start_concret_time = this.data.startTime;
+    item.end_concret_time = this.data.endTime;
+    // item.start_date = this
 
     var tmp = app.globalData.scheduleItems;
     tmp.push(item);
     app.globalData.scheduleItems = tmp;
+    app.globalData.ifAddSchedule = true;
+    app.globalData.ifSameDay = (app.globalData.date == item.start_time.slice(0, 10));
+    console.log(app.globalData.scheduleItems);
     wx.navigateBack({
       delta: 1,
     })
