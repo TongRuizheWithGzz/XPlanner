@@ -40,7 +40,7 @@ Page({
     })
   },
   onShow: function () {
-    // console.log("on show");
+    console.log("on show");
     if (app.globalData.ifAddSchedule) { // 从add页面返回并且添加了日程
       if (app.globalData.ifSameDay) { // 添加的日程和目前显示的日期是相同的
         if (this.data.showItems.length == 0) { // 当前日期原来没有日程
@@ -63,7 +63,7 @@ Page({
         tmp_day_list[parseInt(new_item_date.slice(8, 10)) - 1].haveItems = true;
         tmp_day_list[parseInt(new_item_date.slice(8, 10)) - 1].background = WORK_DAY_BACKGROUND;
         tmp_day_list[parseInt(new_item_date.slice(8, 10)) - 1].color = WORK_DAY_COLOR;
-        // console.log(tmp_month_list);
+
         this.setData({
           dayList: tmp_day_list,
         })
@@ -71,7 +71,7 @@ Page({
       app.globalData.ifAddSchedule = false;
       app.globalData.ifSameDay = false;
     } else { // 普通显示或者放弃添加日程
-      // console.log("no thing happen after on show");
+      console.log("no thing happen after on show");
     }
   },
 
@@ -109,7 +109,7 @@ Page({
    * addSchedule
    * 添加日程
    */
-  addSchedule() {
+  add() {
     wx.navigateTo({
       url: '/pages/schedular/addSchedule/add',
     })
@@ -204,7 +204,11 @@ Page({
 
     /* 向后端发送前一个月的信息，获取对应的有日程的日期数组 */
     var day_with_items = this.getDayWithItemsFromBackEnd(year, month);
-    var tmp_day_list = this.generateDayList(day_with_items, year, month, 0);
+    var tmp_day_list;
+    if (app.globalData.date.slice(0, 7) == time.getMonthStringWithZero(year, month))
+      tmp_day_list = this.generateDayList(day_with_items, year, month, app.globalData.day);
+    else
+      tmp_day_list = this.generateDayList(day_with_items, year, month, 0);
     this.setData({
       dayList: tmp_day_list,
       showYear: year,
@@ -230,7 +234,11 @@ Page({
 
     /* 向后端发送后一个月的信息，获取对应的有日程的日期数组 */
     var day_with_items = this.getDayWithItemsFromBackEnd(year, month);
-    var tmp_day_list = this.generateDayList(day_with_items, year, month, 0);
+    var tmp_day_list;
+    if (app.globalData.date.slice(0, 7) == time.getMonthStringWithZero(year, month))
+      tmp_day_list = this.generateDayList(day_with_items, year, month, app.globalData.day);
+    else
+      tmp_day_list = this.generateDayList(day_with_items, year, month, 0);
     this.setData({
       dayList: tmp_day_list,
       showYear: year,
@@ -246,11 +254,21 @@ Page({
    */
   getDayWithItemsFromBackEnd: function (year, month) {
     /* 此处为模拟 */
-    return {
-      12: [2],
-      13: [1],
-      20: [1],
-    };
+    if (month == 6) {
+      return {
+        12: [2],
+        13: [1],
+        20: [1],
+      };
+    } else if (month == 7) {
+      return {
+        17: [1],
+        18: [3],
+        20: [2]
+      };
+    } else {
+      return {};
+    }
   },
 
   /*
@@ -460,7 +478,9 @@ Page({
       day_list[old_day - 1] = this.getModifiedOldDay(day_list[old_day - 1]);
       day_list[new_day - 1] = this.getModifiedNewDay(day_list[new_day - 1]);
     } else { // 不在当前月内选择
-      var day_list = this.generateDayList(this.getDayWithItemsFromBackEnd(new_year, new_day), new_year, new_month, new_day);
+      var day_list = this.generateDayList(this.getDayWithItemsFromBackEnd(new_year, new_month), new_year, new_month, new_day);
+      console.log(new_year + " " + new_day);
+      console.log(this.getDayWithItemsFromBackEnd(new_year, new_day));
       console.log(day_list);
       day_list[new_day - 1] = this.getModifiedNewDay(day_list[new_day - 1]);
       console.log("flag");

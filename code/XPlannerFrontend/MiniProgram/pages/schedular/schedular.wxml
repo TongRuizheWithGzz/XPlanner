@@ -60,4 +60,4 @@
     </view>
   </view>
 </view>
-<image src="/icons/plus-circle.png" class="add-schedule" bindtap="addSchedule"></image>
+<image src="/icons/plus-circle.png" class="add-schedule" bindtap="add"></image>
