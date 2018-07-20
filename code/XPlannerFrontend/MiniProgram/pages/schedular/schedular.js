@@ -105,12 +105,38 @@ Page({
   detail: function (event) {
     wx.navigateTo({
       url: '/pages/schedular/scheduleDetails/scheduleDetails?id=' +
-        event.currentTarget.dataset.id +
-        '&day=' +
-        this.data.tabs[this.data.activeIndex],
+      event.currentTarget.dataset.index,
     })
   },
-
+  select: function (event) {
+    this.setData({
+      showSelect: event.currentTarget.dataset.index
+    })
+  },
+  unselect: function () {
+    this.setData({
+      showSelect: -1
+    })
+  },
+  detail: function (event) {
+    wx.navigateTo({
+      url: '/pages/schedular/scheduleDetails/scheduleDetails?id=' +
+      event.currentTarget.dataset.id +
+      '&day=' +
+      this.data.tabs[this.data.activeIndex],
+    })
+  },
+  edit: function () {
+    wx.navigateTo({
+      url: '/pages/schedular/add/scheduleDetails?='
+    })
+  },
+  delete: function () {
+    wx.navigateTo({
+      url: '/pages/schedular/add/scheduleDetails?='
+    })
+  }
+  ,
   /*
    * addSchedule
    * 添加日程
@@ -119,10 +145,6 @@ Page({
     wx.navigateTo({
       url: '/pages/schedular/addSchedule/add',
     })
-  },
-
-  changeSchedule() {
-
   },
 
   /*
