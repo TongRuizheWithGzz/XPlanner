@@ -3,7 +3,6 @@ package com.codemover.xplanner.Service.Util;
 import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
 import com.codemover.xplanner.Model.Entity.Scheduleitme;
 import com.codemover.xplanner.Security.Exception.ParseProfileJsonException;
-import com.codemover.xplanner.Service.Impl.TongquService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,12 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.net.URLDecoder;
 
 @Service
 public class ScheduleItemDTOFactory {
@@ -69,11 +66,12 @@ public class ScheduleItemDTOFactory {
                 }
             }
 
+
             scheduleitmeDTO.description = description;
             scheduleitmeDTO.title = act.getString("name");
             scheduleitmeDTO.address = act.getString("location");
-            scheduleitmeDTO.startTime = act.getString("start_time");
-            scheduleitmeDTO.endTime = act.getString("end_time");
+            scheduleitmeDTO.start_time = act.getString("start_time");
+            scheduleitmeDTO.end_time = act.getString("end_time");
 
             try {
                 scheduleitmeDTO.imageUrl = act.getString("poster");
@@ -81,7 +79,7 @@ public class ScheduleItemDTOFactory {
                 scheduleitmeDTO.imageUrl = null;
                 logger.info("missing poster(imageUrl) for this act:'{}'", scheduleitmeDTO.title);
             }
-            scheduleitmeDTO.hasKnownConcretTime = true;
+            scheduleitmeDTO.hasKnownConcreteTime = true;
             scheduleitmes.add(scheduleitmeDTO);
         }
 
@@ -112,14 +110,14 @@ public class ScheduleItemDTOFactory {
 
         scheduleitmeDTO.title = scheduleitme.getTitle();
         scheduleitmeDTO.description = scheduleitme.getDescription();
-        scheduleitmeDTO.hasKnownConcretTime = scheduleitme.isHasKnownConcreteTime();
+        scheduleitmeDTO.hasKnownConcreteTime = scheduleitme.isHasKnownConcreteTime();
         scheduleitmeDTO.address = scheduleitme.getAddress();
         scheduleitmeDTO.imageUrl = scheduleitme.getImageUrl();
 
         String start_time = TimeStamp2String(scheduleitme.getStartTime());
         String end_time = TimeStamp2String(scheduleitme.getEndTime());
-        scheduleitmeDTO.startTime = start_time;
-        scheduleitmeDTO.endTime = end_time;
+        scheduleitmeDTO.start_time = start_time;
+        scheduleitmeDTO.end_time = end_time;
 
         return scheduleitmeDTO;
     }

@@ -10,6 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ElectsysServiceTest {
@@ -18,7 +20,10 @@ public class ElectsysServiceTest {
     ElectsysService electsysService;
 
     @Test
-    public void test() throws IOException{
+    public void test() throws IOException {
         electsysService.getInfoFromElectsys();
+
     }
 }
+
+

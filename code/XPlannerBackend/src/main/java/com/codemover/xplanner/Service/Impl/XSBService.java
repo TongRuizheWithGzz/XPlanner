@@ -1,8 +1,6 @@
 package com.codemover.xplanner.Service.Impl;
 
 import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
-import com.codemover.xplanner.Model.Entity.Scheduleitme;
-import com.codemover.xplanner.Service.Exception.HTTPRequestNotOKException;
 
 import com.google.gson.Gson;
 import org.jsoup.Jsoup;
@@ -12,10 +10,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -39,15 +34,16 @@ public class XSBService {
         for (Element element : lis) {
             ScheduleitmeDTO scheduleitmeDTO = new ScheduleitmeDTO();
 
-            scheduleitmeDTO.hasKnownConcretTime = false;
+            scheduleitmeDTO.hasKnownConcreteTime = false;
             Elements span = element.select("span");
             String pattern = "\\[(.*)\\]";
             Pattern p = Pattern.compile(pattern);
             Matcher m = p.matcher(span.text());
             if (m.find()) {
-                scheduleitmeDTO.startTime = m.group(1) + " 00:00";
-                scheduleitmeDTO.endTime = m.group(1) + " 23:59";
+                scheduleitmeDTO.start_time = m.group(1) + " 00:00";
+                scheduleitmeDTO.end_time = m.group(1) + " 00:00";
             }
+
 
             Element a = element.select("a").get(0);
             scheduleitmeDTO.title = a.text();
