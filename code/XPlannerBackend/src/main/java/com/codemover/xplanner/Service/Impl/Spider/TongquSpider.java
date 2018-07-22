@@ -1,5 +1,6 @@
 package com.codemover.xplanner.Service.Impl.Spider;
 
+import com.codemover.xplanner.Model.DTO.Notification;
 import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
 import com.codemover.xplanner.Security.Exception.ParseProfileJsonException;
 import com.codemover.xplanner.Service.Exception.HTTPRequestNotOKException;
@@ -39,15 +40,18 @@ public class TongquSpider implements ISpider {
 
     private CloseableHttpResponse response;
 
+    private String website;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public TongquSpider() {
         httpClient = HttpClients.createDefault();
+        website = "同去网";
     }
 
 
     @Override
-    public Collection<Pair<ScheduleitmeDTO, String>> getInfoFromWebsite(Integer offset, Integer number)
+    public Collection<Notification> getInfoFromWebsite(Integer offset, Integer number)
             throws IOException {
         if (number > 10)
             return null;
@@ -55,7 +59,7 @@ public class TongquSpider implements ISpider {
         HttpGet httpGet = new HttpGet(url);
 
         response = httpClient.execute(httpGet);
-        SpiderUtil.isResponseOK(response, "同去网");
+        SpiderUtil.isResponseOK(response, website);
 
         String json = IOUtils.toString(response.getEntity().getContent());
 
@@ -69,32 +73,31 @@ public class TongquSpider implements ISpider {
         JSONObject resultJsonObject = jsonObject.getJSONObject("result");
         JSONArray acts = resultJsonObject.getJSONArray("acts");
 
-        ArrayList<ScheduleitmeDTO> scheduleitmes = new ArrayList<>();
+        ArrayList<Notification> notifications = new ArrayList<>();
         for (int index = 0; index < acts.length(); index++) {
 
             JSONObject act = acts.getJSONObject(index);
 
-            ScheduleitmeDTO scheduleitmeDTO = new ScheduleitmeDTO();
+            Notification notification = new Notification();
 
+            notification.website = website;
             Integer actId = act.getInt("actid");
-
-            scheduleitmeDTO.description = getDetailForAct(actId);
-            scheduleitmeDTO.title = act.getString("name");
-            scheduleitmeDTO.address = act.getString("location");
-            scheduleitmeDTO.start_time = act.getString("start_time");
-            scheduleitmeDTO.end_time = act.getString("end_time");
+            notification.description = getDetailForAct(actId);
+            notification.title = act.getString("name");
+            notification.address = act.getString("location");
+            notification.start_time = act.getString("start_time");
+            notification.end_time = act.getString("end_time");
 
             try {
-                scheduleitmeDTO.imageUrl = act.getString("poster");
+                notification.imageUrl = act.getString("poster");
             } catch (JSONException e) {
-                scheduleitmeDTO.imageUrl = null;
-                logger.info("missing poster(imageUrl) for this act:'{}'", scheduleitmeDTO.title);
+                notification.imageUrl = null;
+                logger.info("missing poster(imageUrl) for this act:'{}'", notification.title);
             }
+            notifications.add(notification);
 
-            scheduleitmes.add(scheduleitmeDTO);
         }
-
-
+        return notifications;
     }
 
     private String getDetailForAct(Integer actId)
@@ -102,7 +105,7 @@ public class TongquSpider implements ISpider {
         String url = buildUrlDetail(actId);
         HttpGet httpGet = new HttpGet(url);
         response = httpClient.execute(httpGet);
-        SpiderUtil.isResponseOK(response, "同去网");
+        SpiderUtil.isResponseOK(response, website);
         String json = IOUtils.toString(response.getEntity().getContent());
         JSONObject detailJsonObject = new JSONObject(json);
         JSONArray jsonArray = detailJsonObject.getJSONArray("actContents");

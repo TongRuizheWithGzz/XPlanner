@@ -1,12 +1,18 @@
 package com.codemover.xplanner.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 public class Scheduleitme {
     private int scheduleItmeId;
+
+    @JsonProperty("start_time")
     private Timestamp startTime;
+
+    @JsonProperty("end_time")
     private Timestamp endTime;
     private String description;
     private String address;
@@ -34,6 +40,7 @@ public class Scheduleitme {
     public Timestamp getStartTime() {
         return startTime;
     }
+
 
     public void setStartTime(Timestamp startTime) {
         this.startTime = startTime;
@@ -91,6 +98,7 @@ public class Scheduleitme {
         this.imageUrl = imageUrl;
     }
 
+
     @Basic
     @Column(name = "title")
     public String getTitle() {
@@ -100,8 +108,6 @@ public class Scheduleitme {
     public void setTitle(String title) {
         this.title = title;
     }
-
-
 
 
     @Basic
