@@ -26,6 +26,9 @@ Page({
   },
   onLoad: function () {
     console.log("get app date" + app.globalData.date);
+    console.log(app.globalData.year);
+    console.log(app.globalData.month);
+    console.log(app.globalData.day);
     /* 获取要显示的日程列表 */
     var tmp_show_items = app.globalData.scheduleItems;
 
@@ -36,6 +39,8 @@ Page({
     this.setData({
       dayList: tmp_day_list,
       showItems: tmp_show_items,
+      showYear: app.globalData.year,
+      showMonth: app.globalData.month,
     })
   },
   onShow: function () {
