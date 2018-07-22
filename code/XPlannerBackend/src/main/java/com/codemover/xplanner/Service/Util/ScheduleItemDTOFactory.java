@@ -13,12 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Service
+
 public class ScheduleItemDTOFactory {
     private static final Logger logger = LoggerFactory.getLogger(ScheduleItemDTOFactory.class);
 
@@ -105,23 +106,23 @@ public class ScheduleItemDTOFactory {
         return dFormat.format(new Date(timestamp.getTime()));
     }
 
-    public static ScheduleitmeDTO createScheduleitmeDTOFromScheduleitme(Scheduleitme scheduleitme) {
+    public static ScheduleitmeDTO createScheduleitmeDTOFromScheduleitme(@NotNull Scheduleitme scheduleitme) {
         ScheduleitmeDTO scheduleitmeDTO = new ScheduleitmeDTO();
+
 
         scheduleitmeDTO.title = scheduleitme.getTitle();
         scheduleitmeDTO.description = scheduleitme.getDescription();
         scheduleitmeDTO.hasKnownConcreteTime = scheduleitme.isHasKnownConcreteTime();
         scheduleitmeDTO.address = scheduleitme.getAddress();
+        scheduleitmeDTO.completed = scheduleitme.isCompleted();
         scheduleitmeDTO.imageUrl = scheduleitme.getImageUrl();
-
         String start_time = TimeStamp2String(scheduleitme.getStartTime());
         String end_time = TimeStamp2String(scheduleitme.getEndTime());
         scheduleitmeDTO.start_time = start_time;
         scheduleitmeDTO.end_time = end_time;
-
         return scheduleitmeDTO;
-    }
 
+    }
 
 
     public static Set<ScheduleitmeDTO> createScheduleitmeDTOsFromScheduleitmes(Set<Scheduleitme> scheduleitmes) {

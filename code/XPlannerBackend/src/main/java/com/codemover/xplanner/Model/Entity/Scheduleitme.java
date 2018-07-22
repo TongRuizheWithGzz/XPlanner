@@ -14,7 +14,7 @@ public class Scheduleitme {
 
     private String imageUrl;
     private boolean hasKnownConcreteTime;
-
+    private boolean completed;
     private User user;
 
 
@@ -71,8 +71,6 @@ public class Scheduleitme {
     }
 
 
-
-
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     public User getUser() {
@@ -110,7 +108,21 @@ public class Scheduleitme {
         return hasKnownConcreteTime;
     }
 
+
     public void setHasKnownConcreteTime(boolean hasKnownConcreteTime) {
         this.hasKnownConcreteTime = hasKnownConcreteTime;
     }
+
+
+    @Basic
+    @Column(name = "completed")
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+
 }
