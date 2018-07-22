@@ -39,14 +39,14 @@ Page({
       this.setData({
         startDate: tmp_item.start_time.slice(0, 10),
         startTime: tmp_item.start_time.slice(11, 16),
-        endDate: tmp_item.end_date.slice(0, 10),
+        endDate: tmp_item.end_time.slice(0, 10),
         endTime: tmp_item.end_time.slice(11, 16),
         title: tmp_item.title,
         description: tmp_item.description,
         address: tmp_item.address,
         ifAddPage: false,
         itemIndex: option.id,
-        oldStartDate: tmp_item.start_date,
+        oldStartDate: tmp_item.start_time.slice(0, 10),
       });
     } else { // 如果是添加页面
       this.setData({
@@ -96,18 +96,18 @@ Page({
     })
   },
   save: function () {
-    var item = {
-      title: this.data.title,
-      start_time: this.data.startDate + " " + this.data.startTime,
-      end_time: this.data.endDate + " " + this.data.endTime,
-      description: this.data.description,
-      address: this.data.address,
-      user_id: app.globalData.userInfo.id,
-    };
-
-    /* 向后端发送请求，获取schduleItem_id，增加对应的项目，注意可能有错误处理 */
-
     if (this.data.ifAddPage) { // 如果是添加页面
+      var item = {
+        title: this.data.title,
+        start_time: this.data.startDate + " " + this.data.startTime,
+        end_time: this.data.endDate + " " + this.data.endTime,
+        description: this.data.description,
+        address: this.data.address,
+        user_id: app.globalData.userInfo.id,
+      };
+
+      /* 向后端发送请求，获取schduleItem_id，增加对应的项目，注意可能有错误处理 */
+
       item.scheduleItem_id = 19; // 需要修改
       item.start_concret_time = this.data.startTime;
       item.end_concret_time = this.data.endTime;
@@ -133,6 +133,8 @@ Page({
       var tmp_item = app.globalData.scheduleItems[this.data.itemIndex];
       tmp_item.start_time = this.data.startDate + " " + this.data.startTime;
       tmp_item.end_time = this.data.endDate + " " + this.data.endTime;
+      tmp_item.start_concret_time = this.data.startTime;
+      tmp_item.end_concret_time = this.data.endTime;
       tmp_item.title = this.data.title;
       tmp_item.description = this.data.description;
       tmp_item.address = this.data.address;
@@ -141,7 +143,7 @@ Page({
 
       app.globalData.ifChangeSchedule = true;
       app.globalData.changeScheduleIndex = this.data.itemIndex;
-      app.globalData.ifChangeScheduleStartDate = (this.data.oldStartDate == this.data.startDate);
+      app.globalData.ifChangeScheduleStartDate = !(this.data.oldStartDate == this.data.startDate);
 
       /* 向后端发送请求，注意，如果涉及开始时间点的变化而且开始日期不变，需要更新globalData */
 

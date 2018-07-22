@@ -59,9 +59,10 @@ Page({
       } else { // 添加的日程和目前显示的日期是不同的
         var new_item_date = app.globalData.scheduleItems[app.globalData.scheduleItems.length - 1].start_time;
         var tmp_day_list = this.data.dayList;
-        tmp_day_list[parseInt(new_item_date.slice(8, 10)) - 1].haveItems = true;
-        tmp_day_list[parseInt(new_item_date.slice(8, 10)) - 1].background = WORK_DAY_BACKGROUND;
-        tmp_day_list[parseInt(new_item_date.slice(8, 10)) - 1].color = WORK_DAY_COLOR;
+        var tmp_day = parseInt(new_item_date.slice(8, 10));
+        tmp_day_list[tmp_day - 1].haveItems = true;
+        tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
+        tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
 
         this.setData({
           dayList: tmp_day_list,
@@ -74,7 +75,7 @@ Page({
         var tmp_item = app.globalData.scheduleItems[app.globalData.changeScheduleIndex];
         if (parseInt(tmp_item.start_time.slice(5, 7)) == app.globalData.month) { // 如果是当前月
           var tmp_day_list = this.data.dayList;
-          var tmp_day = parseInt(app.globalData.scheduleItems[app.globalData.changeScheduleIndex].slice(8, 10));
+          var tmp_day = parseInt(tmp_item.start_time.slice(8, 10));
           tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
           tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
           tmp_day_list[tmp_day - 1].haveItems = true;
@@ -86,16 +87,25 @@ Page({
           tmp_items.splice(app.globalData.changeScheduleIndex, 1);
           app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
           this.setData({
-            tmp_items,
+            showItems: tmp_items,
           })
         } else { // 如果不是当前月
-          return;
+        console.log("sb");
+          var tmp_items = app.globalData.scheduleItems;
+          tmp_items.splice(app.globalData.changeScheduleIndex, 1);
+          app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
+          this.setData({
+            showItems: tmp_items,
+          })
         }
       } else { // 如果没有修改开始日期
         this.setData({
           showItems: app.globalData.scheduleItems
         })
       }
+      app.globalData.ifChangeSchedule = false;
+      app.globalData.changeScheduleIndex = 0;
+      app.globalData.ifChangeScheduleStartDate = false;
     } else { // 普通显示或者放弃添加日程
       console.log("no thing happen after on show");
     }

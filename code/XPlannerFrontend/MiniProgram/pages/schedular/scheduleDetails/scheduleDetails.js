@@ -15,7 +15,7 @@ Page({
   onShow: function (option) {
     if (app.globalData.ifChangeSchedule) { // 从add页面返回并且修改日程
       this.setData({
-        item: app.globalData.scheduleItems[option.id]
+        item: app.globalData.scheduleItems[app.globalData.changeScheduleIndex],
       });
     }
   },
