@@ -1,13 +1,5 @@
-.add-schedule {
-  float: right;
-  /* background-color: #fff; */
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  border: 0 solid #fff;
-  border-radius: 500px;
-  height: 40px;
-  width: 40px;
+.schedular {
+  height: 1000rpx;
 }
 
 page {
@@ -19,7 +11,17 @@ page {
 .calendar {
   background-color: #fff;
   border-bottom: 1px solid #ececec;
-  margin-bottom: 4px;
+  margin: 15px;
+  padding-top: 15px;
+  margin-bottom: -1px;
+}
+
+.card{
+  background-color: white;
+  transition: all 0.3s;
+  box-shadow: 2px 3px 3px #a3a3a3;
+  border-radius: 10px;
+  z-index:0;
 }
 
 .list {
@@ -203,9 +205,19 @@ page {
   position: fixed;
   bottom: 0px;
   /* border-radius: 500px; */
-  height: 80px;
+  height: 80rpx;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  box-shadow: -2px 0px 9px #a3a3a3;
+}
+
+.add-item-word {
+  padding-left: 15rpx;
+}
+
+.show-complete-word {
+  padding-right: 15rpx;
 }

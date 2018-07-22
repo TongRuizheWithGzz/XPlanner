@@ -3,13 +3,13 @@ Page({
   data: {
     day:"",
     items: app.globalData.scheduleItems,
-    activeIndex: 0,
+    item:'',
   },
 
   onLoad: function (options) {
     this.setData({
-      day:options.day,
-      activeIndex:options.id,
+      day:"options.day,",
+      item:this.data.items[0],
     })
   },
 
@@ -30,10 +30,5 @@ Page({
   onShareAppMessage: function () {
     
   },
-  swipe:function(e){
-    var current = e.detail.current;
-    this.setData({
-      activeIndex: current,
-    });
-  }
+  
 })

@@ -1,5 +1,4 @@
 var app = getApp();
-var sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
 var time = require("../../common/time");
 const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
 
@@ -18,6 +17,7 @@ Page({
     hideFixTop: true,
     time: 0,
     showSelect: -1,
+    showComplete: true,
 
     showYear: app.globalData.year,
     showMonth: app.globalData.month,
@@ -155,6 +155,12 @@ Page({
       })
     }
     return;
+  },
+
+  changeVisible: function (e) {
+    this.setData({
+      showComplete: !this.data.showComplete
+    })
   },
 
   /*

@@ -1,10 +1,10 @@
-<view class="calendar">
+<view class="calendar card">
   <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{dayList}}" show-more-days="{{true}}" binddayClick="selectDay"
     bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
 </view>
 <view class='items'>
   <view class='list' bindtap='unselect'>
-    <view wx:for="{{showItems}}" wx:key="{{*this}}" class="{{showSelect == index ? 'se-item':'item'}}" catchtap='select' data-index='{{index}}'>
+    <view wx:for="{{showItems}}" wx:key="{{*this}}" wx:if="{{showComplete || !item.completed}}" class="{{showSelect == index ? 'se-item':'item'}}" catchtap='select' data-index='{{index}}'>
       <view class="{{showSelect == index ? 'se-left':'left'}}">
         <view class='start_time'>{{item.start_concret_time}}</view>
         <view wx:if="{{showSelect != index}}" class='plain'></view>
@@ -34,8 +34,7 @@
   </view>
 </view>
 <view class="controller">
-  <view class="add-item-word">添加事务</view>
-  <view class="show-complete-word" wx:if="{{showComplete}}">显示已完成事务</view>
-  <view class="show-complete-word" wx:if="{{showComplete}}">不显示已完成事务</view>
+  <view class="add-item-word" bindtap="add">添加事务</view>
+  <view class="show-complete-word" bindtap="changeVisible" wx:if="{{!showComplete}}">显示已完成事务</view>
+  <view class="show-complete-word" bindtap="changeVisible" wx:if="{{showComplete}}">不显示已完成事务</view>
 </view>
-<image src="/icons/plus-circle.png" class="add-schedule" bindtap="add"></image>
