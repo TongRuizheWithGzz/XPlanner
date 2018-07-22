@@ -11,8 +11,27 @@ Page({
     description: "",
     address: "",
     start_time: "",
-    end_time: ""
+    end_time: "",
+    showModal: true,
+    msg:'jjj',
   },
+  submit: function () {
+    this.setData({
+      showModal: true
+    })
+  },
+
+  preventTouchMove: function () {
+
+  },
+
+
+  go: function () {
+    this.setData({
+      showModal: false
+    })
+  },
+  
   onLoad: function (option) {
     this.setData({
       startDate: "选择日期",
@@ -82,12 +101,20 @@ Page({
     // console.log(app.globalData.scheduleItems);
     wx.navigateBack({
       delta: 1,
+    });
+    this.setData({
+      showModal:true,
+      msg:"是否保存信息?",
     })
   },
   discard: function () {
     console.log("discard");
     wx.navigateBack({
       delta: 1,
+    });
+    this.setData({
+      showModal:true,
+      msg:"是否放弃信息？"
     })
   }
 })

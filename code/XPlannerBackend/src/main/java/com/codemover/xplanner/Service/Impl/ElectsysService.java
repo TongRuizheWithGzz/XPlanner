@@ -106,7 +106,6 @@ public class ElectsysService {
             }
             scheduleitmeDTOS.add(scheduleitmeDTO);
         }
-        String responseString=new Gson().toJson(scheduleitmeDTOS);
         return scheduleitmeDTOS;
     }
 

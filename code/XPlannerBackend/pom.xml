@@ -101,6 +101,9 @@
             <artifactId>org.apache.oltu.oauth2.client</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <!-- reader -->
+
+
 
         <!-- spider -->
         <dependency>

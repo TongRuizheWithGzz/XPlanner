@@ -34,6 +34,7 @@ function warpScheduleItems(scheduleItem_raw) {
     tmp.start_concret_time = tmp.start_time.slice(11, 16);
     tmp.end_concret_time = tmp.end_time.slice(11, 16);
     tmp.start_date = tmp.start_time.slice(0, 10);
+    tmp.selected = false;
     array.push(tmp);
   }
   return array;
@@ -77,18 +78,32 @@ App({
     /* 向后端发送选择的日期，获取当月有日程的日期的数组和当天的日期，设置globalData，注意要使用包装函数 */
     /* 另外，使用wx.getStorage获取存储的选区的日期，也需要设置globalData */
 
+    this.globalData.date = "2018-07-18";
+    this.globalData.year = 2018;
+    this.globalData.month = 7;
+    this.globalData.day = 18;
+    this.globalData.userInfo = userInfo;
+    this.globalData.extensions = warpExtensions(extensions);
+    this.globalData.userFoodEaten = [];
+    this.globalData.scheduleItems = warpScheduleItems(scheduleItems);
+    this.globalData.dayWithItem = { 17: [1], 18: [3], 20: [2] };
+    this.globalData.ifAddSchedule = false;
+    this.globalData.ifSameDay = false;
+
   },
   globalData: {
-    date: "2018-07-18",
-    year: 2018,
-    month: 7,
-    day: 18,
-    userInfo: userInfo,
-    extensions: warpExtensions(extensions),
+    // date: "2018-07-18",
+    date: "",
+    year: 0,
+    month: 0,
+    day: 0,
+    userInfo: {},
+    extensions: [],
     userFoodEaten: [],
-    scheduleItems: warpScheduleItems(scheduleItems),
-    dayWithItem: { 17: [1], 18: [3], 20: [2] }, // 似乎只要用一次
+    scheduleItems: [],
+    dayWithItem: {}, // 似乎只要用一次
     ifAddSchedule: false, // 指示schedular显示时是否从add页面返回
     ifSameDay: false, // 指示添加的日程是否和当天是否是一天
+    logined: false,
   }
 })

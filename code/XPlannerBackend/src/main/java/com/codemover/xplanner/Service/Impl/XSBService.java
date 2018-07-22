@@ -34,7 +34,6 @@ public class XSBService {
         for (Element element : lis) {
             ScheduleitmeDTO scheduleitmeDTO = new ScheduleitmeDTO();
 
-            scheduleitmeDTO.hasKnownConcreteTime = false;
             Elements span = element.select("span");
             String pattern = "\\[(.*)\\]";
             Pattern p = Pattern.compile(pattern);
@@ -62,7 +61,6 @@ public class XSBService {
             String imageUrl = imgs.get(0).attr("abs:href");
             scheduleitmeDTO.imageUrl = imageUrl;
 
-            String json = new Gson().toJson(scheduleitmeDTO);
         }
 
     }

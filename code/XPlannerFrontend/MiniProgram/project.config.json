@@ -11,7 +11,7 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "1.9.6",
+	"libVersion": "2.2.0",
 	"appid": "wx91d784d2361ebf7c",
 	"projectname": "XPlanner",
 	"isGameTourist": false,

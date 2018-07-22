@@ -8,6 +8,8 @@ public class ScheduleitmeDTO {
     public String address;
     public String title;
     public String imageUrl;
-    public boolean hasKnownConcreteTime;
+    public boolean completed;
 }
+
+
 

@@ -1,43 +1,14 @@
 <view class="calendar">
-  <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{dayList}}" show-more-days="{{true}}" binddayClick="selectDay" bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
+  <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{dayList}}" show-more-days="{{true}}" binddayClick="selectDay"
+    bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
 </view>
-
-<!-- <swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange="bindChange" style="height:{{showItems.length * 111}}px">
-
-  <swiper-item class="swiper-item">
-    <view class="weui-panel__bd">
-      <block wx:for="{{showItems}}" wx:key="{{item.scheduleItem_id}}">
-        <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bind:longpress="removeSchedule" data-id="{{item.id}}" data-schedule-item-id="{{item.scheduleItem_id}}" bindtap="detail" >
-          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-            <view class="weui-media-box__title">
-              <view>
-                <image src="/icons/des.png" class="schedule-icon" />{{item.title}}
-              </view>
-            </view>
-            <view class="weui-media-box__desc">
-              <image src="/icons/time.png" class="schedule-icon time-icon" />{{"开始时间 "+item.start_time}}
-              <view class="schedule-end-time">
-                {{"结束时间 " + item.end_time}}
-              </view>
-            </view>
-            <view class="weui-media-box__desc">
-              <image src="/icons/loc.png" class="schedule-icon" />{{item.address}}
-            </view>
-          </view>
-        </view>
-      </block>
-    </view>
-  </swiper-item>
-  <swiper-item>
-    show week
-  </swiper-item>
-</swiper> -->
 <view class='items'>
   <view class='list' bindtap='unselect'>
 
     <view wx:for="{{showItems}}" wx:key="{{*this}}" class="{{showSelect == index ? 'se-item':'item'}}" catchtap='select' data-index='{{index}}'>
-      <view class='left'>
+      <view class="{{showSelect == index ? 'se-left':'left'}}">
         <view class='start_time'>{{item.start_concret_time}}</view>
+        <view wx:if="{{showSelect != index}}" class='plain'></view>
         <view class='end_time'>{{item.end_concret_time}}</view>
       </view>
       <view class='line'></view>
@@ -52,11 +23,25 @@
           <text>{{item.description}}</text>
         </view>
       </view>
-      <view wx:if="{{showSelect == index}}" class='buttons'>
-        <image src='/icons/detail.png' class='button' catchtap='detail' data-index="{{index}}"></image>
-        <image src='/icons/edit.png' class='button' catchtap='edit' data-index="{{index}}"></image>
-        <image src='/icons/delete.png' class='button' catchtap='delete' data-index="{{index}}"></image>
+      <!-- <view class="{{showSelect == index ? 'se-operate':'operate'}}"> -->
+      <!-- <view class="{{showSelect == index ? 'se-checkbox':'checkbox'}}">
+        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}"
+          wx:if="{{item.selected}}" src="/icons/checkbox-checked.png"></image>
+        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}"
+          wx:if="{{!item.selected}}" src="/icons/checkbox.png"></image>
+      </view> -->
+      <view class="{{showSelect == index ? 'buttons':'one-button'}}">
+        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{item.selected}}" src="/icons/checkbox-checked.png"></image>
+        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{!item.selected}}" src="/icons/checkbox.png"></image>
+        <image wx:if="{{showSelect == index}}" src='/icons/detail.png' class='button' catchtap='detail' data-index="{{index}}"></image>
+        <!-- <image wx:if="{{showSelect == index}}" src='/icons/edit.png' class='button' catchtap='edit' data-index="{{index}}"></image> -->
+        <image wx:if="{{showSelect == index}}" src='/icons/delete.png' class='button' catchtap='delete' data-index="{{index}}"></image>
       </view>
+      <!-- </view> -->
+      <!-- <view class="{{showSelect == index ? 'se-checkbox':'checkbox'}}">
+        <image class="checkbox-icon" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{item.selected}}" src="/icons/checkbox-checked.png"></image>
+        <image class="checkbox-icon" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{!item.selected}}" src="/icons/checkbox.png"></image>
+      </view> -->
     </view>
   </view>
 </view>
