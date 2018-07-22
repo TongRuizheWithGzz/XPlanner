@@ -22,6 +22,7 @@ CREATE TABLE user (
   PRIMARY KEY (user_id)
 );
 
+
 create table JAccount_user (
   user_id       INTEGER,
   user_realName varchar(128),
@@ -48,6 +49,8 @@ create table role (
   role_name varchar(64) not null unique,
   primary key (role_id)
 );
+
+
 create table user_role (
   user_role_id integer auto_increment,
   user_id      integer,
@@ -79,20 +82,22 @@ CREATE TABLE food (
 
 
 CREATE TABLE scheduleItme (
-  scheduleItme_id         INTEGER auto_increment,
-  start_time              DATETIME,
-  end_time                DATETIME,
-  has_known_concrete_time boolean not null ,
-  title                   varchar(1024),
-  description             varchar(1024),
-  address                 varchar(256),
-  user_id                 INTEGER,
-  imageUrl                varchar(1024),
+  scheduleItme_id INTEGER auto_increment,
+  start_time      DATETIME      not null,
+  end_time        DATETIME      not null,
+  title           varchar(1024) not null,
+  description     varchar(1024),
+  address         varchar(256),
+  user_id         INTEGER,
+  completed       boolean       not null,
+  imageUrl        varchar(1024),
   PRIMARY KEY (scheduleItme_id),
   FOREIGN KEY (user_id) REFERENCES user (user_id)
     on delete cascade
     on UPDATE cascade
+
 );
+
 
 create table plannerStore (
   planner_id        integer,
@@ -101,6 +106,7 @@ create table plannerStore (
   description       varchar(1024),
   primary key (planner_id)
 );
+
 
 CREATE TABLE user_planner_settings (
   user_planner_settings_id INTEGER auto_increment,
@@ -121,6 +127,7 @@ CREATE TABLE sportsItem (
   sport_name         varchar(64),
   calorie_per_minute INTEGER unsigned,
   address            varchar(256),
+  imageUrl           varchar(2048),
   PRIMARY KEY (sportsItem_id)
 );
 
