@@ -13,7 +13,6 @@ public class Scheduleitme {
     private String title;
 
     private String imageUrl;
-    private boolean hasKnownConcreteTime;
     private boolean completed;
     private User user;
 
@@ -102,16 +101,7 @@ public class Scheduleitme {
         this.title = title;
     }
 
-    @Basic
-    @Column(name = "has_known_concrete_time")
-    public boolean isHasKnownConcreteTime() {
-        return hasKnownConcreteTime;
-    }
 
-
-    public void setHasKnownConcreteTime(boolean hasKnownConcreteTime) {
-        this.hasKnownConcreteTime = hasKnownConcreteTime;
-    }
 
 
     @Basic

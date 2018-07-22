@@ -7,13 +7,11 @@ import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
 import com.codemover.xplanner.Model.Entity.Scheduleitme;
 import com.codemover.xplanner.Model.Entity.User;
 import com.codemover.xplanner.Service.ScheduleService;
-import com.codemover.xplanner.Service.Util.ScheduleItemDTOFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import com.codemover.xplanner.Converter.ScheduleitemConverter;
 
-
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,7 +34,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         try {
             User user = userRepository.findByUserName(username);
             Set<Scheduleitme> scheduleitmes = user.getScheduleitmes();
-            Set<ScheduleitmeDTO> scheduleitmeDTOS = ScheduleItemDTOFactory.createScheduleitmeDTOsFromScheduleitmes(scheduleitmes);
+            Set<ScheduleitmeDTO> scheduleitmeDTOS = ScheduleitemConverter.entitiesToDTOs(scheduleitmes);
             response.put("errno", 0);
             response.put("errMsg", "QueryScheduleItem:ok");
             response.put("scheduleItems", scheduleitmeDTOS);

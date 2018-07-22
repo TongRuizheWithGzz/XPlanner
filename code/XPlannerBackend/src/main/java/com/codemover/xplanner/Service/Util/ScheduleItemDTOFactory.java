@@ -80,7 +80,6 @@ public class ScheduleItemDTOFactory {
                 scheduleitmeDTO.imageUrl = null;
                 logger.info("missing poster(imageUrl) for this act:'{}'", scheduleitmeDTO.title);
             }
-            scheduleitmeDTO.hasKnownConcreteTime = true;
             scheduleitmes.add(scheduleitmeDTO);
         }
 
@@ -88,56 +87,12 @@ public class ScheduleItemDTOFactory {
     }
 
 
-    //Timestamp has a precision of yyyy-MM-dd HH:mm:ss
-    private static Timestamp convertStringToTimestamp(String strDate, String format) {
-        SimpleDateFormat sf = new SimpleDateFormat(format);
-        Date date = null;
-        try {
-            date = sf.parse(strDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Timestamp timestamp = new Timestamp(date.getTime());
-        return timestamp;
-    }
-
-    public static String TimeStamp2String(Timestamp timestamp) {
-        SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        return dFormat.format(new Date(timestamp.getTime()));
-    }
-
-    public static ScheduleitmeDTO createScheduleitmeDTOFromScheduleitme(@NotNull Scheduleitme scheduleitme) {
-        ScheduleitmeDTO scheduleitmeDTO = new ScheduleitmeDTO();
 
 
-        scheduleitmeDTO.title = scheduleitme.getTitle();
-        scheduleitmeDTO.description = scheduleitme.getDescription();
-        scheduleitmeDTO.hasKnownConcreteTime = scheduleitme.isHasKnownConcreteTime();
-        scheduleitmeDTO.address = scheduleitme.getAddress();
-        scheduleitmeDTO.completed = scheduleitme.isCompleted();
-        scheduleitmeDTO.imageUrl = scheduleitme.getImageUrl();
-        String start_time = TimeStamp2String(scheduleitme.getStartTime());
-        String end_time = TimeStamp2String(scheduleitme.getEndTime());
-        scheduleitmeDTO.start_time = start_time;
-        scheduleitmeDTO.end_time = end_time;
-        return scheduleitmeDTO;
-
-    }
 
 
-    public static Set<ScheduleitmeDTO> createScheduleitmeDTOsFromScheduleitmes(Set<Scheduleitme> scheduleitmes) {
-        Set<ScheduleitmeDTO> scheduleitmeDTOSet = new HashSet<ScheduleitmeDTO>();
-
-        Iterator<Scheduleitme> it = scheduleitmes.iterator();
-        while (it.hasNext()) {
-            ScheduleitmeDTO scheduleitmeDTO =
-                    createScheduleitmeDTOFromScheduleitme(it.next());
-            scheduleitmeDTOSet.add(scheduleitmeDTO);
-        }
 
 
-        return scheduleitmeDTOSet;
-    }
 
     public static String buildUrlForActDetail(Integer actId, String tongquActDetailUrl) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(tongquActDetailUrl)
