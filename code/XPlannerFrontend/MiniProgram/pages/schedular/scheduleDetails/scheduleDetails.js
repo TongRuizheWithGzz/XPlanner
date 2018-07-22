@@ -1,34 +1,28 @@
 var app = getApp();
 Page({
   data: {
-    day:"",
-    items: app.globalData.scheduleItems,
-    item:'',
+    item: {},
+    id: 0,
   },
 
   onLoad: function (options) {
     this.setData({
-      day:"options.day,",
-      item:this.data.items[0],
+      item: app.globalData.scheduleItems[options.id],
+      id: options.id,
     })
   },
 
-  onPullDownRefresh: function () {
-    
+  onShow: function (option) {
+    if (app.globalData.ifChangeSchedule) { // 从add页面返回并且修改日程
+      this.setData({
+        item: app.globalData.scheduleItems[option.id]
+      });
+    }
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-    
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-    
-  },
-  
+  edit: function () {
+    wx.redirectTo({
+      url: "/pages/schedular/addSchedule/add?id=" + this.data.id
+    });
+  }
 })

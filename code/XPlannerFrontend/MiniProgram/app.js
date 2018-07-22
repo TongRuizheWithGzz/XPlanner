@@ -35,6 +35,7 @@ function warpScheduleItems(scheduleItem_raw) {
     tmp.end_concret_time = tmp.end_time.slice(11, 16);
     tmp.start_date = tmp.start_time.slice(0, 10);
     tmp.completed = false;
+    tmp.visible = true;
     array.push(tmp);
   }
   return array;
@@ -102,8 +103,11 @@ App({
     userFoodEaten: [],
     scheduleItems: [],
     dayWithItem: {}, // 似乎只要用一次
-    ifAddSchedule: false, // 指示schedular显示时是否从add页面返回
+    ifAddSchedule: false, // 指示schedular显示时是否从添加事务的add页面返回
     ifSameDay: false, // 指示添加的日程是否和当天是否是一天
     logined: false,
+    ifChangeSchedule: false, // 指示schedular显示时是否从修改事务的add页面返回
+    changeScheduleIndex: 0,
+    ifChangeScheduleStartDate: false,
   }
 })

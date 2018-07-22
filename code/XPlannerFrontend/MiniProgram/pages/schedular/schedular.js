@@ -69,6 +69,33 @@ Page({
       }
       app.globalData.ifAddSchedule = false;
       app.globalData.ifSameDay = false;
+    } else if (app.globalData.ifChangeSchedule) { // 从add页面返回并且修改了日程
+      if (app.globalData.ifChangeScheduleStartDate) { // 如果修改了日程的开始日期
+        var tmp_item = app.globalData.scheduleItems[app.globalData.changeScheduleIndex];
+        if (parseInt(tmp_item.start_time.slice(5, 7)) == app.globalData.month) { // 如果是当前月
+          var tmp_day_list = this.data.dayList;
+          var tmp_day = parseInt(app.globalData.scheduleItems[app.globalData.changeScheduleIndex].slice(8, 10));
+          tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
+          tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
+          tmp_day_list[tmp_day - 1].haveItems = true;
+          this.setData({
+            dayList: tmp_day_list,
+          })
+
+          var tmp_items = app.globalData.scheduleItems;
+          tmp_items.splice(app.globalData.changeScheduleIndex, 1);
+          app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
+          this.setData({
+            tmp_items,
+          })
+        } else { // 如果不是当前月
+          return;
+        }
+      } else { // 如果没有修改开始日期
+        this.setData({
+          showItems: app.globalData.scheduleItems
+        })
+      }
     } else { // 普通显示或者放弃添加日程
       console.log("no thing happen after on show");
     }
@@ -137,30 +164,65 @@ Page({
    * 移除日程
    */
   delete(e) {
-    /* 向后端发送请求 */
+    var that = this;
+    wx.showModal({
+      title: '警告',
+      content: '是否删除选中日程？',
+      success: function (res) {
+        if (res.confirm) { // 确认删除
+          /* 向后端发送请求 */
 
-    /* 更改scheduleItems */
-    var tmp_items = app.globalData.scheduleItems;
-    tmp_items.splice(e.currentTarget.dataset.index, 1);
-    app.globalData.scheduleItems = tmp_items;
-    this.setData({
-      showItems: tmp_items,
+          /* 更改scheduleItems */
+          var tmp_items = app.globalData.scheduleItems;
+          tmp_items.splice(e.currentTarget.dataset.index, 1);
+          app.globalData.scheduleItems = tmp_items;
+          that.setData({
+            showItems: tmp_items,
+          });
+
+          if (tmp_items.length == 0) {
+            var day_list = this.data.dayList;
+            day_list[app.globalData.day - 1].haveItems = 0;
+            that.setData({
+              dayList: day_list,
+            })
+          }
+
+          that.setData({
+            showSelect: -1,
+          })
+        } else if (res.cancel) {
+          return;
+        }
+      }
     });
-
-    if (tmp_items.length == 0) {
-      var day_list = this.data.dayList;
-      day_list[app.globalData.day - 1].haveItems = 0;
-      this.setData({
-        dayList: day_list,
-      })
-    }
-    return;
   },
 
   changeVisible: function (e) {
-    this.setData({
-      showComplete: !this.data.showComplete
-    })
+    var tmp_show_complete = this.data.showComplete;
+    if (tmp_show_complete) {
+      var tmp_show_items = this.data.showItems;
+      for (var i = 0; i < tmp_show_items.length; i++) {
+        if (tmp_show_items[i].completed) {
+          tmp_show_items[i].visible = false;
+        }
+      }
+      this.setData({
+        showItems: tmp_show_items,
+        showComplete: !tmp_show_complete
+      });
+    } else {
+      var tmp_show_items = this.data.showItems;
+      for (var i = 0; i < tmp_show_items.length; i++) {
+        if (tmp_show_items[i].completed) {
+          tmp_show_items[i].visible = true;
+        }
+      }
+      this.setData({
+        showItems: tmp_show_items,
+        showComplete: !tmp_show_complete
+      });
+    }
   },
 
   /*

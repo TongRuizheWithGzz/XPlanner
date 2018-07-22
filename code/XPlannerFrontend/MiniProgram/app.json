@@ -1,7 +1,9 @@
 {
   "pages": [
     "pages/schedular/schedular",
+    
     "pages/schedular/scheduleDetails/scheduleDetails",
+    
     "pages/schedular/addSchedule/add",
     "pages/planners/planners",
     "pages/planners/management/management",

@@ -4,7 +4,7 @@
 </view>
 <view class='items'>
   <view class='list' bindtap='unselect'>
-    <view wx:for="{{showItems}}" wx:key="{{*this}}" wx:if="{{showComplete || !item.completed}}" class="{{showSelect == index ? 'se-item':'item'}}" catchtap='select' data-index='{{index}}'>
+    <view wx:for="{{showItems}}" wx:key="{{*this}}" wx:if="{{item.visible}}" class="{{showSelect == index ? 'se-item':'item'}}" catchtap='select' data-index='{{index}}'>
       <view class="{{showSelect == index ? 'se-left':'left'}}">
         <view class='start_time'>{{item.start_concret_time}}</view>
         <view wx:if="{{showSelect != index}}" class='plain'></view>
