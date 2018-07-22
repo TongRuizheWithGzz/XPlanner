@@ -40,6 +40,7 @@ public class ScheduleitemConverterTest {
         DTO.address = "Shanghai Jiaotong University";
     }
 
+
     @Test
     public void canConvertEntityToDTOTest() {
         ScheduleitmeDTO scheduleitmeDTO = ScheduleitemConverter.entityToDTO(entity);
@@ -51,6 +52,7 @@ public class ScheduleitemConverterTest {
         assertThat(scheduleitmeDTO.completed).isEqualTo(false);
         assertThat(scheduleitmeDTO.address).isEqualTo(null);
     }
+
 
 
 
