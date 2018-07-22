@@ -56,7 +56,6 @@ public class ScheduleDaoTest {
         scheduleitme.setTitle("tongruizhe");
         User user = userRepository.findByUserName("lihu");
         scheduleitme.setUser(user);
-        scheduleitme.setHasKnownConcreteTime(true);
         scheduleItemRepository.save(scheduleitme);
         Scheduleitme scheduleitme1 = new Scheduleitme();
         java.sql.Timestamp start_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-20 17:00").getTime());
@@ -67,7 +66,6 @@ public class ScheduleDaoTest {
         scheduleitme1.setAddress("软件大楼");
         scheduleitme1.setTitle("tongruizhe");
         scheduleitme1.setUser(user);
-        scheduleitme1.setHasKnownConcreteTime(true);
         scheduleItemRepository.save(scheduleitme1);
     }
 
@@ -122,7 +120,7 @@ public class ScheduleDaoTest {
         scheduleitme.setTitle("tongruizhe");
         User user1 = userRepository.findByUserName("lihu");
         scheduleitme.setUser(user1);
-        scheduleitme.setHasKnownConcreteTime(true);
+
 
         Timestamp start_time = scheduleitme.getStartTime();
         Timestamp end_time = scheduleitme.getEndTime();
@@ -175,7 +173,7 @@ public class ScheduleDaoTest {
         User user = userRepository.findByUserName("lihu");
         System.out.println(user.getUserId());
         scheduleitme.setUser(user);
-        scheduleitme.setHasKnownConcreteTime(true);
+
         scheduleItemRepository.save(scheduleitme);
         List<Scheduleitme> scheduleitme1 = scheduleItemRepository.findAll();
     }
@@ -195,7 +193,7 @@ public class ScheduleDaoTest {
         scheduleitme.setTitle("tongruizhe");
         User user = userRepository.findByUserName("lihu");
         scheduleitme.setUser(user);
-        scheduleitme.setHasKnownConcreteTime(true);
+
         scheduleitme.setScheduleItmeId(scheduleitme1.get(0).getScheduleItmeId());
         System.out.println(scheduleitme.getScheduleItmeId());
         scheduleItemRepository.save(scheduleitme);
