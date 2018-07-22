@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 @Service
-public class TongquService {
+public class TongquXSpider {
 
     @Value("${api.tongqu.url}")
     private String tongquApiUrl;
@@ -38,7 +38,9 @@ public class TongquService {
             response.put("errMsg", "tongqu acts get:failed");
             return response;
         }
+
     }
+
 
     public String getActsFromTongqu(Integer offset, String orderBy) {
         String url = ScheduleItemDTOFactory.buildUrl(offset, orderBy, tongquApiUrl);
@@ -46,8 +48,8 @@ public class TongquService {
         ResponseEntity<String> response
                 = restTemplate.getForEntity(url, String.class);
         return response.getBody();
-
     }
+
 
     public String getActDetailByIdFromWeSJTU(Integer actId) {
         String url = ScheduleItemDTOFactory.buildUrlForActDetail(actId, tongquDetailApiUrl);

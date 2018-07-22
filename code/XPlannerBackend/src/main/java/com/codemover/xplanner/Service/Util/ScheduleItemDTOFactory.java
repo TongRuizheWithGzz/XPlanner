@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 
@@ -85,12 +82,6 @@ public class ScheduleItemDTOFactory {
 
         return scheduleitmes;
     }
-
-
-
-
-
-
 
 
 

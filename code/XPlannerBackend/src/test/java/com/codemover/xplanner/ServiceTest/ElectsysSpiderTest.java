@@ -1,9 +1,7 @@
 package com.codemover.xplanner.ServiceTest;
 
 
-import com.codemover.xplanner.Service.Impl.TongquService;
-import com.codemover.xplanner.Service.Impl.XSBService;
-import org.dom4j.DocumentException;
+import com.codemover.xplanner.Service.Impl.ElectsysSpider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +10,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class XSBServiceTest {
+public class ElectsysSpiderTest {
+
     @Autowired
-    private XSBService xsbService;
+    ElectsysSpider electsysSpider;
 
     @Test
-    public void test() throws IOException{
-        xsbService.ParseHTMLFromXSB(1);
+    public void test() throws IOException {
+        electsysSpider.getInfoFromElectsys();
+
     }
-
-
 }
+
+

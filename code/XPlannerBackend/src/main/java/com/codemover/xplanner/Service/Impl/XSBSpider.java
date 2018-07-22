@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 
 @Service
-public class XSBService {
+public class XSBSpider {
 
     @Value("${url.xsb.info}")
     private String XSBUrl;

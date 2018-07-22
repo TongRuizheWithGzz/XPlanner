@@ -1,9 +1,7 @@
 package com.codemover.xplanner.ServiceTest;
 
 
-import com.codemover.xplanner.Model.Entity.Scheduleitme;
-import com.codemover.xplanner.Service.Impl.TongquService;
-import com.codemover.xplanner.Service.Util.ScheduleItemDTOFactory;
+import com.codemover.xplanner.Service.Impl.TongquXSpider;
 import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,32 +9,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TongquServiceTest {
+public class TongquXSpiderTest {
 
     @Autowired
-    private TongquService tongquService;
+    private TongquXSpider tongquXSpider;
 
 
     @Test
     public void tongquOffsetParameterOffset0And1AreNotSame() {
-        String response1 = tongquService.getActsFromTongqu(1, "act.create_time");
-        String response2 = tongquService.getActsFromTongqu(0, "act.create_time");
+        String response1 = tongquXSpider.getActsFromTongqu(1, "act.create_time");
+        String response2 = tongquXSpider.getActsFromTongqu(0, "act.create_time");
         System.out.println(response1);
         assertThat(response1).isNotEqualTo(response2);
     }
 
     @Test
     public void tongquJsonParseSuccess() {
-        HashMap<String, Object> response = tongquService.getScheduleitemsFromTongqu(0, "act.create_time");
+        HashMap<String, Object> response = tongquXSpider.getScheduleitemsFromTongqu(0, "act.create_time");
         Gson gson = new Gson();
         String json = gson.toJson(response);
         System.out.println(json);

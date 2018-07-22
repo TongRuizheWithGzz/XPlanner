@@ -29,7 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class ElectsysService {
+public class ElectsysSpider {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -44,7 +44,7 @@ public class ElectsysService {
 
     private CloseableHttpResponse response;
 
-    public ElectsysService() {
+    public ElectsysSpider() {
         httpClient = HttpClients.createDefault();
 
 
