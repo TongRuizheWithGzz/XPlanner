@@ -34,7 +34,7 @@ function warpScheduleItems(scheduleItem_raw) {
     tmp.start_concret_time = tmp.start_time.slice(11, 16);
     tmp.end_concret_time = tmp.end_time.slice(11, 16);
     tmp.start_date = tmp.start_time.slice(0, 10);
-    tmp.selected = false;
+    tmp.completed = false;
     array.push(tmp);
   }
   return array;

@@ -4,7 +4,6 @@
 </view>
 <view class='items'>
   <view class='list' bindtap='unselect'>
-
     <view wx:for="{{showItems}}" wx:key="{{*this}}" class="{{showSelect == index ? 'se-item':'item'}}" catchtap='select' data-index='{{index}}'>
       <view class="{{showSelect == index ? 'se-left':'left'}}">
         <view class='start_time'>{{item.start_concret_time}}</view>
@@ -23,26 +22,20 @@
           <text>{{item.description}}</text>
         </view>
       </view>
-      <!-- <view class="{{showSelect == index ? 'se-operate':'operate'}}"> -->
-      <!-- <view class="{{showSelect == index ? 'se-checkbox':'checkbox'}}">
-        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}"
-          wx:if="{{item.selected}}" src="/icons/checkbox-checked.png"></image>
-        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}"
-          wx:if="{{!item.selected}}" src="/icons/checkbox.png"></image>
-      </view> -->
       <view class="{{showSelect == index ? 'buttons':'one-button'}}">
-        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{item.selected}}" src="/icons/checkbox-checked.png"></image>
-        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{!item.selected}}" src="/icons/checkbox.png"></image>
+        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}"
+          wx:if="{{item.completed}}" src="/icons/checkbox-checked.png"></image>
+        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}"
+          wx:if="{{!item.completed}}" src="/icons/checkbox.png"></image>
         <image wx:if="{{showSelect == index}}" src='/icons/detail.png' class='button' catchtap='detail' data-index="{{index}}"></image>
-        <!-- <image wx:if="{{showSelect == index}}" src='/icons/edit.png' class='button' catchtap='edit' data-index="{{index}}"></image> -->
         <image wx:if="{{showSelect == index}}" src='/icons/delete.png' class='button' catchtap='delete' data-index="{{index}}"></image>
       </view>
-      <!-- </view> -->
-      <!-- <view class="{{showSelect == index ? 'se-checkbox':'checkbox'}}">
-        <image class="checkbox-icon" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{item.selected}}" src="/icons/checkbox-checked.png"></image>
-        <image class="checkbox-icon" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{!item.selected}}" src="/icons/checkbox.png"></image>
-      </view> -->
     </view>
   </view>
+</view>
+<view class="controller">
+  <view class="add-item-word">添加事务</view>
+  <view class="show-complete-word" wx:if="{{showComplete}}">显示已完成事务</view>
+  <view class="show-complete-word" wx:if="{{showComplete}}">不显示已完成事务</view>
 </view>
 <image src="/icons/plus-circle.png" class="add-schedule" bindtap="add"></image>

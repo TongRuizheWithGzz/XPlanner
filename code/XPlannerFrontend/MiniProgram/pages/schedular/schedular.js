@@ -113,8 +113,8 @@ Page({
 
   selectCheckbox: function (e) {
     console.log(e.currentTarget.dataset.index);
-    var tmp = app.globalData.scheduleItems[e.currentTarget.dataset.index].selected;
-    app.globalData.scheduleItems[e.currentTarget.dataset.index].selected = !tmp;
+    var tmp = app.globalData.scheduleItems[e.currentTarget.dataset.index].completed;
+    app.globalData.scheduleItems[e.currentTarget.dataset.index].completed = !tmp;
     this.setData({
       showItems: app.globalData.scheduleItems
     });
