@@ -1,5 +1,6 @@
 package com.codemover.xplanner.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.sql.Timestamp;
 
 @Entity
 public class Scheduleitme {
+    @JsonProperty("scheduleItem_id")
     private int scheduleItmeId;
 
     @JsonProperty("start_time")
@@ -18,8 +20,9 @@ public class Scheduleitme {
     private String address;
     private String title;
 
-    private String imageUrl;
     private boolean completed;
+
+    @JsonIgnore
     private User user;
 
 
@@ -88,15 +91,7 @@ public class Scheduleitme {
     }
 
 
-    @Basic
-    @Column(name = "imageUrl")
-    public String getImageUrl() {
-        return imageUrl;
-    }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
 
     @Basic

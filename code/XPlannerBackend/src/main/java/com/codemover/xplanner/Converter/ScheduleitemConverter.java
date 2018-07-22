@@ -17,13 +17,8 @@ import java.util.Set;
 public class ScheduleitemConverter {
     public static Scheduleitme DTOToEntity(@NotNull ScheduleitmeDTO dto) {
         Scheduleitme entity = new Scheduleitme();
-        entity.setTitle(dto.title);
-        entity.setImageUrl(dto.imageUrl);
-        entity.setStartTime(String2TimeStamp(dto.start_time));
-        entity.setEndTime(String2TimeStamp(dto.end_time));
-        entity.setAddress(dto.address);
-        entity.setCompleted(dto.completed);
-        entity.setDescription(dto.description);
+        modifyEntity(entity, dto);
+
         return entity;
     }
 
@@ -33,13 +28,20 @@ public class ScheduleitemConverter {
         DTO.description = entity.getDescription();
         DTO.address = entity.getAddress();
         DTO.completed = entity.isCompleted();
-        DTO.imageUrl = entity.getImageUrl();
         DTO.start_time = TimeStamp2String(entity.getStartTime());
         DTO.end_time = TimeStamp2String(entity.getEndTime());
 
         return DTO;
     }
 
+    public static void modifyEntity(@NotNull Scheduleitme entity, @NotNull ScheduleitmeDTO dto) {
+        entity.setTitle(dto.title);
+        entity.setStartTime(String2TimeStamp(dto.start_time));
+        entity.setEndTime(String2TimeStamp(dto.end_time));
+        entity.setAddress(dto.address);
+        entity.setCompleted(dto.completed);
+        entity.setDescription(dto.description);
+    }
 
     public static Set<ScheduleitmeDTO> entitiesToDTOs(@NotNull Set<Scheduleitme> entities) {
         Set<ScheduleitmeDTO> DTOs = new HashSet<ScheduleitmeDTO>();

@@ -1,14 +1,15 @@
-package com.codemover.xplanner.Service.Impl;
+package com.codemover.xplanner.Service.Impl.Spider;
 
+import com.codemover.xplanner.Model.DTO.Notification;
 import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
 
-import com.google.gson.Gson;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import org.apache.http.impl.client.HttpClients;
+import org.dom4j.Node;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,17 +20,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.apache.commons.io.IOUtils;
 
-import javax.print.Doc;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service
-public class ElectsysSpider {
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
+
+@Service("ElectsysSpider")
+public class ElectsysSpider implements ISpider {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -40,73 +42,96 @@ public class ElectsysSpider {
     @Value("${url.electsys.login}")
     private String EleLoginUrl;
 
+    @Value("${url.electsys.allInfo}")
+    private String EleAllInfoUrl;
+
     private CloseableHttpClient httpClient;
 
     private CloseableHttpResponse response;
 
+    private String website;
+
     public ElectsysSpider() {
         httpClient = HttpClients.createDefault();
-
+        website = "教学信息服务网";
 
     }
 
-    public String getIndexPage() throws IOException {
-        HttpGet httpGetIndexPage = new HttpGet(EleUrl);
+    @Override
+    public Collection<Notification> getInfoFromWebsite(Integer offset, Integer number)
+            throws IOException {
 
-        logger.info("Visit electsys index page");
-        response = httpClient.execute(httpGetIndexPage);
+        String allInfoXml = getAllInfo(EleAllInfoUrl);
+        String patternForTitle = "<title>(.+?)</title>";
+        String patternForLink = "<link>(.+?)</link>";
+        String patternForPubDate = "<pubDate>(.+?)</pubDate>";
+        Pattern pattern1 = Pattern.compile(patternForTitle);
+        Pattern pattern2 = Pattern.compile(patternForLink);
+        Pattern pattern3 = Pattern.compile(patternForPubDate);
+
+
+        Matcher m1 = pattern1.matcher(allInfoXml);
+        Matcher m2 = pattern2.matcher(allInfoXml);
+
+        Matcher m3 = pattern3.matcher(allInfoXml);
+
+        ArrayList<Notification> notifications = new ArrayList<>();
+        Integer count = 0;
+        Integer hasParsed = 0;
+
+        while (m1.find() && m2.find() && m3.find()) {
+            if (count < offset) {
+                count++;
+                continue;
+            }
+            if (hasParsed >= number)
+                break;
+            Notification notification = new Notification();
+
+            notification.title = m1.group(1);
+
+            String link = m2.group(1);
+
+            String pubDate = m3.group(1);
+            notification.start_time = pubDate.substring(0, pubDate.length() - 3);
+            notification.end_time = notification.start_time;
+            notification.imageUrl = "";
+            notification.address = "";
+            notification.website = website;
+            notification.description = "";
+
+            String detailHtml = getAllInfo(link);
+
+            Document detailDoc = Jsoup.parse(detailHtml);
+
+            try {
+                Element table = detailDoc.select("table.main_r_co_fo").get(0);
+                notification.description = table.text().substring(0, Integer.min(1024, table.text().length()));
+                notifications.add(notification);
+            } catch (IndexOutOfBoundsException e) {
+                notifications.add(notification);
+            } finally {
+                hasParsed++;
+            }
+        }
+        return notifications;
+    }
+
+    private String getAllInfo(String url) throws IOException {
+        HttpGet httpGetAllInfoPage = new HttpGet(url);
+
+        logger.info("Visit electsys allInfo page");
+        response = httpClient.execute(httpGetAllInfoPage);
 
 
         int statusCode = response.getStatusLine().getStatusCode();
         logger.info("Get status code from electsys: '{}'", statusCode);
 
-        return IOUtils.toString(response.getEntity().getContent());
+        SpiderUtil.isResponseOK(statusCode, website);
 
-    }
+        String resStr = IOUtils.toString(response.getEntity().getContent(), "gb2312");
+        return resStr;
 
-
-    public List<ScheduleitmeDTO> getInfoFromElectsys() throws IOException {
-        ArrayList<ScheduleitmeDTO> scheduleitmeDTOS = new ArrayList<>();
-        String html = getIndexPage();
-        Document doc = Jsoup.parse(html);
-        Elements TDs = doc.select("TD.18line");
-
-        for (Element td : TDs) {
-            ScheduleitmeDTO scheduleitmeDTO = new ScheduleitmeDTO();
-            Element font = td.select("font.date").get(0);
-            Element href = td.select("a").get(0);
-            String title = href.text();
-            String detailUrl = href.attr("abs:href");
-            scheduleitmeDTO.title = title;
-
-
-            String pattern = "\\((?:([0-9]{4})年([0-9]{1,2})月([0-9]{1,2})日)\\)";
-            Pattern p = Pattern.compile(pattern);
-            Matcher m = p.matcher(font.text());
-            if (m.find()) {
-                String year = m.group(1);
-                String month = m.group(2).length() == 1 ? "0" + m.group(2) : m.group(2);
-                String day = m.group(3).length() == 1 ? "0" + m.group(3) : m.group(3);
-
-                String formatDateString = year + "-" + month + "-" + day + " 00:00";
-                scheduleitmeDTO.start_time = formatDateString;
-                scheduleitmeDTO.end_time = formatDateString;
-            }
-
-            HttpGet httpGet = new HttpGet(detailUrl);
-            response = httpClient.execute(httpGet);
-            String detailHtml = IOUtils.toString(response.getEntity().getContent(), "gb2312");
-            Document detailDoc = Jsoup.parse(detailHtml);
-
-            try {
-                Element table = detailDoc.select("table.main_r_co_fo").get(0);
-                scheduleitmeDTO.description = table.text().substring(0, Integer.min(1024, table.text().length()));
-            } catch (IndexOutOfBoundsException e) {
-                continue;
-            }
-            scheduleitmeDTOS.add(scheduleitmeDTO);
-        }
-        return scheduleitmeDTOS;
     }
 
 
