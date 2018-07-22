@@ -13,8 +13,9 @@ public class SpiderUtil {
             throw new HTTPRequestNotOKException(website + " response badly!");
     }
 
-    public static void isResponseOK(int statusCode,String website){
+    public static void isResponseOK(int statusCode, String website) {
         if (statusCode != HttpStatus.SC_OK)
             throw new HTTPRequestNotOKException(website + " response badly!");
     }
+
 }

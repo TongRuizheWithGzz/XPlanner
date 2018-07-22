@@ -1,34 +1,24 @@
 package com.codemover.xplanner.Service.Impl.Spider;
 
 import com.codemover.xplanner.Model.DTO.Notification;
-import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
-
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-
 import org.apache.http.impl.client.CloseableHttpClient;
-
 import org.apache.http.impl.client.HttpClients;
-import org.dom4j.Node;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.dom4j.DocumentException;
-import org.dom4j.io.SAXReader;
 
 @Service("ElectsysSpider")
 public class ElectsysSpider implements ISpider {

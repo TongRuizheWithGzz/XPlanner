@@ -1,27 +1,21 @@
 package com.codemover.xplanner.Service.Impl.Spider;
 
 import com.codemover.xplanner.Model.DTO.Notification;
-
 import com.codemover.xplanner.Service.Exception.HTTPRequestNotOKException;
-
 import com.codemover.xplanner.Service.Exception.SpiderRequestParamException;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
-
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.stereotype.Service;
-
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;

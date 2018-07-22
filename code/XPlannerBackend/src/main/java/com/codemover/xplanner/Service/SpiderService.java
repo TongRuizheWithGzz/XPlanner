@@ -1,7 +1,6 @@
 package com.codemover.xplanner.Service;
 
 import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
-import com.codemover.xplanner.Model.Entity.Scheduleitme;
 
 import java.util.Collection;
 

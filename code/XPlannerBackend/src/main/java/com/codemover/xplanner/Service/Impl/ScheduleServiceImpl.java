@@ -1,6 +1,7 @@
 package com.codemover.xplanner.Service.Impl;
 
 
+import com.codemover.xplanner.Converter.ScheduleitemConverter;
 import com.codemover.xplanner.DAO.ScheduleItemRepository;
 import com.codemover.xplanner.DAO.UserRepository;
 import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
@@ -12,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import com.codemover.xplanner.Converter.ScheduleitemConverter;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
