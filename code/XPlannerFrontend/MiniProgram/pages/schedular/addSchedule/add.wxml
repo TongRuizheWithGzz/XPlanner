@@ -1,35 +1,38 @@
 <view class='input'>
-  <view class='inter'>
+  <view class='inter1 line'>
     <image src="/icons/des.png" class="icon"></image>
     <text>描述</text>
   </view>
 
-  <view class='block'>
-    <text class='title'>标题</text>
+  <view class='block line'>
+    <text class='title '>标题</text>
     <input value="{{title}}" placeholder='事项标题' class='ip' placeholder-class='ph' bindinput='titleIp' />
   </view>
+
+
 
   <view class='block1'>
     <text class='description'>描述</text>
     <textarea value="{{description}}" placeholder='事项文字' class='ip1' placeholder-class='ph' bindinput='descriptionIp' />
   </view>
-  <view class='inter'>
+</view>
+<view class='input'>
+  <view class='inter1 line'>
     <image src="/icons/time.png" class="icon"></image>
     <text>时间</text>
   </view>
-
-  <view class='block'>
+  <view class='block line'>
     <text class='text1'>开始时间</text>
     <picker value="{{startDate}}" mode='date' class='date' bindchange='changeSD'>{{startDate}}</picker>
     <picker value="{{startTime}}" mode='time' class='time' bindchange='changeST'>{{startTime}}</picker>
   </view>
 
-  <view class='block'>
+  <view class='block line'>
     <text class='text2'>结束时间</text>
     <picker value="{{endDate}}" mode='date' class='date' bindchange='changeED'>{{endDate}}</picker>
     <picker value="{{endTime}}" mode='time' class='time' bindchange='changeET'>{{endTime}}</picker>
   </view>
-  <view class='inter'>
+  <view class='inter line'>
     <image src="/icons/loc.png" class="icon"></image>
     <text>地点</text>
   </view>
@@ -39,9 +42,13 @@
     <input class='ip' placeholder='事项地址' placeholder-class='ph' bindinput='addressIp' value="{{address}}" />
   </view>
 
-  <view class='buttons'>
-    <view class='button' bindtap='save'><text>保存</text></view>
-    <view class='button' bindtap='discard'><text>放弃</text></view>
-  </view>
+</view>
 
+<view class='buttons'>
+  <view class="button save" hover-class='press' catchtap='save'>
+    <text>保存</text>
+  </view>
+  <view class='button discard' hover-class='press' catchtap='discard'>
+    <text>放弃</text>
+  </view>
 </view>

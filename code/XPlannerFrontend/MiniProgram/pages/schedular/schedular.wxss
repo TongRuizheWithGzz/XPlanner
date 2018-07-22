@@ -142,37 +142,47 @@
 
 .item, .se-item {
   background-color: white;
-  height: 90px;
-  margin: 18px 115px 18px 10px;
+  height: 65px;
+  margin-top: 18px;
+  margin-right: 15px;
+  margin-left: 200rpx;
   display: flex;
-  transition: height 0.3s, margin 0.3s;
+  transition: all 0.3s;
   flex-direction: row;
   align-items: center;
   -moz-box-shadow: 2px 3px 3px #a3a3a3;
   -webkit-box-shadow: 2px 3px 3px #a3a3a3;
   box-shadow: 2px 3px 3px #a3a3a3;
   border-radius: 10px;
-  z-index: 100;
+  z-index:0;
+}
+
+.plain {
+  height: 1px;
+  width: 85%;
+  background-color: #a8a8a8;
 }
 
 .se-item {
   position: relative;
   margin: -10px 15px -10px 15px;
-  height: 200px;
+  height: 220px;
   -moz-box-shadow: 2px 3px 30px #969696;
   -webkit-box-shadow: 2px 3px 30px #969696;
   box-shadow: 2px 3px 30px #969696;
-  z-index: 1000;
+  z-index: 50;
+  transition: all 0.3s;
 }
 
-.left, .right, .se-right {
+.left, .se-left, .right, .se-right {
   height: 100%;
   display: flex;
   transition: all 0.3s;
   flex-direction: column;
 }
 
-.left {
+.left, .se-left {
+  height: 80%;
   justify-content: space-around;
   width: 75px;
   align-items: center;
@@ -180,9 +190,15 @@
   transition: all 0.3s;
 }
 
+.se-left {
+  height: 120%;
+  transition: all 0.3s;
+  font-size: 16px;  
+}
+
 .right, .se-right {
-  font-size: 13.4px;
-  margin-left: 15px;
+  font-size: 15px;
+  margin-left: 12px;
   transition: all 0.3s;
   font-weight: bold;
 }
@@ -206,11 +222,12 @@
 
 .end_time {
   font-weight: lighter;
-  color: #616161;
+  color: #757575;
 }
 
 .address {
-  margin-top:7px;
+  font-size:14px;
+  margin-top: 7px;
   font-weight: light;
   color: #a3a3a3;
 }
@@ -220,29 +237,66 @@
 }
 
 .se-title {
-  font-size: 17px;
+  font-size: 18px;
+  font-weight: bold;
   transition: all 0.3s;
 }
 
 .buttons {
-  height: 90%;
+  height: 60%;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   margin-left: 30px;
 }
-
 .button {
   height: 30px;
   width: 30px;
 }
 
 .description {
-  margin-top:1px;
+  margin-top: 1px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   font-weight: lighter;
+  font-size:14px;
+}
+
+.operate {
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+}
+
+.se-operate {
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+}
+
+.se-checkbox {
+  height: 30%;
+  padding-bottom: 0px;
+}
+
+.checkbox {
+  height: 30%;
+  padding-top: 5px;
+}
+
+.checkbox-icon {
+  padding-left: 20px;
+  padding-bottom: 10px;
+  height: 20px;
+  width: 20px;
+}
+
+.se-checkbox-icon {
+  padding-left: 5px;
+  padding-bottom: 8px;
+  height: 20px;
+  width: 20px;
 }

@@ -1,6 +1,5 @@
 var app = getApp();
 var sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
-// var scheduleItems = app.globalData.scheduleItems;
 var time = require("../../common/time");
 const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
 
@@ -23,10 +22,10 @@ Page({
     showYear: app.globalData.year,
     showMonth: app.globalData.month,
     monthStr: MONTHS[app.globalData.month - 1],
-    // monthList: {},
     dayList: [],
   },
   onLoad: function () {
+    console.log("get app date" + app.globalData.date);
     /* 获取要显示的日程列表 */
     var tmp_show_items = app.globalData.scheduleItems;
 
@@ -89,8 +88,15 @@ Page({
     })
   },
   select: function (event) {
+    if (this.data.showSelect == event.currentTarget.dataset.index) {
+      this.setData({
+        showSelect: -1,
+      })
+      return;
+    }
     this.setData({
-      showSelect: event.currentTarget.dataset.index
+      showSelect: event.currentTarget.dataset.index,
+      showModalStatus: false,
     })
   },
   unselect: function () {
@@ -103,6 +109,17 @@ Page({
       url: '/pages/schedular/add/scheduleDetails?id=' +
         event.currentTarget.dataset.index,
     })
+  },
+
+  selectCheckbox: function (e) {
+    console.log(e.currentTarget.dataset.index);
+    var tmp = app.globalData.scheduleItems[e.currentTarget.dataset.index].selected;
+    app.globalData.scheduleItems[e.currentTarget.dataset.index].selected = !tmp;
+    this.setData({
+      showItems: app.globalData.scheduleItems
+    });
+
+    /* 注意，需要通知后端数据已经更改 */
   },
 
   /*
@@ -445,7 +462,6 @@ Page({
     var show_year = this.data.showYear;
     var show_month = this.data.showMonth;
     var new_date = time.getDateStringWithZero(new_year, new_month, new_day);
-    // var tmp_month_list = this.data.monthList;
 
     if ((new_day == old_day && new_month == old_month && // 判断是否点击同一天
       new_year == old_year && show_month == old_month &&
@@ -464,6 +480,22 @@ Page({
     app.globalData.date = new_date;
 
     /* 本地存储新日期 */
+    wx.setStorage({
+      key: "date",
+      data: new_date
+    });
+    wx.setStorage({
+      key: "year",
+      data: new_year,
+    });
+    wx.setStorage({
+      key: "month",
+      data: new_month,
+    });
+    wx.setStorage({
+      key: "day",
+      data: new_day,
+    });
 
     /* 设置控制日程显示的showItems和scheduleItems */
     var tmp_items = this.getScheduleItemsFromBackEndAndWarp(new_date);
