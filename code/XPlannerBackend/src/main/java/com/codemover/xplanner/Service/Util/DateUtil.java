@@ -9,5 +9,8 @@ public class DateUtil {
         return chineseTool.default_time(hint);
     }
 
-    public int String2Int(String hint) { return chineseTool.String2Int(hint); }
+
+    public int String2Int(String hint) {
+        return chineseTool.String2Int(hint);
+    }
 }

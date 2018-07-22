@@ -1,6 +1,8 @@
 package com.codemover.xplanner.OAuth2Test;
 
 
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +47,28 @@ public class OAuth2ControllerTest {
                 .andExpect(jsonPath("$.errMsg", is("loginByJAccount:ok")));
     }
 
+    @Test
+    public void GetCorrectUrlTest() throws OAuthSystemException {
+        OAuthClientRequest request = OAuthClientRequest
+                .authorizationLocation("https://jaccount.sjtu.edu.cn/oauth2/authorize")
+                .setClientId("ajebOnLZZi7Uk7y3Jbze")
+                .setRedirectURI("http://localhost:8082/api/loginByJAccount/authorize")
+                .setResponseType("code")
+                .setState("xyz")
+                .setScope("lessons")
+                .buildQueryMessage();
+        String UrlForGetCode = request.getLocationUri();
+        OAuthClientRequest request2 = OAuthClientRequest
+                .authorizationLocation("https://jaccount.sjtu.edu.cn/oauth2/logout")
+                .setClientId("ajebOnLZZi7Uk7y3Jbze")
+                .setRedirectURI("https://baidu.com")
+                .buildQueryMessage();
+        String UrlForGetCode2 = request2.getLocationUri();
+        System.out.println(UrlForGetCode);
+
+
+        System.out.println(UrlForGetCode2);
+    }
 
 
 }

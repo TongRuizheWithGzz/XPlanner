@@ -20,8 +20,6 @@ import java.util.HashMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-
-
 public class ReaderTest {
 
     @Before

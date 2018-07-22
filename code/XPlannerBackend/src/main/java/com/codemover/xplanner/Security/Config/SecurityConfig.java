@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/loginByUsernamePassword").permitAll()
-                .antMatchers("/api/auth/test").hasRole("JACCOUNT_USER")
+                .antMatchers("/api/auth/getIndexPage").hasRole("JACCOUNT_USER")
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutUrl("/api/logout").deleteCookies("JSESSIONID");
