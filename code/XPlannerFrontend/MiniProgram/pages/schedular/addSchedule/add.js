@@ -13,6 +13,7 @@ Page({
     showModal: true,
     msg: 'jjj',
     ifAddPage: true,
+    ifSpiderPage: false,
     itemIndex: 0,
     ifChangeScheduleStartDate: false,
   },
@@ -33,9 +34,9 @@ Page({
     })
   },
 
-  onLoad: function (option) {
-    if (option.id) { // 如果是修改页面
-      var tmp_item = app.globalData.scheduleItems[option.id];
+  onLoad: function (options) {
+    if (options.id) { // 如果是修改页面
+      var tmp_item = app.globalData.scheduleItems[options.id];
       this.setData({
         startDate: tmp_item.start_time.slice(0, 10),
         startTime: tmp_item.start_time.slice(11, 16),
@@ -45,8 +46,25 @@ Page({
         description: tmp_item.description,
         address: tmp_item.address,
         ifAddPage: false,
-        itemIndex: option.id,
+        itemIndex: options.id,
         oldStartDate: tmp_item.start_time.slice(0, 10),
+      });
+    } else if (options.spiderIndex) { // 如果是添加spider项目
+      console.log(options.spiderIndex);
+      console.log("add spider item");
+      console.log(options.pageNumber);
+      console.log(app.globalData.spiderItems);
+      var tmp_item = app.globalData.spiderItems[options.pageNumber - 1][options.spiderIndex];
+      console.log(tmp_item);
+      this.setData({
+        startDate: tmp_item.start_time.slice(0, 10),
+        startTime: tmp_item.start_time.slice(11, 16),
+        endDate: tmp_item.end_time.slice(0, 10),
+        endTime: tmp_item.end_time.slice(11, 16),
+        title: tmp_item.title,
+        description: tmp_item.description,
+        address: tmp_item.address,
+        ifAddPage: true, // 添加spider项目本质上和添加普通项目相同
       });
     } else { // 如果是添加页面
       this.setData({
