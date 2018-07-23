@@ -1,5 +1,6 @@
 var app = getApp();
 var time = require("../../common/time");
+var schedule = require("../../common/schedule");
 const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
 
 const NORMAL_DAY_COLOR = 'grey';
@@ -567,21 +568,10 @@ Page({
       key: "date",
       data: new_date
     });
-    wx.setStorage({
-      key: "year",
-      data: new_year,
-    });
-    wx.setStorage({
-      key: "month",
-      data: new_month,
-    });
-    wx.setStorage({
-      key: "day",
-      data: new_day,
-    });
 
     /* 设置控制日程显示的showItems和scheduleItems */
-    var tmp_items = this.getScheduleItemsFromBackEndAndWarp(new_date);
+    var tmp_items = schedule.warpScheduleItems(this.getScheduleItemsFromBackEndAndWarp(new_date));
+    console.log(tmp_items);
     app.globalData.scheduleItems = tmp_items;
     this.setData({
       showItems: tmp_items,
