@@ -11,7 +11,7 @@
           <view wx:for="{{crawled}}" wx:key="{{*this}}" class="item{{(id+index)%2}}" catchtap='select' data-index='{{index}}'>
             <image src="/icons/spider.png" class='spide'></image>
 
-            <view class="item" catchtap='detail'>
+            <view class="item" catchtap='detail' data-index="{{index}}">
               <view class='left'>
                 <text class='start_time'>{{item.start_time}}</text>
                 <view class='plain' />

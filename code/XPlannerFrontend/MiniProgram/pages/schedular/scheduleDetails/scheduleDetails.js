@@ -6,10 +6,18 @@ Page({
   },
 
   onLoad: function (options) {
-    this.setData({
-      item: app.globalData.scheduleItems[options.id],
-      id: options.id,
-    })
+    if (options.spiderIndex) {
+      console.log(app.globalData.spiderItems);
+      this.setData({
+        item: app.globalData.spiderItems[options.spiderIndex],
+        id: options.spiderIndex,
+      })
+    } else {
+      this.setData({
+        item: app.globalData.scheduleItems[options.id],
+        id: options.id,
+      })
+    }
   },
 
   onShow: function (option) {

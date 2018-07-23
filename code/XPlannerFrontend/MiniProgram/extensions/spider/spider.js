@@ -1,5 +1,6 @@
 //index.js 获取应用实例
-var sedata = require("../../data/tongquitems.js")
+var sedata = require("../../data/spiderItems.js")
+var spider = require("../../common/spider");
 var app = getApp();
 Page({
   data: {
@@ -133,9 +134,10 @@ Page({
       pageNumber: 1
     })
   },
-  detail:function(){
+  detail:function(e){
+    app.globalData.spiderItems = spider.warpSpiderItems(this.data.crawled);
     wx.navigateTo({
-      url: '/pages/schedular/scheduleDetails/scheduleDetails',
+      url: '/pages/schedular/scheduleDetails/scheduleDetails?spiderIndex=' + e.currentTarget.dataset.index,
     })
   }
 });
