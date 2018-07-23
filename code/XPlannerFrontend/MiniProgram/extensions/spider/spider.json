@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "爬取日程",
-  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarBackgroundColor": "#f9f9f9",
   "navigationBarTextStyle": "black",
-  "enablePullDownRefresh": true
+  "disableScroll": true
 }

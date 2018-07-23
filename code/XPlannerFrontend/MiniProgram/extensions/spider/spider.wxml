@@ -1,14 +1,38 @@
-<view hidden='{{hideFixTop}}' class='fixTop'>
-  <text>{{time}}:00 PM</text>
-</view>
-<view wx:for="{{scheduleItems}}" wx:key='key' data-id='{{index}}'>
-  <view hidden='{{index%3!=0}}' class='top'>
-    <text>{{index}}:00 PM</text>
-  </view>
-  <view class='list-item' bindtap='detail'>
-    <text class='item-title item{{index%4}}'>{{item.title}}</text>
-    <text class='item-time'>
-          {{"FROM "+item.start_time + " TO " + item.end_time}}
-        </text>
+<!--index.wxml-->
+<view class="card_wrap">
+  <view bindtouchstart='start' bindtouchend='end' animation="{{ animationlist[id] }}" class="card_item card{{ id + 1 }} zindex{{ zindex[(2-id)] }} " wx:for="{{ spiderItems }}" wx:key="unique" wx:for-index="id" wx:for-item="item">
+    <view class='spider-page'>
+      <view class='top'>
+        <image src='https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1532238329349&di=0d99521b5ee795b5df00824d90f949f2&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dshijue1%252C0%252C0%252C294%252C40%2Fsign%3Dc1673089aec27d1eb12b338773bcc71b%2Fd31b0ef41bd5ad6ec89ce6c78bcb39dbb6fd3cb1.jpg'
+          class='icon' catchtap='refresh'></image>
+      </view>
+      <view class='items'>
+        <view class='list' bindtap='unselect'>
+          <view wx:for="{{crawled}}" wx:key="{{*this}}" class="item{{(id+index)%2}}" catchtap='select' data-index='{{index}}'>
+            <image src="/icons/spider.png" class='spide'></image>
+
+            <view class="item" catchtap='detail'>
+              <view class='left'>
+                <text class='start_time'>{{item.start_time}}</text>
+                <view class='plain' />
+                <text class='end_time'>{{item.end_time}}</text>
+              </view>
+              <view class='line'>
+
+                <view class='right'>
+                  <text>{{item.title}}</text>
+                  <view class='right-down'>
+                    <text>{{item.address}}</text>
+                    <text>{{item.website}}</text>
+                  </view>
+                </view>
+
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class='number'>{{"第 "+pageNumber+" 页"}}</view>
+    </view>
   </view>
 </view>
