@@ -18,6 +18,16 @@ var schedule = {
             array.push(tmp);
         }
         return array;
+    },
+
+    generateScheduleItem: function (title, start_time, end_time, description, address) {
+        return {
+            title: title,
+            start_time: start_time,
+            end_time: end_time,
+            description: description,
+            address: address,
+        };
     }
 }
 
