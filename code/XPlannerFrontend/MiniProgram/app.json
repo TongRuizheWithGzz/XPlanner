@@ -1,6 +1,5 @@
 {
   "pages": [
-    "extensions/spider/spider",
     "pages/schedular/schedular",
     "pages/schedular/scheduleDetails/scheduleDetails",
     "pages/schedular/addSchedule/add",
@@ -14,7 +13,8 @@
     "extensions/keeper/keeper",
     "extensions/keeper/selector/selector",
     "extensions/keeper/camera/camera",
-    "extensions/keeper/output/output"
+    "extensions/keeper/output/output",
+    "extensions/spider/spider"
   ],
   "tabBar": {
     "color": "#515151",
