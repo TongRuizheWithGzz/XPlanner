@@ -17,6 +17,7 @@ public class ScheduleitmeDTO implements Serializable {
                            String address,
                            String title,
                            boolean completed) {
+
         this.start_time = start_time;
         this.end_time = end_time;
         this.description = description;
@@ -24,7 +25,6 @@ public class ScheduleitmeDTO implements Serializable {
         this.title = title;
         this.completed = completed;
     }
-
 
 
     public String start_time;

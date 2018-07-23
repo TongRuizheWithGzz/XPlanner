@@ -48,6 +48,6 @@ public class NotificationDaoTest {
                 isEqualTo(SpiderUtil.hashCode("2016-08-08 09:32" + "2016-08-08 09:32"));
         System.out.println(n.getNotificationId());
         System.out.println(n.getStart_time());
-        System.out.println(n.getCreate_time());
+        System.out.println(n.getCreateTime());
     }
 }

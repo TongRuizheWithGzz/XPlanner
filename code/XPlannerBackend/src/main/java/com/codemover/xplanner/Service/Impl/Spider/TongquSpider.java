@@ -16,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 
 @Service("TongquSpider")
 public class TongquSpider implements ISpider {
@@ -30,8 +31,6 @@ public class TongquSpider implements ISpider {
     private String tongquDetailApiUrl;
 
 
-
-
     private String website;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -42,7 +41,7 @@ public class TongquSpider implements ISpider {
 
 
     @Override
-    public Collection<Notification> getInfoFromWebsite(Integer offset, Integer number)
+    public CompletableFuture<Collection<Notification>> getInfoFromWebsite(Integer offset, Integer number)
             throws IOException {
         if (number > 10) {
             logger.warn("Require for too much notifications per time. Will ignore this request");
@@ -63,29 +62,38 @@ public class TongquSpider implements ISpider {
 
         ArrayList<Notification> notifications = new ArrayList<>();
         for (int index = 0; index < acts.length() && index < number; index++) {
-
-            JSONObject act = acts.getJSONObject(index);
-
             Notification notification = new Notification();
 
-            notification.website = website;
-            Integer actId = act.getInt("actid");
-            notification.description = getDetailForAct(actId);
-            notification.title = act.getString("name");
-            notification.address = act.getString("location");
-            notification.start_time = act.getString("start_time");
-            notification.end_time = act.getString("end_time");
             try {
+                JSONObject act = acts.getJSONObject(index);
+
+
+                notification.website = website;
+                Integer actId = act.getInt("actid");
+                notification.description = getDetailForAct(actId);
+                notification.title = act.getString("name");
+                notification.address = act.getString("location");
+                notification.start_time = act.getString("start_time");
+                notification.end_time = act.getString("end_time");
+                notification.setUUID(actId.toString());
+
                 notification.imageUrl = act.getString("poster");
+
+                notification.setNotificationId(notification.hashCode());
+                notifications.add(notification);
+
             } catch (JSONException e) {
-                notification.imageUrl = null;
+                notification.imageUrl = "";
                 logger.info("missing poster(imageUrl) for this act:'{}'", notification.title);
+                notification.setNotificationId(notification.hashCode());
+                notifications.add(notification);
+            } catch (Exception e) {
+                logger.warn(e.getMessage());
             }
-            notifications.add(notification);
 
         }
 
-        return notifications;
+        return CompletableFuture.completedFuture(notifications);
     }
 
     private String getDetailForAct(Integer actId)

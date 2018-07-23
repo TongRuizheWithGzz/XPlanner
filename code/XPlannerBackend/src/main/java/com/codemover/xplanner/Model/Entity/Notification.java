@@ -1,5 +1,6 @@
 package com.codemover.xplanner.Model.Entity;
 
+import com.codemover.xplanner.Converter.ScheduleitemConverter;
 import com.codemover.xplanner.Service.Impl.Spider.SpiderUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -8,6 +9,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ListIterator;
 
 @Entity
 public class Notification {
@@ -19,7 +23,18 @@ public class Notification {
     public String address;
     public String title;
     public String imageUrl;
-    private Timestamp create_time;
+    public String UUID;
+    private Timestamp createTime;
+
+    @Basic
+    @JsonIgnore
+    public String getUUID() {
+        return UUID;
+    }
+
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
+    }
 
     public Notification() {
         start_time = "";
@@ -28,12 +43,13 @@ public class Notification {
         address = "";
         title = "";
         imageUrl = "";
+        UUID = "";
 
     }
 
     @Override
     public int hashCode() {
-        return SpiderUtil.hashCode(start_time + end_time + description + address + title + imageUrl);
+        return SpiderUtil.hashCode(start_time + end_time + description + address + title + imageUrl + UUID);
     }
 
 
@@ -115,14 +131,42 @@ public class Notification {
     }
 
     @Basic
-    @Column(name="create_time")
-    public Timestamp getCreate_time() {
-        return create_time;
+    @Column(name = "create_time")
+    @JsonIgnore
+    public Timestamp getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Timestamp create_time) {
-        this.create_time = create_time;
+
+    public void setCreateTime(Timestamp v) {
+        this.createTime = createTime;
     }
+
+    @Override
+    public String toString() {
+        createTime = ScheduleitemConverter.String2TimeStamp(start_time);
+
+        List<String> strings4 = Arrays.asList(
+                title, description, start_time, end_time, address, imageUrl, website, createTime.toString()
+        );
+
+        ListIterator<String> listIterator = strings4.listIterator();
+        while (listIterator.hasNext()) {
+            String s = listIterator.next();
+
+            s = s.replaceAll("'", " ");
+            s = s.replaceAll("\n", " ");
+            s = s.replaceAll("›", "");
+            listIterator.set(s);
+        }
+
+        return "insert into notification(notification_id, title, description," +
+                " start_time, end_time, " +
+                "address, imageUrl, website,create_time) values(" + notificationId.toString() + ",'" + String.join("','", strings4) +
+                "');\n";
+    }
+
+
 }
 
 

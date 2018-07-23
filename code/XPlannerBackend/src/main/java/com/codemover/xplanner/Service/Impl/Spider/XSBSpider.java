@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +37,7 @@ public class XSBSpider implements ISpider {
     }
 
     @Override
-    public Collection<Notification> getInfoFromWebsite(Integer offset, Integer number)
+    public CompletableFuture<Collection<Notification>> getInfoFromWebsite(Integer offset, Integer number)
             throws IOException {
         if (number > itemPerPage) {
             logger.warn("Require for too much notifications per time. Will ignore this request");
@@ -48,14 +49,14 @@ public class XSBSpider implements ISpider {
         Integer startIndex = offset % itemPerPage;
         Integer endIndex = (offset + number - 1) % itemPerPage;
         if (startPageNumber.equals(endPageNumber))
-            return ParseHTMLFromXSB(startPageNumber + 1, startIndex, number);
+            return CompletableFuture.completedFuture(ParseHTMLFromXSB(startPageNumber + 1, startIndex, number));
         else {
             ArrayList<Notification> notifications = ParseHTMLFromXSB(startPageNumber + 1,
                     startIndex, itemPerPage - startIndex);
             ArrayList<Notification> notifications1 = ParseHTMLFromXSB(endPageNumber + 1,
                     0, endIndex + 1);
             notifications.addAll(notifications1);
-            return notifications;
+            return CompletableFuture.completedFuture(notifications);
         }
     }
 
@@ -75,32 +76,38 @@ public class XSBSpider implements ISpider {
         ArrayList<Notification> notifications = new ArrayList<>();
 
         for (int index = startIndex; index - startIndex < number; index++) {
-            Notification notification = new Notification();
-            notification.website = website;
-            Element element = lis.get(index);
-            Elements span = element.select("span");
-            String pattern = "\\[(.*)\\]";
-            Pattern p = Pattern.compile(pattern);
-            Matcher m = p.matcher(span.text());
-            if (m.find()) {
-                notification.start_time = m.group(1) + " 00:00";
-                notification.end_time = m.group(1) + " 00:00";
+            try {
+                Notification notification = new Notification();
+                notification.website = website;
+                Element element = lis.get(index);
+                Elements span = element.select("span");
+                String pattern = "\\[(.*)\\]";
+                Pattern p = Pattern.compile(pattern);
+                Matcher m = p.matcher(span.text());
+                if (m.find()) {
+                    notification.start_time = m.group(1) + " 00:00";
+                    notification.end_time = m.group(1) + " 00:00";
+                }
+                Element a = element.select("a").get(0);
+                notification.title = a.text();
+                String href = a.attr("abs:href");
+                Document detailDoc = Jsoup.connect(href).get();
+                Element article = detailDoc.select("div.article_box").get(0);
+                String description = article.text();
+                notification.description = description.substring(0, Integer.min(1023, description.length()));
+                notification.address = "";
+                Elements imgs = article.select("img");
+                if (imgs.size() == 0)
+                    notification.imageUrl = "";
+                else {
+                    notification.imageUrl = imgs.get(0).attr("abs:src");
+                }
+                notification.setNotificationId(notification.hashCode());
+                notifications.add(notification);
+            } catch (Exception e) {
+                logger.warn(e.getMessage());
+                continue;
             }
-            Element a = element.select("a").get(0);
-            notification.title = a.text();
-            String href = a.attr("abs:href");
-            Document detailDoc = Jsoup.connect(href).get();
-            Element article = detailDoc.select("div.article_box").get(0);
-            String description = article.text();
-            notification.description = description.substring(0, Integer.min(1023, description.length()));
-            notification.address = "";
-            Elements imgs = article.select("img");
-            if (imgs.size() == 0)
-                notification.imageUrl = "";
-            else {
-                notification.imageUrl = imgs.get(0).attr("abs:src");
-            }
-            notifications.add(notification);
         }
         return notifications;
     }

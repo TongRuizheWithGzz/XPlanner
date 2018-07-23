@@ -1,8 +1,12 @@
 package com.codemover.xplanner.UtilTest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import com.google.common.hash.Hashing;
+
+import java.sql.Timestamp;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,5 +53,45 @@ public class HashTest {
         assertThat(output1).isNotEqualTo(output2);
     }
 
+    @Test
+    public void timestamp2StringTest() {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        System.out.println(timestamp.toString());
+    }
 
+    @Test
+    public void quoteHandler() throws Exception {
+        String s = "\n \"";
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("s", s);
+
+        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writeValueAsString(hashMap));
+    }
+
+
+    @Test
+    public void canConVertStringSuccess() {
+        List<String> strings4 = Arrays.asList(
+                "我", "好"
+        );
+
+        for (String s : strings4) {
+            s = s.replaceAll("我", " ");
+            s = s.replaceAll("'", " ");
+        }
+        strings4.forEach((s) -> {
+
+            s = s.replaceAll("我", " ");
+        });
+
+        ListIterator<String> listIterator = strings4.listIterator();
+        while (listIterator.hasNext()) {
+            listIterator.set(
+                    listIterator.next().replaceAll("我", " "));
+        }
+        for (String s : strings4) {
+            System.out.println(s);
+        }
+    }
 }

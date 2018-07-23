@@ -8,11 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,8 +45,10 @@ public class ElectsysSpider implements ISpider {
 
     }
 
+
     @Override
-    public Collection<Notification> getInfoFromWebsite(Integer offset, Integer number)
+    @Async
+    public CompletableFuture<Collection<Notification>> getInfoFromWebsite(Integer offset, Integer number)
             throws IOException {
 
         String allInfoXml = getAllInfo(EleAllInfoUrl);
@@ -65,42 +70,48 @@ public class ElectsysSpider implements ISpider {
         Integer hasParsed = 0;
 
         while (m1.find() && m2.find() && m3.find()) {
-            if (count < offset) {
-                count++;
-                continue;
-            }
-            if (hasParsed >= number)
-                break;
             Notification notification = new Notification();
-
-            notification.title = m1.group(1);
-
-            String link = m2.group(1);
-
-            String pubDate = m3.group(1);
-            notification.start_time = pubDate.substring(0, pubDate.length() - 3);
-            notification.end_time = notification.start_time;
-            notification.imageUrl = "";
-            notification.address = "";
-            notification.website = website;
-            notification.description = "";
-
-            String detailHtml = getAllInfo(link);
-
-            Document detailDoc = Jsoup.parse(detailHtml);
-
             try {
+                if (count < offset) {
+                    count++;
+                    continue;
+                }
+                if (hasParsed >= number)
+                    break;
+
+                notification.title = m1.group(1);
+
+                String link = m2.group(1);
+
+                String pubDate = m3.group(1);
+                notification.start_time = pubDate.substring(0, pubDate.length() - 3);
+                notification.end_time = notification.start_time;
+                notification.imageUrl = "";
+                notification.address = "";
+                notification.website = website;
+                notification.description = "";
+
+                String detailHtml = getAllInfo(link);
+
+                Document detailDoc = Jsoup.parse(detailHtml);
+
+
                 Element table = detailDoc.select("table.main_r_co_fo").get(0);
                 notification.description = table.text().substring(0, Integer.min(1024, table.text().length()));
+                notification.setNotificationId(notification.hashCode());
                 notifications.add(notification);
             } catch (IndexOutOfBoundsException e) {
+                notification.setNotificationId(notification.hashCode());
                 notifications.add(notification);
+            } catch (Exception e) {
+                logger.warn(e.getMessage());
             } finally {
                 hasParsed++;
             }
         }
-        return notifications;
+        return CompletableFuture.completedFuture(notifications);
     }
+
     private String getAllInfo(String url) throws IOException {
         String resStr = httpService.HttpGet(url, "gb2312");
         return resStr;

@@ -52,13 +52,13 @@ public class ScheduleitemConverter {
         return DTOs;
     }
 
-    private static String TimeStamp2String(@NotNull Timestamp timestamp) {
+    public static String TimeStamp2String(@NotNull Timestamp timestamp) {
         SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return dFormat.format(new Date(timestamp.getTime()));
     }
 
     //Timestamp has a precision of yyyy-MM-dd HH:mm:ss
-    private static Timestamp String2TimeStamp(@NotNull String strDate) {
+    public static Timestamp String2TimeStamp(@NotNull String strDate) {
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = null;
         try {
