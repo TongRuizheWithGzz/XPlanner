@@ -165,8 +165,7 @@ Page({
     });
 
     /* 注意，需要通知后端数据已经更改 */
-    wrapper.wxRequestWrapper(api.updateScheduleitem, "PUT", {
-    }).then(() => {
+    wrapper.wxRequestWrapper(api.updateScheduleitem, "PUT", {}).then(() => {
 
     }).catch(() => {
 
@@ -201,6 +200,7 @@ Page({
           }).catch(() => {
 
           });
+
 
           /* 更改scheduleItems */
           var tmp_items = app.globalData.scheduleItems;
