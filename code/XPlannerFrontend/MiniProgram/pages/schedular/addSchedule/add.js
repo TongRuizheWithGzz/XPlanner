@@ -1,5 +1,6 @@
 var app = getApp();
 var scheduleItems = app.globalData.scheduleItems;
+var schedule = require("../../../common/schedule");
 
 Page({
   data: {
@@ -115,14 +116,13 @@ Page({
   },
   save: function () {
     if (this.data.ifAddPage) { // 如果是添加页面
-      var item = {
-        title: this.data.title,
-        start_time: this.data.startDate + " " + this.data.startTime,
-        end_time: this.data.endDate + " " + this.data.endTime,
-        description: this.data.description,
-        address: this.data.address,
-        user_id: app.globalData.userInfo.id,
-      };
+      var item = schedule.generateScheduleItem(
+        this.data.title,
+        this.data.startDate + " " + this.data.startTime,
+        this.data.endDate + " " + this.data.endTime,
+        this.data.description,
+        this.data.address
+      );
 
       /* 向后端发送请求，获取schduleItem_id，增加对应的项目，注意可能有错误处理 */
 
