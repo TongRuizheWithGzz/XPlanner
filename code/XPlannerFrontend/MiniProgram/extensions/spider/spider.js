@@ -15,18 +15,27 @@ Page({
     x1: -1,
     x2: -1,
     page: 1,
-    crawled: sedata,
+    crawled: [],
+
   },
-  onShow: function() {
-    console.log(this.data.crawled);
+  onLoad: function () {
+    //向后端发送请求，获取5个东西
+    var tmp = sedata;
+    app.globalData.spiderItems = [spider.warpSpiderItems(tmp)];
+    this.setData({
+      crawled: tmp,
+    })
+  },
+  onShow: function () {
+
     //load page 1
   },
-  start: function(e) {
+  start: function (e) {
     this.setData({
       x1: e.changedTouches[0].pageX,
     })
   },
-  end: function(e) {
+  end: function (e) {
     this.setData({
       x2: e.changedTouches[0].pageX,
     })
@@ -34,7 +43,7 @@ Page({
       return;
     if (this.data.x1 > this.data.x2) {
       this.setData({
-        pageNumber: this.data.pageNumber + 1
+        pageNumber: this.data.pageNumber + 1 //爬取后段
       })
     } else if (this.data.x1 < this.data.x2) {
       if (this.data.pageNumber === 1)
@@ -46,7 +55,7 @@ Page({
     this.slidethis()
   },
   //事件处理函数
-  slidethis: function(e) {
+  slidethis: function (e) {
     console.log("slide")
     var self = this;
     if (this.data.isAnimation) {
@@ -112,7 +121,7 @@ Page({
       animationlist: [],
       animationlistyet: self.data.animationlistyet
     });
-    setTimeout(function() {
+    setTimeout(function () {
       var zindex = self.data.zindex;
       var slidethis = self
         .data
@@ -128,16 +137,29 @@ Page({
       });
     }, 100);
   },
-  refresh: function(e) {
-    this.slidethis()
+  refresh: function (e) {
+    this.slidethis();
+
+    /* 向后端请求page1 */
+
+    var tmp = sedata;
+    app.globalData.spiderItems[0] = spider.warpSpiderItems(tmp); // 更新全局数据，需要更改
     this.setData({
+      crawled: app.globalData.spiderItems,
       pageNumber: 1
     })
   },
-  detail:function(e){
-    app.globalData.spiderItems = spider.warpSpiderItems(this.data.crawled);
+  detail: function (e) {
+    // app.globalData.spiderItems = spider.warpSpiderItems(sedata);
     wx.navigateTo({
-      url: '/pages/schedular/scheduleDetails/scheduleDetails?spiderIndex=' + e.currentTarget.dataset.index,
+      // url: '/pages/schedular/scheduleDetails/scheduleDetails?spiderIndex=' + e.currentTarget.dataset.index,
+      url: '/pages/schedular/scheduleDetails/scheduleDetails?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
+    })
+  },
+  addSpiderItem: function (e) {
+    console.log("add spider item");
+    wx.navigateTo({
+      url: '/pages/schedular/addSchedule/add?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
     })
   }
 });

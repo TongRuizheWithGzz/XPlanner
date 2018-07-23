@@ -13,6 +13,7 @@ Page({
     showModal: true,
     msg: 'jjj',
     ifAddPage: true,
+    ifSpiderPage: false,
     itemIndex: 0,
     ifChangeScheduleStartDate: false,
   },
@@ -47,6 +48,23 @@ Page({
         ifAddPage: false,
         itemIndex: option.id,
         oldStartDate: tmp_item.start_time.slice(0, 10),
+      });
+    } else if (option.spiderIndex) { // 如果是添加spider项目
+      console.log(option.spiderIndex);
+      console.log("add spider item");
+      console.log(option.pageNumber);
+      console.log(app.globalData.spiderItems);
+      var tmp_item = app.globalData.spiderItems[option.pageNumber - 1][option.spiderIndex];
+      console.log(tmp_item);
+      this.setData({
+        startDate: tmp_item.start_time.slice(0, 10),
+        startTime: tmp_item.start_time.slice(11, 16),
+        endDate: tmp_item.end_time.slice(0, 10),
+        endTime: tmp_item.end_time.slice(11, 16),
+        title: tmp_item.title,
+        description: tmp_item.description,
+        address: tmp_item.address,
+        ifAddPage: true, // 添加spider项目本质上和添加普通项目相同
       });
     } else { // 如果是添加页面
       this.setData({
