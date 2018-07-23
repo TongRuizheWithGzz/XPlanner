@@ -1,6 +1,6 @@
 package com.codemover.xplanner.Service.Impl;
 
-import com.codemover.xplanner.Model.DTO.Notification;
+import com.codemover.xplanner.Model.Entity.Notification;
 import com.codemover.xplanner.Service.Impl.Spider.ISpider;
 import com.codemover.xplanner.Service.SpiderService;
 import org.springframework.beans.factory.annotation.Autowired;

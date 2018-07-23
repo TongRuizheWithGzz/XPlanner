@@ -8,10 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 
 public class ScheduleitemConverter {
@@ -43,7 +40,7 @@ public class ScheduleitemConverter {
         entity.setDescription(dto.description);
     }
 
-    public static Set<ScheduleitmeDTO> entitiesToDTOs(@NotNull Set<Scheduleitme> entities) {
+    public static Set<ScheduleitmeDTO> entitiesToDTOs(@NotNull Collection<Scheduleitme> entities) {
         Set<ScheduleitmeDTO> DTOs = new HashSet<ScheduleitmeDTO>();
 
         Iterator<Scheduleitme> it = entities.iterator();
@@ -67,6 +64,7 @@ public class ScheduleitemConverter {
         try {
             date = sf.parse(strDate);
         } catch (ParseException e) {
+
             e.printStackTrace();
         }
         Timestamp timestamp = new Timestamp(date.getTime());

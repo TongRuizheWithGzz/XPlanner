@@ -13,4 +13,6 @@ public interface ScheduleItemRepository extends JpaRepository<Scheduleitme, Inte
     List<Scheduleitme> findByUserAndStartTimeBetween(User user, Timestamp beginning, Timestamp endding);
 
     List<Scheduleitme> findByUserAndStartTimeBetweenOrderByStartTimeAsc(User user, Timestamp beginning, Timestamp endding);
+
+
 }

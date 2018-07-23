@@ -57,8 +57,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/loginByUsernamePassword").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .logout().logoutUrl("/api/logout").deleteCookies("JSESSIONID");
+                .logout().logoutUrl("/api/logout")
+                .deleteCookies("JSESSIONID");
     }
+
+
 }
 
 

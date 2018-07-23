@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.text.ParseException;
 import java.util.Map;
+
+
+
 
 @RestController
 public class ScheduleController {
@@ -49,11 +53,20 @@ public class ScheduleController {
     @GetMapping(value = "/api/monthScheduleInfo")
     public Map<String, Object> monthScheduleInfo(Principal principal,
                                                  @RequestParam("year") Integer year,
-                                                 @RequestParam("month") Integer month) {
-        return null;
+                                                 @RequestParam("month") Integer month)
+            throws ParseException {
+        return ControllerUtil.successHandler(scheduleService.getScheduledDays(principal.getName(), year, month));
     }
 
-
+    @GetMapping(value = "/api/scheduleForDay")
+    public Map<String, Object> scheduleFor(Principal principal,
+                                           @RequestParam("year") Integer year,
+                                           @RequestParam("month") Integer month,
+                                           @RequestParam("day") Integer day
+    ) {
+        return ControllerUtil.successHandler(scheduleService.findSchedule4OneDay(principal.getName(),
+                year, month, day));
+    }
 
 
 }

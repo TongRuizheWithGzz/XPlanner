@@ -1,6 +1,6 @@
 package com.codemover.xplanner.Service.Impl.Spider;
 
-import com.codemover.xplanner.Model.DTO.Notification;
+import com.codemover.xplanner.Model.Entity.Notification;
 import com.codemover.xplanner.Service.Exception.SpiderRequestParamException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

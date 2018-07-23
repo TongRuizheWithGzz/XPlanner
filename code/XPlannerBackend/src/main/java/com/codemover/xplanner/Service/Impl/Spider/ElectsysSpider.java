@@ -1,11 +1,6 @@
 package com.codemover.xplanner.Service.Impl.Spider;
 
-import com.codemover.xplanner.Model.DTO.Notification;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import com.codemover.xplanner.Model.Entity.Notification;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

@@ -21,6 +21,7 @@ public class SpiderController {
     Map<String, Object> getNotificationsFromWebsite(@RequestParam("pageNumber") Integer pageNumber,
                                                     @RequestParam("size") Integer size) throws Exception {
         return ControllerUtil.successHandler(spiderService.getInfoFromWebsites(pageNumber, size));
+
     }
 
 
