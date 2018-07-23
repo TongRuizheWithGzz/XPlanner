@@ -10,7 +10,7 @@
       <view class='items'>
         <view class='list' bindtap='unselect'>
           <view wx:for="{{crawled}}" wx:key="{{*this}}" class="item{{(id+index)%2}}" catchtap='select' data-index='{{index}}'>
-            <image catchtap="addSpiderItem" src="/icons/spider.png" class='spide'></image>
+            <image catchtap="addSpiderItem" src="/icons/spider.png" class='spide' data-index="{{index}}"></image>
 
             <view class="item" catchtap='detail' data-index="{{index}}">
               <view class='left'>

@@ -143,21 +143,20 @@ Page({
     /* 向后端请求page1 */
 
     var tmp = sedata;
-    app.globalData.spiderItems[0] = spider.warpSpiderItems(tmp); // 更新全局数据，需要更改
+    var tmp_items = app.globalData.spiderItems;
+    tmp_items[0] = spider.warpSpiderItems(tmp); // 更新全局数据，需要更改
+    app.globalData.spiderItems = tmp_items;
     this.setData({
-      crawled: app.globalData.spiderItems,
+      crawled: app.globalData.spiderItems[0],
       pageNumber: 1
     })
   },
   detail: function (e) {
-    // app.globalData.spiderItems = spider.warpSpiderItems(sedata);
     wx.navigateTo({
-      // url: '/pages/schedular/scheduleDetails/scheduleDetails?spiderIndex=' + e.currentTarget.dataset.index,
       url: '/pages/schedular/scheduleDetails/scheduleDetails?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
     })
   },
   addSpiderItem: function (e) {
-    console.log("add spider item");
     wx.navigateTo({
       url: '/pages/schedular/addSchedule/add?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
     })

@@ -34,9 +34,9 @@ Page({
     })
   },
 
-  onLoad: function (option) {
-    if (option.id) { // 如果是修改页面
-      var tmp_item = app.globalData.scheduleItems[option.id];
+  onLoad: function (options) {
+    if (options.id) { // 如果是修改页面
+      var tmp_item = app.globalData.scheduleItems[options.id];
       this.setData({
         startDate: tmp_item.start_time.slice(0, 10),
         startTime: tmp_item.start_time.slice(11, 16),
@@ -46,15 +46,15 @@ Page({
         description: tmp_item.description,
         address: tmp_item.address,
         ifAddPage: false,
-        itemIndex: option.id,
+        itemIndex: options.id,
         oldStartDate: tmp_item.start_time.slice(0, 10),
       });
-    } else if (option.spiderIndex) { // 如果是添加spider项目
-      console.log(option.spiderIndex);
+    } else if (options.spiderIndex) { // 如果是添加spider项目
+      console.log(options.spiderIndex);
       console.log("add spider item");
-      console.log(option.pageNumber);
+      console.log(options.pageNumber);
       console.log(app.globalData.spiderItems);
-      var tmp_item = app.globalData.spiderItems[option.pageNumber - 1][option.spiderIndex];
+      var tmp_item = app.globalData.spiderItems[options.pageNumber - 1][options.spiderIndex];
       console.log(tmp_item);
       this.setData({
         startDate: tmp_item.start_time.slice(0, 10),
