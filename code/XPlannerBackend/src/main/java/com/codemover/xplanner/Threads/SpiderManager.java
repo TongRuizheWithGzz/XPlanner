@@ -13,7 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -40,32 +40,57 @@ public class SpiderManager implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        try {
-            Integer where = 0;
-            while (true) {
-                CompletableFuture<Collection<Notification>> _c1 = spider1.getInfoFromWebsite(where, 1);
-                CompletableFuture<Collection<Notification>> _c2 = spider2.getInfoFromWebsite(where, 1);
-                CompletableFuture<Collection<Notification>> _c3 = spider3.getInfoFromWebsite(where, 1);
+        while (true) {
+            logger.info("I'm awake!");
 
-                CompletableFuture.allOf(_c1, _c2, _c3).join();
+            LinkedList<Integer> wheres = new LinkedList<>();
+            wheres.add(0);
+            wheres.add(0);
+            wheres.add(0);
+            LinkedList<ISpider> spiders = new LinkedList<>();
+            spiders.add(spider1);
+            spiders.add(spider2);
+            spiders.add(spider3);
+            try {
+                while (spiders.size() != 0) {
 
-                Collection<Notification> c1 = _c1.get();
-                Collection<Notification> c2 = _c2.get();
-                Collection<Notification> c3 = _c3.get();
+                    ISpider spider = spiders.removeFirst();
+                    Integer where = wheres.removeFirst();
+                    CompletableFuture<Collection<Notification>> _c1 = spider.getInfoFromWebsite(where, 1);
+                    CompletableFuture.allOf(_c1).join();
+                    Collection<Notification> c1 = _c1.get();
 
-                if(c1.size()!=0){
-
+                    if (c1.size() != 0) {
+                        logger.info("size of Collection<Notification>:'{}'", c1.size());
+                        Notification n = c1.iterator().next();
+                        Optional<Notification> o = notificationRepository.findById(n.getNotificationId());
+                        if (!o.isPresent()) {
+                            logger.info("new Notification found!");
+                            notificationRepository.save(n);
+                            where++;
+                            spiders.addLast(spider);
+                            wheres.addLast(where);
+                        } else {
+                            logger.info("Notification up to date,will leave");
+                        }
+                    } else {
+                        logger.info("Nothing get when get 1 per time,will continue");
+                        spiders.addLast(spider);
+                        wheres.addLast(where);
+                    }
                 }
-
-                where++;
-
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return;
+            } catch (Exception e) {
+                logger.warn(e.getMessage());
+            } finally {
+                logger.info("I will sleep");
+                Thread.sleep(5 * 1000 * 3600);
             }
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return;
-        } catch (Exception e) {
-            logger.warn(e.getMessage());
         }
+
     }
 }
+
+
