@@ -11,6 +11,7 @@ module.exports = {
   updateScheduleitem: ApiRootUrl + '',
   queryScheduleitemByDay: ApiRootUrl + '',
   queryDaysHavingScheduletimesInMonth: ApiRootUrl + '',
+  changeScheduleCompletedState: ApiRootUrl + '',
   queryEnabledExtensionsArray: ApiRootUrl + '',
   // getUserSettings,
 }

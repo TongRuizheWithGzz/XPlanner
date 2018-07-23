@@ -1,6 +1,8 @@
 var app = getApp();
 var time = require("../../common/time");
 var schedule = require("../../common/schedule");
+var wrapper = require("../../interface/wrapper/wrapper");
+var api = require("../../interface/config/api");
 const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
 
 const NORMAL_DAY_COLOR = 'grey';
@@ -163,6 +165,12 @@ Page({
     });
 
     /* 注意，需要通知后端数据已经更改 */
+    wrapper.wxRequestWrapper(api.updateScheduleitem, "PUT", {
+    }).then(() => {
+
+    }).catch(() => {
+
+    });
   },
 
   /*
@@ -186,7 +194,13 @@ Page({
       content: '是否删除选中日程？',
       success: function (res) {
         if (res.confirm) { // 确认删除
+
           /* 向后端发送请求 */
+          wrapper.wxRequestWrapper(api.deleteScheduleitme, "DELETE", {}).then(() => {
+
+          }).catch(() => {
+
+          });
 
           /* 更改scheduleItems */
           var tmp_items = app.globalData.scheduleItems;
@@ -354,22 +368,29 @@ Page({
    * 向后端发送代表某天的字符串，获取对应的月份的有日程的日子的数组
    */
   getDayWithItemsFromBackEnd: function (year, month) {
-    /* 此处为模拟 */
-    if (month == 6) {
-      return {
-        12: [2],
-        13: [1],
-        20: [1],
-      };
-    } else if (month == 7) {
-      return {
-        17: [1],
-        18: [3],
-        20: [2]
-      };
-    } else {
-      return {};
-    }
+    // /* 此处为模拟 */
+    // if (month == 6) {
+    //   return {
+    //     12: [2],
+    //     13: [1],
+    //     20: [1],
+    //   };
+    // } else if (month == 7) {
+    //   return {
+    //     17: [1],
+    //     18: [3],
+    //     20: [2]
+    //   };
+    // } else {
+    //   return {};
+    // }
+    var result;
+    wrapper.wxRequestWrapper(api.queryDaysHavingScheduletimesInMonth, "GET", {}).then(() => {
+
+    }).catch({
+
+    });
+    return result;
   },
 
   /*
@@ -377,127 +398,133 @@ Page({
    * 向后端发送代表某天的字符串，获取对应的日期的日程列表
    */
   getScheduleItemsFromBackEndAndWarp: function (str) {
-    /* 此处为模拟 */
+    // /* 此处为模拟 */
+    // var tmp;
+    // if (str == "2018-07-20") {
+    //   tmp = [
+    //     {
+    //       "title": "上学",
+    //       "start_time": "2018-07-20 19:00",
+    //       "end_time": "2018-07-20 20:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 4,
+    //       "user_id": 1
+    //     },
+    //     {
+    //       "title": "运动",
+    //       "start_time": "2018-07-20 17:00",
+    //       "end_time": "2018-07-20 15:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 5,
+    //       "user_id": 1
+    //     }
+    //   ];
+    // } else if (str == "2018-07-17") {
+    //   tmp = [
+    //     {
+    //       "title": "上学",
+    //       "start_time": "2018-07-17 06:00",
+    //       "end_time": "2018-07-17 08:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 6,
+    //       "user_id": 1
+    //     },
+    //   ];
+    // } else if (str == "2018-06-12") {
+    //   tmp = [
+    //     {
+    //       "title": "运动",
+    //       "start_time": "2018-06-12 08:00",
+    //       "end_time": "2018-06-12 10:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 7,
+    //       "user_id": 1
+    //     },
+    //     {
+    //       "title": "上学",
+    //       "start_time": "2018-06-12 08:00",
+    //       "end_time": "2018-06-12 10:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 8,
+    //       "user_id": 1
+    //     },
+    //   ];
+    // } else if (str == "2018-06-20") {
+    //   tmp = [
+    //     {
+    //       "title": "运动",
+    //       "start_time": "2018-06-20 08:00",
+    //       "end_time": "2018-06-20 10:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 9,
+    //       "user_id": 1
+    //     },
+    //   ];
+    // } else if (str == "2018-06-13") {
+    //   tmp = [
+    //     {
+    //       "title": "运动",
+    //       "start_time": "2018-06-13 08:00",
+    //       "end_time": "2018-06-13 10:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 10,
+    //       "user_id": 1
+    //     },
+    //   ];
+    // } else if (str == "2018-07-18") {
+    //   tmp = [
+    //     {
+    //       "title": "吃午饭",
+    //       "start_time": "2018-07-18 10:00",
+    //       "end_time": "2018-07-18 11:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 1,
+    //       "user_id": 1
+    //     },
+    //     {
+    //       "title": "上学",
+    //       "start_time": "2018-07-18 12:00",
+    //       "end_time": "2018-07-18 13:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 2,
+    //       "user_id": 1
+    //     },
+    //     {
+    //       "title": "运动",
+    //       "start_time": "2018-07-18 13:00",
+    //       "end_time": "2018-07-18 15:00",
+    //       "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
+    //       "address": "二餐",
+    //       "scheduleItem_id": 3,
+    //       "user_id": 1
+    //     }
+    //   ];
+    // } else {
+    //   console.log("no record!");
+    //   return [];
+    // }
     var tmp;
-    if (str == "2018-07-20") {
-      tmp = [
-        {
-          "title": "上学",
-          "start_time": "2018-07-20 19:00",
-          "end_time": "2018-07-20 20:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 4,
-          "user_id": 1
-        },
-        {
-          "title": "运动",
-          "start_time": "2018-07-20 17:00",
-          "end_time": "2018-07-20 15:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 5,
-          "user_id": 1
-        }
-      ];
-    } else if (str == "2018-07-17") {
-      tmp = [
-        {
-          "title": "上学",
-          "start_time": "2018-07-17 06:00",
-          "end_time": "2018-07-17 08:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 6,
-          "user_id": 1
-        },
-      ];
-    } else if (str == "2018-06-12") {
-      tmp = [
-        {
-          "title": "运动",
-          "start_time": "2018-06-12 08:00",
-          "end_time": "2018-06-12 10:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 7,
-          "user_id": 1
-        },
-        {
-          "title": "上学",
-          "start_time": "2018-06-12 08:00",
-          "end_time": "2018-06-12 10:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 8,
-          "user_id": 1
-        },
-      ];
-    } else if (str == "2018-06-20") {
-      tmp = [
-        {
-          "title": "运动",
-          "start_time": "2018-06-20 08:00",
-          "end_time": "2018-06-20 10:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 9,
-          "user_id": 1
-        },
-      ];
-    } else if (str == "2018-06-13") {
-      tmp = [
-        {
-          "title": "运动",
-          "start_time": "2018-06-13 08:00",
-          "end_time": "2018-06-13 10:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 10,
-          "user_id": 1
-        },
-      ];
-    } else if (str == "2018-07-18") {
-      tmp = [
-        {
-          "title": "吃午饭",
-          "start_time": "2018-07-18 10:00",
-          "end_time": "2018-07-18 11:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 1,
-          "user_id": 1
-        },
-        {
-          "title": "上学",
-          "start_time": "2018-07-18 12:00",
-          "end_time": "2018-07-18 13:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 2,
-          "user_id": 1
-        },
-        {
-          "title": "运动",
-          "start_time": "2018-07-18 13:00",
-          "end_time": "2018-07-18 15:00",
-          "description": "Eat more and more and more Eat more and more and more Eat more and more and more",
-          "address": "二餐",
-          "scheduleItem_id": 3,
-          "user_id": 1
-        }
-      ];
-    } else {
-      console.log("no record!");
-      return [];
-    }
+    wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {}).then(() => {
 
-    /* 处理后端传来的scheduleItems数组 */
-    for (var i = 0; i < tmp.length; i++) {
-      tmp[i].start_concret_time = tmp[i].start_time.slice(11, 16);
-      tmp[i].end_concret_time = tmp[i].end_time.slice(11, 16);
-    }
-    console.log(tmp);
+    }).catch(() => {
+
+    });
+
+    // /* 处理后端传来的scheduleItems数组 */
+    // for (var i = 0; i < tmp.length; i++) {
+    //   tmp[i].start_concret_time = tmp[i].start_time.slice(11, 16);
+    //   tmp[i].end_concret_time = tmp[i].end_time.slice(11, 16);
+    // }
+    // console.log(tmp);
     return tmp;
   },
 

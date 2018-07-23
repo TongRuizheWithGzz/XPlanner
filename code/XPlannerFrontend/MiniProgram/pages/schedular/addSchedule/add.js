@@ -1,5 +1,7 @@
 var app = getApp();
 var scheduleItems = app.globalData.scheduleItems;
+var wrapper = require("../../../interface/wrapper/wrapper");
+var api = require("../../../interface/config/api");
 
 Page({
   data: {
@@ -121,10 +123,14 @@ Page({
         end_time: this.data.endDate + " " + this.data.endTime,
         description: this.data.description,
         address: this.data.address,
-        user_id: app.globalData.userInfo.id,
       };
 
       /* 向后端发送请求，获取schduleItem_id，增加对应的项目，注意可能有错误处理 */
+      wrapper.wxRequestWrapper(api.addScheduleitem, "POST", {}).then((data) => {
+
+      }).catch((errno) => {
+
+      });
 
       item.scheduleItem_id = 19; // 需要修改
       item.start_concret_time = this.data.startTime;
@@ -164,6 +170,11 @@ Page({
       app.globalData.ifChangeScheduleStartDate = !(this.data.oldStartDate == this.data.startDate);
 
       /* 向后端发送请求，注意，如果涉及开始时间点的变化而且开始日期不变，需要更新globalData */
+      wrapper.wxRequestWrapper(api.updateScheduleitem, "POST", {}).then((data) => {
+
+      }).catch((errno) => {
+
+      });
 
       wx.redirectTo({
         url: "/pages/schedular/scheduleDetails/scheduleDetails?id=" + this.data.itemIndex,
