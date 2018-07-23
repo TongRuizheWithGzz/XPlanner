@@ -53,5 +53,4 @@ public class UsernamePasswordLogin {
         return response;
     }
 
-
 }

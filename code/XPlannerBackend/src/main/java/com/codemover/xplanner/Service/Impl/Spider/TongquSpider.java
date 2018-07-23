@@ -3,17 +3,12 @@ package com.codemover.xplanner.Service.Impl.Spider;
 import com.codemover.xplanner.Model.DTO.Notification;
 import com.codemover.xplanner.Service.Exception.HTTPRequestNotOKException;
 import com.codemover.xplanner.Service.Exception.SpiderRequestParamException;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,23 +20,23 @@ import java.util.Collection;
 @Service("TongquSpider")
 public class TongquSpider implements ISpider {
 
+    @Autowired
+    private HTTPService httpService;
+
     @Value("${api.tongqu.url}")
     private String tongquApiUrl;
 
     @Value("${api.tongqu.detail}")
     private String tongquDetailApiUrl;
 
-    private CloseableHttpClient httpClient;
 
-    private CloseableHttpResponse response;
 
-    private HttpEntity entity;
+
     private String website;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public TongquSpider() {
-        httpClient = HttpClients.createDefault();
         website = "同去网";
     }
 
@@ -54,13 +49,7 @@ public class TongquSpider implements ISpider {
             throw new SpiderRequestParamException("Require for too much a time");
         }
         String url = buildUrl(offset, "act.create_time");
-        HttpGet httpGet = new HttpGet(url);
-
-
-        response = httpClient.execute(httpGet);
-        SpiderUtil.isResponseOK(response, website);
-        String json = IOUtils.toString(response.getEntity().getContent());
-        response.close();
+        String json = httpService.HttpGet(url, "UTF-8");
 
         JSONObject jsonObject = new JSONObject(json);
 
@@ -104,11 +93,8 @@ public class TongquSpider implements ISpider {
 
         String url = buildUrlDetail(actId);
 
-        HttpGet httpGet = new HttpGet(url);
-        response = httpClient.execute(httpGet);
-        SpiderUtil.isResponseOK(response, website);
-        String json = IOUtils.toString(response.getEntity().getContent());
-        response.close();
+        String json = httpService.HttpGet(url, "UTF-8");
+
         JSONObject detailJsonObject = new JSONObject(json);
         JSONArray jsonArray = detailJsonObject.getJSONArray("actContents");
         String description = "";

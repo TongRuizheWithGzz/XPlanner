@@ -11,6 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -35,14 +36,13 @@ public class ElectsysSpider implements ISpider {
     @Value("${url.electsys.allInfo}")
     private String EleAllInfoUrl;
 
-    private CloseableHttpClient httpClient;
+    @Autowired
+    private HTTPService httpService;
 
-    private CloseableHttpResponse response;
 
     private String website;
 
     public ElectsysSpider() {
-        httpClient = HttpClients.createDefault();
         website = "教学信息服务网";
 
     }
@@ -106,22 +106,9 @@ public class ElectsysSpider implements ISpider {
         }
         return notifications;
     }
-
     private String getAllInfo(String url) throws IOException {
-        HttpGet httpGetAllInfoPage = new HttpGet(url);
-
-        logger.info("Visit electsys allInfo page");
-        response = httpClient.execute(httpGetAllInfoPage);
-
-
-        int statusCode = response.getStatusLine().getStatusCode();
-        logger.info("Get status code from electsys: '{}'", statusCode);
-
-        SpiderUtil.isResponseOK(statusCode, website);
-
-        String resStr = IOUtils.toString(response.getEntity().getContent(), "gb2312");
+        String resStr = httpService.HttpGet(url, "gb2312");
         return resStr;
-
     }
 
 

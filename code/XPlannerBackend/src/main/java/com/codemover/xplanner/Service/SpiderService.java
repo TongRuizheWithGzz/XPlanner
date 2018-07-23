@@ -1,10 +1,8 @@
 package com.codemover.xplanner.Service;
 
-import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
-
-import java.util.Collection;
+import java.util.HashMap;
 
 public interface SpiderService {
 
-    Collection<ScheduleitmeDTO> getInfoFromWebsites(Integer pageNumber, Integer itemsPerPage);
+    HashMap<String ,Object> getInfoFromWebsites(Integer pageNumber, Integer itemsPerPage) throws Exception;
 }
