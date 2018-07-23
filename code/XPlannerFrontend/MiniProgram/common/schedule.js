@@ -28,6 +28,16 @@ var schedule = {
             description: description,
             address: address,
         };
+    },
+    
+    formateScheduleItem: function (item) {
+        return {
+            title: item.title,
+            start_time: item.start_time,
+            end_time: item.end_time,
+            description: item.description,
+            address: item.address
+        };
     }
 }
 

@@ -164,6 +164,13 @@ Page({
       app.globalData.ifChangeScheduleStartDate = !(this.data.oldStartDate == this.data.startDate);
 
       /* 向后端发送请求，注意，如果涉及开始时间点的变化而且开始日期不变，需要更新globalData */
+      var item_sent_to_back_end = schedule.generateScheduleItem(
+        this.data.title,
+        this.data.startDate + " " + this.data.startTime,
+        this.data.endDate + " " + this.data.endTime,
+        this.data.description,
+        this.data.address
+      );
 
       wx.redirectTo({
         url: "/pages/schedular/scheduleDetails/scheduleDetails?id=" + this.data.itemIndex,
