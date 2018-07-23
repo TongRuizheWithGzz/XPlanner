@@ -1,7 +1,7 @@
-//index.js 获取应用实例
 var sedata = require("../../data/spiderItems.js")
 var spider = require("../../common/spider");
 var app = getApp();
+
 Page({
   data: {
     animationlist: [],
