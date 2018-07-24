@@ -4,6 +4,7 @@
     "pages/schedular/scheduleDetails/scheduleDetails",
     "pages/schedular/addSchedule/add",
     "pages/planners/planners",
+    "pages/store/store",
     "pages/planners/management/management",
     "pages/planners/extensionDetails/extensionDetails",
     "pages/settings/settings",
@@ -34,10 +35,16 @@
         "text": "扩展"
       },
       {
+        "selectedIconPath": "icons/bag.png",
+        "iconPath": "icons/bag2.png",
+        "pagePath": "pages/store/store",
+        "text": "商城"
+      },
+      {
         "selectedIconPath": "icons/personal-selected.png",
         "iconPath": "icons/personal.png",
         "pagePath": "pages/settings/settings",
-        "text": "我"
+        "text": "我的"
       }
     ]
   },

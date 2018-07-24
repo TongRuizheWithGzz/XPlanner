@@ -1,0 +1,19 @@
+<view class='img' style="background:url({{extension.background}})" />
+
+<text class='name'>{{extension.name}}</text>
+<text class='des'>{{extension.msg}}</text>
+<image class='back' src='/icons/remove.png' catchtap='back'/>
+
+<view class='buttom'>
+  <view class='desc'>{{extension.description}}</view>
+  <view class='down'>
+    <image src='{{extension.icon}}' class='icon'></image>
+    <view class='right'>
+      <text class='name1'>{{extension.name}}</text>
+      <text class='msg'>{{extension.msg}}</text>
+    </view>
+    <view class='button' hover-class='press' catchtap="{{extension.visible ? 'open':'install'}}" data-url='{{extension.extension_path}}'>
+      {{extension.visible? '打开':'安装'}}
+    </view>
+  </view>
+</view>
