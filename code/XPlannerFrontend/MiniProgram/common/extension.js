@@ -1,4 +1,8 @@
 var extension = {
+  /*
+   * warpExtensions
+   * 包装extensions
+   */
   warpExtensions: function (extensions_raw) {
     var result = [];
     var shortmsg = ["轻松获取各个网站信息", "定制健康的运动饮食计划", "识别各处的事项安排", "即将推出"];
@@ -23,10 +27,14 @@ var extension = {
     return result;
   },
 
+  /*
+   * filterExtensions
+   * 根据array设置用户安装扩展情况
+   */
   filterExtensions: function (extensions, array) {
     var tmp = extensions;
     for (var i = 0; i < array.length; i++) {
-      tmp[array[i]].visible = true;
+      extensions[array[i]].visible = true;
     }
     return tmp;
   }

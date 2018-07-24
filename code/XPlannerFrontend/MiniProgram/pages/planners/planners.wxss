@@ -67,6 +67,7 @@ page {
   display: flex;
   flex-direction:row;
   flex-wrap: wrap;
+  height:100%;
 }
 
 .weui-grid {
@@ -74,42 +75,14 @@ page {
   float: left;
   padding: 20px 10px;
   width: 33.33333333%;
+  height: 120px;
   /* width: 25%; */
   box-sizing: border-box;
   /* border-right: 1rpx solid #fff; */
   /* border-bottom: 1rpx solid #fff; */
 }
-.weui-grid__icon {
-  display: block;
-  width: 60px;
-  height: 60px;
-  margin: 0 auto;
-  border-radius: 14px;
-}
 
-.weui-grid__label {
-  margin-top: 5px;
-  display: block;
-  text-align: center;
-  color: #000;
-  font-size: 13px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
 
-.weui-badge {
-  display: inline-block;
-  padding: 0.03em 0.33em;
-  min-width: 13.7px;
-  border-radius: 18px;
-  background-color:red;
-  color: #fff;
-  line-height: 1.6;
-  text-align: center;
-  font-size: 15px;
-  vertical-align: center;
-}
 
 .weui-badge_dot {
   padding: 0.4em;
@@ -129,3 +102,99 @@ page {
   color: #999;
   font-size: 14px;
 }
+.icon,.m-icon{
+  position:relative;
+  
+  z-index:-1;
+  display: block;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  border-radius: 14px;
+}
+.m-icon{
+  animation: zy 0.5s linear infinite;
+}
+@keyframes zy {
+  0%{
+    transform: rotate(8.5deg)
+  }
+  14.285%{
+    transform:translateX(-6rpx);
+  }
+  0%{
+    transform: rotate(-8.5deg)
+  }
+  28.571%{
+    transform:translateX(0rpx);
+  }
+  42.857%{
+    transform: rotate(8.5deg)
+  }
+  57.142%{
+    transform:translateY(6rpx);
+  }
+  71.428%{
+    transform: rotate(-8.5deg)
+  }
+  85.714%{
+    transform:translateY(0rpx);
+  }  
+  100%{
+    transform:rotate(-8.5deg);
+  }
+}
+
+.label,.m-label{
+  margin-top: 5px;
+  display: block;
+  text-align: center;
+  color: #000;
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.badge {
+  position:absolute;
+  
+  display: inline-block;
+  top:8px;
+  left:23px;
+  width:23px;
+  height:23px;
+  padding: 0.03em 0.33em;
+  min-width: 13.7px;
+  border-radius: 18px;
+  color: #fff;
+  line-height: 1.6;
+  text-align: center;
+  font-size: 15px;
+  vertical-align: center;
+}
+.badge1 {
+  position:relative;
+  display: inline-block;
+  padding: 0.03em 0.33em;
+  min-width: 13.7px;
+  border-radius: 18px;
+  background-color:red;
+  color: #fff;
+  line-height: 1.6;
+  text-align: center;
+  font-size: 15px;
+  vertical-align: center;
+  z-index:1000;
+}
+.remove{
+  position:relative;
+  top:14px;
+  left:18px;
+  width: 20px;
+  height:20px;
+  border-radius: 18px;
+  font-size: 15px;
+  z-index:10;
+}
+

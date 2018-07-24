@@ -1,33 +1,17 @@
 var app = getApp();
 var extensions = app.globalData.extensions;
-var User_planner_setting = app.globalData.User_planner_setting;
-/*
- * filterAndSetGlobalExtensions
- * 根据后端传来的数组settings过滤得到用户安装的扩展，并且设置globalData
- */
-function filterAndSetGlobalExtensions() {
-  var temp = app.globalData.extensions;
-  for (var i = 0; i < temp.length; i++) {
-    var k = User_planner_setting.indexOf(i);
-    if (k >= 0)
-      k = true;
-    else
-      k = false;
-    temp[i].visible = k;
-  }
-  return temp;
-}
-
+var time = require("../../common/time");
+var date = new Date();
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-    time: app.globalData.date,
-    extensions: filterAndSetGlobalExtensions(),
-    User_planner_setting: User_planner_setting,
+    time: time.getDateStringWithZero(date.getFullYear(), date.getMonth() + 1, date.getDate()),
+    extensions: extensions,
+  },
+  onShow: function () {
+    this.setData({
+      extensions: app.globalData.extensions,
+    })
   },
   open: function(e) {
     wx.navigateTo({
@@ -40,6 +24,14 @@ Page({
     })
   },
   install:function(e){
-    
+    app.globalData.extensions[e.currentTarget.dataset.id].visible = true;
+    this.setData({
+      extensions: app.globalData.extensions
+    })
+    wx.showToast({
+      title: "已完成",
+      icon: "success",
+      duration: 3000
+    });
   }
 })

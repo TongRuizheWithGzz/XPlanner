@@ -7,7 +7,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    extension:{},
+    extension: {},
+    id: 0,
   },
 
   /**
@@ -15,10 +16,11 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
-      extension:extensions[options.id]
+      extension: extensions[options.id],
+      id: options.id
     })
   },
-  back:function(){
+  back: function () {
     wx.navigateBack({})
   },
   open: function (e) {
@@ -27,6 +29,16 @@ Page({
     })
   },
   install: function (e) {
-
+    console.log(app.globalData.extensions);
+    var id = this.data.id;
+    app.globalData.extensions[id].visible = true;
+    this.setData({
+      extension: app.globalData.extensions[id]
+    })
+    wx.showToast({
+      title: "已完成",
+      icon: "success",
+      duration: 3000
+    });
   }
 })

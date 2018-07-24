@@ -13,7 +13,7 @@
       <text class='msg'>{{extension.msg}}</text>
     </view>
     <view class='button' hover-class='press' catchtap="{{extension.visible ? 'open':'install'}}" data-url='{{extension.extension_path}}'>
-      {{extension.visible? '打开':'安装'}}
+      {{extension.visible ? '打开':'安装'}}
     </view>
   </view>
 </view>
