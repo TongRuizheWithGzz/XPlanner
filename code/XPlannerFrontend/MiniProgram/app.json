@@ -1,14 +1,14 @@
 {
   "pages": [
-    "pages/settings/login/login",
+    "pages/store/store",
     "pages/schedular/schedular",
     "pages/schedular/scheduleDetails/scheduleDetails",
     "pages/schedular/addSchedule/add",
     "pages/planners/planners",
-    "pages/planners/management/management",
-    "pages/planners/extensionDetails/extensionDetails",
+    "pages/store/detail/detail",
     "pages/settings/settings",
     "pages/settings/userSettings/userSettings",
+    "pages/settings/login/login",
     "extensions/reader/reader",
     "extensions/keeper/keeper",
     "extensions/keeper/selector/selector",
@@ -19,6 +19,7 @@
   "tabBar": {
     "color": "#515151",
     "borderStyle": "black",
+    "selectedColor": "#000",
     "list": [
       {
         "selectedIconPath": "icons/11.png",
@@ -33,10 +34,16 @@
         "text": "扩展"
       },
       {
+        "selectedIconPath": "icons/bag.png",
+        "iconPath": "icons/bag2.png",
+        "pagePath": "pages/store/store",
+        "text": "商城"
+      },
+      {
         "selectedIconPath": "icons/personal-selected.png",
         "iconPath": "icons/personal.png",
         "pagePath": "pages/settings/settings",
-        "text": "我"
+        "text": "我的"
       }
     ]
   },

@@ -1,6 +1,9 @@
-// var extensions = require("/data/extensions");
-// var userInfo = require("/data/userInfo");
-// var scheduleItems = require("/data/scheduleItem");
+var extensions = require("/data/extensions");
+var userInfo = require("/data/userInfo");
+var scheduleItems = require("/data/scheduleItem");
+
+var schedule = require("/common/schedule");
+var extension = require("/common/extension");
 
 //app.js
 App({
@@ -40,17 +43,18 @@ App({
     /* 向后端发送选择的日期，获取当月有日程的日期的数组和当天的日期，设置globalData，注意要使用包装函数 */
     /* 另外，使用wx.getStorage获取存储的选区的日期，也需要设置globalData */
 
-    // this.globalData.date = "2018-07-18";
-    // this.globalData.year = 2018;
-    // this.globalData.month = 7;
-    // this.globalData.day = 18;
-    // this.globalData.userInfo = userInfo;
-    // this.globalData.extensions = warpExtensions(extensions);
-    // this.globalData.userFoodEaten = [];
-    // this.globalData.scheduleItems = warpScheduleItems(scheduleItems);
-    // this.globalData.dayWithItem = { 17: [1], 18: [3], 20: [2] };
-    // this.globalData.ifAddSchedule = false;
-    // this.globalData.ifSameDay = false;
+    this.globalData.date = "2018-07-18";
+    this.globalData.year = 2018;
+    this.globalData.month = 7;
+    this.globalData.day = 18;
+    this.globalData.userInfo = userInfo;
+    this.globalData.extensions = extension.filterExtensions(extension.warpExtensions(extensions), [0, 1, 2]);
+    console.log(this.globalData.extensions);
+    this.globalData.userFoodEaten = [];
+    this.globalData.scheduleItems = schedule.warpScheduleItems(scheduleItems);
+    this.globalData.dayWithItem = { 17: [1], 18: [3], 20: [2] };
+    this.globalData.ifAddSchedule = false;
+    this.globalData.ifSameDay = false;
   },
   globalData: {
     date: "",
@@ -64,9 +68,10 @@ App({
     dayWithItem: {}, // 似乎只要用一次
     ifAddSchedule: false, // 指示schedular显示时是否从添加事务的add页面返回
     ifSameDay: false, // 指示添加的日程是否和当天是否是一天
-    logined: false,
+    logined: false, // 是否登录
     ifChangeSchedule: false, // 指示schedular显示时是否从修改事务的add页面返回
-    changeScheduleIndex: 0,
-    ifChangeScheduleStartDate: false,
+    changeScheduleIndex: 0, // 指示修改事务在全局变量里的索引
+    ifChangeScheduleStartDate: false, // 指示修改事务时是否有修改开始日期
+    spiderItems: [],
   }
 })

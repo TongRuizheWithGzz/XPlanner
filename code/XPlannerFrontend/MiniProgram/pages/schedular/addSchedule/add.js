@@ -1,5 +1,8 @@
 var app = getApp();
 var scheduleItems = app.globalData.scheduleItems;
+var wrapper = require("../../../interface/wrapper/wrapper");
+var api = require("../../../interface/config/api");
+var schedule = require("../../../common/schedule");
 
 Page({
   data: {
@@ -13,6 +16,7 @@ Page({
     showModal: true,
     msg: 'jjj',
     ifAddPage: true,
+    ifSpiderPage: false,
     itemIndex: 0,
     ifChangeScheduleStartDate: false,
   },
@@ -33,9 +37,9 @@ Page({
     })
   },
 
-  onLoad: function (option) {
-    if (option.id) { // 如果是修改页面
-      var tmp_item = app.globalData.scheduleItems[option.id];
+  onLoad: function (options) {
+    if (options.id) { // 如果是修改页面
+      var tmp_item = app.globalData.scheduleItems[options.id];
       this.setData({
         startDate: tmp_item.start_time.slice(0, 10),
         startTime: tmp_item.start_time.slice(11, 16),
@@ -45,8 +49,25 @@ Page({
         description: tmp_item.description,
         address: tmp_item.address,
         ifAddPage: false,
-        itemIndex: option.id,
+        itemIndex: options.id,
         oldStartDate: tmp_item.start_time.slice(0, 10),
+      });
+    } else if (options.spiderIndex) { // 如果是添加spider项目
+      console.log(options.spiderIndex);
+      console.log("add spider item");
+      console.log(options.pageNumber);
+      console.log(app.globalData.spiderItems);
+      var tmp_item = app.globalData.spiderItems[options.pageNumber - 1][options.spiderIndex];
+      console.log(tmp_item);
+      this.setData({
+        startDate: tmp_item.start_time.slice(0, 10),
+        startTime: tmp_item.start_time.slice(11, 16),
+        endDate: tmp_item.end_time.slice(0, 10),
+        endTime: tmp_item.end_time.slice(11, 16),
+        title: tmp_item.title,
+        description: tmp_item.description,
+        address: tmp_item.address,
+        ifAddPage: true, // 添加spider项目本质上和添加普通项目相同
       });
     } else { // 如果是添加页面
       this.setData({
@@ -97,16 +118,20 @@ Page({
   },
   save: function () {
     if (this.data.ifAddPage) { // 如果是添加页面
-      var item = {
-        title: this.data.title,
-        start_time: this.data.startDate + " " + this.data.startTime,
-        end_time: this.data.endDate + " " + this.data.endTime,
-        description: this.data.description,
-        address: this.data.address,
-        user_id: app.globalData.userInfo.id,
-      };
+      var item = schedule.generateScheduleItem(
+        this.data.title,
+        this.data.startDate + " " + this.data.startTime,
+        this.data.endDate + " " + this.data.endTime,
+        this.data.description,
+        this.data.address
+      );
 
       /* 向后端发送请求，获取schduleItem_id，增加对应的项目，注意可能有错误处理 */
+      wrapper.wxRequestWrapper(api.addScheduleitem, "POST", {}).then((data) => {
+
+      }).catch((errno) => {
+
+      });
 
       item.scheduleItem_id = 19; // 需要修改
       item.start_concret_time = this.data.startTime;
@@ -146,6 +171,11 @@ Page({
       app.globalData.ifChangeScheduleStartDate = !(this.data.oldStartDate == this.data.startDate);
 
       /* 向后端发送请求，注意，如果涉及开始时间点的变化而且开始日期不变，需要更新globalData */
+      wrapper.wxRequestWrapper(api.updateScheduleitem, "POST", {}).then((data) => {
+
+      }).catch((errno) => {
+
+      });
 
       wx.redirectTo({
         url: "/pages/schedular/scheduleDetails/scheduleDetails?id=" + this.data.itemIndex,
