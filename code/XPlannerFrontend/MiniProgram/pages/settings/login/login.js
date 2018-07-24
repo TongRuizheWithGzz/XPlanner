@@ -7,45 +7,7 @@ var wrapper = require("../../../interface/wrapper/wrapper");
 var time = require("../../../common/time");
 var schedule = require("../../../common/schedule");
 var extension = require("../../../common/extension");
-
-// function warpExtensions(extensions_raw) {
-//   var result = [];
-//   for (var i = 0; i < extensions_raw.length; i++) {
-//     var tmp = new Object();
-//     tmp.id = extensions_raw[i].planner_id;
-//     tmp.name = extensions_raw[i].planner_name;
-//     tmp.description = extensions_raw[i].description;
-//     tmp.content = "尚无内容。";
-//     tmp.visible = false;
-//     tmp.messages = extensions_raw[i].planner_name == "Spider" ? 8 : -1;
-//     tmp.icon = extensions_raw[i].picture_path_name;
-//     var name = tmp.name.toLowerCase();
-//     tmp.extension_path = "/extensions/" + name + "/" + name;
-//     result.push(tmp);
-//   }
-//   return result;
-// }
-
-// function warpScheduleItems(scheduleItem_raw) {
-//   var array = [];
-//   for (var i = 0; i < scheduleItem_raw.length; i++) {
-//     var tmp = new Object();
-//     tmp.title = scheduleItem_raw[i].title;
-//     tmp.start_time = scheduleItem_raw[i].start_time;
-//     tmp.end_time = scheduleItem_raw[i].end_time;
-//     tmp.description = scheduleItem_raw[i].description;
-//     tmp.address = scheduleItem_raw[i].address;
-//     tmp.scheduleItem_id = scheduleItem_raw[i].scheduleItem_id;
-//     tmp.user_id = scheduleItem_raw[i].user_id;
-//     tmp.start_concret_time = tmp.start_time.slice(11, 16);
-//     tmp.end_concret_time = tmp.end_time.slice(11, 16);
-//     tmp.start_date = tmp.start_time.slice(0, 10);
-//     tmp.completed = false;
-//     tmp.visible = true;
-//     array.push(tmp);
-//   }
-//   return array;
-// }
+var api = require("../../../interface/config/api");
 
 Page({
   data: {
@@ -57,7 +19,7 @@ Page({
    * getName
    * 获取名称
    */
-  getName: function (e) {
+  getName: function(e) {
     console.log(e.detail.value);
     this.setData({
       name: e.detail.value
@@ -68,89 +30,94 @@ Page({
    * getPassword
    * 获取密码
    */
-  getPassword: function (e) {
+  getPassword: function(e) {
     console.log(e.detail.value);
     this.setData({
       password: e.detail.value
     });
   },
 
-  login: function () {
+  login: function() {
     console.log("login");
     /* 向后端发送用户名和密码 */
-    // wrapper.loginByUsernamePassword(this.data.name, this.data.password).then((errno) => {
-    //   wx.getStorage({
-    //     key: 'date',
-    //     success: function (res) {
-    //       app.globalData.date = res.data;
-    //       app.globalData.year = parseInt(res.data.slice(0, 4));
-    //       app.globalData.month = parseInt(res.data.slice(5, 7));
-    //       app.globalData.day = parseInt(res.data.slice(8, 10));
-    //     },
-    //     fail: function() {
-    //       var tmp_date = new Date();
-    //       app.globalData.year = tmp_date.getFullYear();
-    //       app.globalData.month = tmp_date.getMonth() + 1;
-    //       app.globalData.day = tmp_date.getDate();
-    //       app.globalData.date = time.getDateStringWithZero(app.globalData.year, app.globalData.month, app.globalData.day);
-    //       console.log(app.globalData.date);
-    //       wx.setStorage({
-    //         key: 'date',
-    //         data: app.globalData.date
-    //       });
-    //     }
-    //   })
-    //   // app.globalData.date = "2018-07-18";
-    //   // app.globalData.year = 2018;
-    //   // app.globalData.month = 7;
-    //   // app.globalData.day = 18;
-    //   app.globalData.logined = true;
-    // }).catch((errno) => {
-    //   switch (errno) {
-    //     case 1:
-    //       console.log("wrong name or password");
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // });
+    wrapper.loginByUsernamePassword(this.data.name, this.data.password)
+      .then((errno) => {
+        var date = wx.getStorageSync('date');
+        if (date) {
+          app.globalData.date = res.data;
+          app.globalData.year = parseInt(res.data.slice(0, 4));
+          app.globalData.month = parseInt(res.data.slice(5, 7));
+          app.globalData.day = parseInt(res.data.slice(8, 10));
+        } else {
+          var tmp_date = new Date();
+          app.globalData.year = tmp_date.getFullYear();
+          app.globalData.month = tmp_date.getMonth() + 1;
+          app.globalData.day = tmp_date.getDate();
+          app.globalData.date = time.getDateStringWithZero(app.globalData.year, app.globalData.month, app.globalData.day);
+          console.log(app.globalData.date);
+          wx.setStorage('date', app.globalData.date);
+        }
 
-    wx.getStorage({
-      key: 'date',
-      success: function (res) {
-        app.globalData.date = res.data;
-        app.globalData.year = parseInt(res.data.slice(0, 4));
-        app.globalData.month = parseInt(res.data.slice(5, 7));
-        app.globalData.day = parseInt(res.data.slice(8, 10));
-      },
-      fail: function () {
-        var tmp_date = new Date();
-        app.globalData.year = tmp_date.getFullYear();
-        app.globalData.month = tmp_date.getMonth() + 1;
-        app.globalData.day = tmp_date.getDate();
-        app.globalData.date = time.getDateStringWithZero(app.globalData.year, app.globalData.month, app.globalData.day);
-        console.log(app.globalData.date);
-        wx.setStorage({
-          key: 'date',
-          data: app.globalData.date
+
+        /* 获取当天日程 */
+        wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
+          "year": app.globalData.year,
+          "month": app.globalDate.month,
+          "day": app.globalDate.day,
+        }).then((data) => {
+          console.log("Get scheduleitems by data:", data)
+          app.globalData.scheduleItems = schedule.warpScheduleItems(data); // 设置对应全局变量
+        }).catch((errno) => {
+          console.log("something wrong when get scheduleItems: " + errno);
         });
-      }
-    })
-    app.globalData.logined = true;
-    // app.globalData.date = "2018-07-18";
-    // app.globalData.year = 2018;
-    // app.globalData.month = 7;
-    // app.globalData.day = 18;
-    // app.globalData.userInfo = userInfo;
-    // app.globalData.extensions = extension.warpExtensions(extensions);
-    // app.globalData.userFoodEaten = [];
-    // app.globalData.scheduleItems = schedule.warpScheduleItems(scheduleItems);
-    // app.globalData.dayWithItem = { 17: [1], 18: [3], 20: [2] };
-    // app.globalData.ifAddSchedule = false;
-    // app.globalData.ifSameDay = false;
 
-    wx.switchTab({
-      url: '/pages/schedular/schedular',
-    })
+        /* 获取当月有日程的日期的对象 */
+        wrapper.wxRequestWrapper(api.queryDaysHavingScheduletimesInMonth, "GET", {
+          year: app.globalData.year,
+          month: app.globalData.month
+        }).then((data) => {
+          console.log("Get scheduleitems in month",data)
+          app.globalData.dayWithItem = data; // 设置对应全局变量
+        }).catch((errno) => {
+          console.log("something wrong when get days with items in selected month: " + errno);
+        });
+
+        /* 获取用户信息 */
+        wrapper.wxRequestWrapper(api.queryUserInfo, "GET", {}).then((data) => {
+          app.globalData.userInfo = data;
+        }).catch((errno) => {
+          console.log("something wrong when get user info: " + errno);
+        });
+
+
+
+
+
+        /* 获取用户安装扩展对应的数组 */
+        wrapper.wxRequestWrapper(api.queryEnabledExtensionsArray, "GET", {}).then((data) => {
+          app.globalData.extensions = extension.warpExtensions(data); // 设置对应全局变量
+        }).catch((errno) => {
+          console.log("something wrong when get installed extensions: " + errno);
+        })
+        app.globalData.userFoodEaten = [];
+        app.globalData.logined = true;
+        wx.switchTab({
+          url: '/pages/schedular/schedular',
+        })
+      })
+      .catch((errno) => {
+        app.globalData.logined = false;
+        console.log("Get errno when login: ", errno);
+        switch (errno) {
+          case 1:
+            console.log("wrong name or password");
+            break;
+          default:
+            break;
+        }
+      });
+
+
+
   }
 })

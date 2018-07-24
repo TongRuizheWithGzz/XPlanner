@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 @Service
 public class KeeperService {
     @Autowired
@@ -138,7 +139,6 @@ public class KeeperService {
     //get user's today's scheduleitems and then calculate for busy_time_pool
     public void get_user_busy_time_pool() throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
         Calendar calendar = Calendar.getInstance();
         //get begin and end of today
         calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMinimum(Calendar.HOUR_OF_DAY));
