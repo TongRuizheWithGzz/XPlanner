@@ -1,13 +1,13 @@
 <view class="weui-grids" bindtap="undo">
   <block wx:for="{{extensions}}" wx:key="{{item.id}}" wx:if="{{item.visible}}">
-    <view class="weui-grid" bindlongpress='remove'>
+    <view class="weui-grid" bindlongpress='remove' data-url="{{item.extension_path}}" catchtap='direct'>
       <image wx:if="{{move}}" src='/icons/remove.png' wx:if="{{move}}" class="badge" catchtap='rem' data-id="{{index}}" />
 
       <view wx:if="{{item.messages > 0 && item.visible && !move}}" class="badge1" style="position: absolute;top: 0.5em;right: 1.75em;">
         <text>{{item.messages}}</text>
       </view>
 
-      <image class="{{move ? 'm-icon':'icon'}}" src="{{item.icon}}" bindlongpress='remove' catchtap='direct' data-url="{{}}"></image>
+      <image class="{{move ? 'm-icon':'icon'}}" src="{{item.icon}}"></image>
       <view class='label'>{{item.name}}</view>
     </view>
   </block>

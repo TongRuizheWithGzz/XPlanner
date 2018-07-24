@@ -48,7 +48,7 @@ App({
     this.globalData.month = 7;
     this.globalData.day = 18;
     this.globalData.userInfo = userInfo;
-    this.globalData.extensions = extension.filterExtensions(extension.warpExtensions(extensions), [0, 1, 2]);
+    this.globalData.extensions = extension.filterExtensions(extension.warpExtensions(extensions), [0, 1, 2, 3]);
     console.log(this.globalData.extensions);
     this.globalData.userFoodEaten = [];
     this.globalData.scheduleItems = schedule.warpScheduleItems(scheduleItems);
