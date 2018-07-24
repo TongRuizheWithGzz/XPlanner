@@ -11,7 +11,8 @@ drop table if exists role;
 drop table if exists JAccount_user;
 drop table if exists Weixin_user;
 drop table if exists user;
-
+drop table if exists keeper_recommand;
+drop table if exists notification;
 
 CREATE TABLE user (
   user_id       INTEGER auto_increment,
@@ -19,9 +20,37 @@ CREATE TABLE user (
   user_password varchar(64),
   avatar_url    varchar(2056),
   enabled       boolean,
+  last_keeper_fresh     datetime,
+
   PRIMARY KEY (user_id)
 );
+create table keeper_recommand(
+  recommand_id    INTEGER auto_increment,
+  user_id     INTEGER,
+  start_time      DATETIME      not null,
+  end_time        DATETIME      not null,
+  title           varchar(1024) not null,
+  description     varchar(1024),
+  address         varchar(256),
+  primary key (recommand_id),
+  foreign key (user_id) references user (user_id)
+);
 
+create table notification (
+  notification_id integer primary key,
+  title           varchar(256),
+  description     varchar(2056),
+  start_time      char(16) not null,
+  end_time        char(16) not null,
+  address         varchar(256),
+  imageUrl        varchar(1024),
+  website         varchar(64),
+  UUID            varchar(64) default '',
+  create_time     timestamp(3)
+);
+
+create index create_time_index
+  on notification (create_time);
 
 create table JAccount_user (
   user_id       INTEGER,
@@ -175,5 +204,3 @@ insert into user_role values (null, 1, 2);
 insert into user_role values (null, 1, 1);
 
 #insert schedule itmes
-
-

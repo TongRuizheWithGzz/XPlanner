@@ -27,7 +27,6 @@ public class ScheduleitemConverterTest {
         entity.setStartTime(Timestamp.valueOf("2018-07-29 13:56:13"));
         entity.setEndTime(Timestamp.valueOf("2018-07-29 13:57:59"));
         entity.setTitle("title");
-        entity.setImageUrl("https://www.baidu.com");
 
 
         DTO = new ScheduleitmeDTO();
@@ -36,9 +35,9 @@ public class ScheduleitemConverterTest {
         DTO.title = "title";
         DTO.start_time = "2018-01-29 01:02";
         DTO.end_time = "2018-02-02 13:13";
-        DTO.imageUrl = null;
         DTO.address = "Shanghai Jiaotong University";
     }
+
 
 
     @Test
@@ -48,10 +47,11 @@ public class ScheduleitemConverterTest {
         assertThat(scheduleitmeDTO.start_time).isEqualTo("2018-07-29 13:56");
         assertThat(scheduleitmeDTO.end_time).isEqualTo("2018-07-29 13:57");
         assertThat(scheduleitmeDTO.description).isEqualTo("description");
-        assertThat(scheduleitmeDTO.imageUrl).isEqualTo("https://www.baidu.com");
         assertThat(scheduleitmeDTO.completed).isEqualTo(false);
         assertThat(scheduleitmeDTO.address).isEqualTo(null);
     }
+
+
 
 
 

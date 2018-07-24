@@ -2,7 +2,7 @@ const api = require('../config/api.js');
 
 var wrapper = {
   loginByUsernamePassword: function (username, password) {
-    return new Promisae(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
       wx.request({
         url: api.LoginByUsernamePassword,
         data: {
@@ -48,9 +48,15 @@ var wrapper = {
         data,
         header: {
           'Cookie': Cookie,
-          'content-type': 'application/json',
         },
         success: function (res) {
+          switch (res.statusCode) {
+            case 400:
+              reject(7);
+            case 404:
+              reject(8);
+          }
+
           switch (res.data.errno) {
             case (0):
               //接口调用成功

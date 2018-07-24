@@ -1,7 +1,5 @@
 package com.codemover.xplanner.Model.Entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 
 @Entity

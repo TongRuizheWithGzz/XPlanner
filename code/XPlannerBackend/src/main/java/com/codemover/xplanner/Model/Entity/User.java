@@ -1,6 +1,8 @@
 package com.codemover.xplanner.Model.Entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -14,10 +16,11 @@ public class User {
     private Set<UserFoodEaten> foodEatens;
     private Set<Role> roles;
     private boolean enabled;
+    private Timestamp last_keeper_fresh;
+    private List<KeeperRecommand> keeperRecommands;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     @Column(name = "user_id")
 
     public Integer getUserId() {
@@ -58,6 +61,13 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
+    @Basic
+    @Column(name="last_keeper_fresh")
+    public Timestamp getLast_keeper_fresh(){return last_keeper_fresh;}
+
+    public void setLast_keeper_fresh(Timestamp last_keeper_fresh) {
+        this.last_keeper_fresh = last_keeper_fresh;
+    }
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
@@ -100,6 +110,15 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
+    public List<KeeperRecommand> getKeeperRecommands() {
+        return keeperRecommands;
+    }
+
+    public void setKeeperRecommands(List<KeeperRecommand> keeperRecommands) {
+        this.keeperRecommands = keeperRecommands;
     }
 
 }

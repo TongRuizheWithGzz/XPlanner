@@ -8,22 +8,14 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 
 public class ScheduleitemConverter {
     public static Scheduleitme DTOToEntity(@NotNull ScheduleitmeDTO dto) {
         Scheduleitme entity = new Scheduleitme();
-        entity.setTitle(dto.title);
-        entity.setImageUrl(dto.imageUrl);
-        entity.setStartTime(String2TimeStamp(dto.start_time));
-        entity.setEndTime(String2TimeStamp(dto.end_time));
-        entity.setAddress(dto.address);
-        entity.setCompleted(dto.completed);
-        entity.setDescription(dto.description);
+        modifyEntity(entity, dto);
+
         return entity;
     }
 
@@ -33,15 +25,22 @@ public class ScheduleitemConverter {
         DTO.description = entity.getDescription();
         DTO.address = entity.getAddress();
         DTO.completed = entity.isCompleted();
-        DTO.imageUrl = entity.getImageUrl();
         DTO.start_time = TimeStamp2String(entity.getStartTime());
         DTO.end_time = TimeStamp2String(entity.getEndTime());
 
         return DTO;
     }
 
+    public static void modifyEntity(@NotNull Scheduleitme entity, @NotNull ScheduleitmeDTO dto) {
+        entity.setTitle(dto.title);
+        entity.setStartTime(String2TimeStamp(dto.start_time));
+        entity.setEndTime(String2TimeStamp(dto.end_time));
+        entity.setAddress(dto.address);
+        entity.setCompleted(dto.completed);
+        entity.setDescription(dto.description);
+    }
 
-    public static Set<ScheduleitmeDTO> entitiesToDTOs(@NotNull Set<Scheduleitme> entities) {
+    public static Set<ScheduleitmeDTO> entitiesToDTOs(@NotNull Collection<Scheduleitme> entities) {
         Set<ScheduleitmeDTO> DTOs = new HashSet<ScheduleitmeDTO>();
 
         Iterator<Scheduleitme> it = entities.iterator();
@@ -53,18 +52,19 @@ public class ScheduleitemConverter {
         return DTOs;
     }
 
-    private static String TimeStamp2String(@NotNull Timestamp timestamp) {
+    public static String TimeStamp2String(@NotNull Timestamp timestamp) {
         SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return dFormat.format(new Date(timestamp.getTime()));
     }
 
     //Timestamp has a precision of yyyy-MM-dd HH:mm:ss
-    private static Timestamp String2TimeStamp(@NotNull String strDate) {
+    public static Timestamp String2TimeStamp(@NotNull String strDate) {
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = null;
         try {
             date = sf.parse(strDate);
         } catch (ParseException e) {
+
             e.printStackTrace();
         }
         Timestamp timestamp = new Timestamp(date.getTime());
