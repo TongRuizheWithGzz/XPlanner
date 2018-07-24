@@ -11,6 +11,7 @@ drop table if exists role;
 drop table if exists JAccount_user;
 drop table if exists Weixin_user;
 drop table if exists user;
+drop table if exists keeper_recommand;
 drop table if exists notification;
 
 CREATE TABLE user (
@@ -19,7 +20,20 @@ CREATE TABLE user (
   user_password varchar(64),
   avatar_url    varchar(2056),
   enabled       boolean,
+  last_keeper_fresh     datetime,
+
   PRIMARY KEY (user_id)
+);
+create table keeper_recommand(
+  recommand_id    INTEGER auto_increment,
+  user_id     INTEGER,
+  start_time      DATETIME      not null,
+  end_time        DATETIME      not null,
+  title           varchar(1024) not null,
+  description     varchar(1024),
+  address         varchar(256),
+  primary key (recommand_id),
+  foreign key (user_id) references user (user_id)
 );
 
 create table notification (
