@@ -1,12 +1,30 @@
-<view class='tab'>{{day}}</view>
-<swiper current="{{activeIndex}}" class="swiper-box" duration="250" bindchange='swipe'>
-  <block wx:for="{{items}}" wx:key='key'>
-    <swiper-item class="swiper-item">
-      <text class='time'>{{"FROM "+item.start_time + " TO " + item.end_time}}</text>
-      <text class='title item{{index}}'>{{item.title}}</text>
-      <text class='description'>{{item.description}}</text>
-      <text class='add'>Address</text>
-      <text class='address'>{{item.address}}</text>
-    </swiper-item>
-  </block>
-</swiper>
+<view class='detail'>
+  <view class="swiper-item">
+    <view class='up'>
+      <view class='intro card'>
+        <view class='top-line'>
+          <text class='name'>{{item.title}}</text>
+          <image src="/icons/edit.png" class="pen" catchtap='edit'></image>
+        </view>
+        <view class='block'>
+          <image src="/icons/time.png" class="icon1"></image>
+          <text class='time'>{{"开始："+item.start_concret_time + "\n" +"结束："+item.end_concret_time}}</text>
+        </view>
+        <view class='block'>
+          <image src="/icons/loc.png" class="icon2"></image>
+          <text class='address'>{{item.address}}</text>
+        </view>
+      </view>
+      <image class='flower card' src='http://img.zcool.cn/community/010ce158a169b2a801219c77585e19.jpg@2o.jpg'>
+      </image>
+    </view>
+    <view class='down card'>
+      <view class='top  top1'>
+        <image src="/icons/des.png" class="icon"></image>
+        <text class='title'>详情</text>
+      </view>
+      <text class='des'>{{item.description}}</text>
+    </view>
+  </view>
+
+</view>
