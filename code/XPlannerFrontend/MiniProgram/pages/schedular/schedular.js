@@ -1,6 +1,6 @@
 var app = getApp();
-var sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
 var time = require("../../common/time");
+var schedule = require("../../common/schedule");
 const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May.', 'June.', 'July.', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
 
 const NORMAL_DAY_COLOR = 'grey';
@@ -18,6 +18,7 @@ Page({
     hideFixTop: true,
     time: 0,
     showSelect: -1,
+    showComplete: true,
 
     showYear: app.globalData.year,
     showMonth: app.globalData.month,
@@ -26,6 +27,9 @@ Page({
   },
   onLoad: function () {
     console.log("get app date" + app.globalData.date);
+    console.log(app.globalData.year);
+    console.log(app.globalData.month);
+    console.log(app.globalData.day);
     /* 获取要显示的日程列表 */
     var tmp_show_items = app.globalData.scheduleItems;
 
@@ -36,6 +40,8 @@ Page({
     this.setData({
       dayList: tmp_day_list,
       showItems: tmp_show_items,
+      showYear: app.globalData.year,
+      showMonth: app.globalData.month,
     })
   },
   onShow: function () {
@@ -59,9 +65,10 @@ Page({
       } else { // 添加的日程和目前显示的日期是不同的
         var new_item_date = app.globalData.scheduleItems[app.globalData.scheduleItems.length - 1].start_time;
         var tmp_day_list = this.data.dayList;
-        tmp_day_list[parseInt(new_item_date.slice(8, 10)) - 1].haveItems = true;
-        tmp_day_list[parseInt(new_item_date.slice(8, 10)) - 1].background = WORK_DAY_BACKGROUND;
-        tmp_day_list[parseInt(new_item_date.slice(8, 10)) - 1].color = WORK_DAY_COLOR;
+        var tmp_day = parseInt(new_item_date.slice(8, 10));
+        tmp_day_list[tmp_day - 1].haveItems = true;
+        tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
+        tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
 
         this.setData({
           dayList: tmp_day_list,
@@ -69,6 +76,42 @@ Page({
       }
       app.globalData.ifAddSchedule = false;
       app.globalData.ifSameDay = false;
+    } else if (app.globalData.ifChangeSchedule) { // 从add页面返回并且修改了日程
+      if (app.globalData.ifChangeScheduleStartDate) { // 如果修改了日程的开始日期
+        var tmp_item = app.globalData.scheduleItems[app.globalData.changeScheduleIndex];
+        if (parseInt(tmp_item.start_time.slice(5, 7)) == app.globalData.month) { // 如果是当前月
+          var tmp_day_list = this.data.dayList;
+          var tmp_day = parseInt(tmp_item.start_time.slice(8, 10));
+          tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
+          tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
+          tmp_day_list[tmp_day - 1].haveItems = true;
+          this.setData({
+            dayList: tmp_day_list,
+          })
+
+          var tmp_items = app.globalData.scheduleItems;
+          tmp_items.splice(app.globalData.changeScheduleIndex, 1);
+          app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
+          this.setData({
+            showItems: tmp_items,
+          })
+        } else { // 如果不是当前月
+        console.log("sb");
+          var tmp_items = app.globalData.scheduleItems;
+          tmp_items.splice(app.globalData.changeScheduleIndex, 1);
+          app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
+          this.setData({
+            showItems: tmp_items,
+          })
+        }
+      } else { // 如果没有修改开始日期
+        this.setData({
+          showItems: app.globalData.scheduleItems
+        })
+      }
+      app.globalData.ifChangeSchedule = false;
+      app.globalData.changeScheduleIndex = 0;
+      app.globalData.ifChangeScheduleStartDate = false;
     } else { // 普通显示或者放弃添加日程
       console.log("no thing happen after on show");
     }
@@ -113,8 +156,8 @@ Page({
 
   selectCheckbox: function (e) {
     console.log(e.currentTarget.dataset.index);
-    var tmp = app.globalData.scheduleItems[e.currentTarget.dataset.index].selected;
-    app.globalData.scheduleItems[e.currentTarget.dataset.index].selected = !tmp;
+    var tmp = app.globalData.scheduleItems[e.currentTarget.dataset.index].completed;
+    app.globalData.scheduleItems[e.currentTarget.dataset.index].completed = !tmp;
     this.setData({
       showItems: app.globalData.scheduleItems
     });
@@ -137,24 +180,65 @@ Page({
    * 移除日程
    */
   delete(e) {
-    /* 向后端发送请求 */
+    var that = this;
+    wx.showModal({
+      title: '警告',
+      content: '是否删除选中日程？',
+      success: function (res) {
+        if (res.confirm) { // 确认删除
+          /* 向后端发送请求 */
 
-    /* 更改scheduleItems */
-    var tmp_items = app.globalData.scheduleItems;
-    tmp_items.splice(e.currentTarget.dataset.index, 1);
-    app.globalData.scheduleItems = tmp_items;
-    this.setData({
-      showItems: tmp_items,
+          /* 更改scheduleItems */
+          var tmp_items = app.globalData.scheduleItems;
+          tmp_items.splice(e.currentTarget.dataset.index, 1);
+          app.globalData.scheduleItems = tmp_items;
+          that.setData({
+            showItems: tmp_items,
+          });
+
+          if (tmp_items.length == 0) {
+            var day_list = this.data.dayList;
+            day_list[app.globalData.day - 1].haveItems = 0;
+            that.setData({
+              dayList: day_list,
+            })
+          }
+
+          that.setData({
+            showSelect: -1,
+          })
+        } else if (res.cancel) {
+          return;
+        }
+      }
     });
+  },
 
-    if (tmp_items.length == 0) {
-      var day_list = this.data.dayList;
-      day_list[app.globalData.day - 1].haveItems = 0;
+  changeVisible: function (e) {
+    var tmp_show_complete = this.data.showComplete;
+    if (tmp_show_complete) {
+      var tmp_show_items = this.data.showItems;
+      for (var i = 0; i < tmp_show_items.length; i++) {
+        if (tmp_show_items[i].completed) {
+          tmp_show_items[i].visible = false;
+        }
+      }
       this.setData({
-        dayList: day_list,
-      })
+        showItems: tmp_show_items,
+        showComplete: !tmp_show_complete
+      });
+    } else {
+      var tmp_show_items = this.data.showItems;
+      for (var i = 0; i < tmp_show_items.length; i++) {
+        if (tmp_show_items[i].completed) {
+          tmp_show_items[i].visible = true;
+        }
+      }
+      this.setData({
+        showItems: tmp_show_items,
+        showComplete: !tmp_show_complete
+      });
     }
-    return;
   },
 
   /*
@@ -484,21 +568,10 @@ Page({
       key: "date",
       data: new_date
     });
-    wx.setStorage({
-      key: "year",
-      data: new_year,
-    });
-    wx.setStorage({
-      key: "month",
-      data: new_month,
-    });
-    wx.setStorage({
-      key: "day",
-      data: new_day,
-    });
 
     /* 设置控制日程显示的showItems和scheduleItems */
-    var tmp_items = this.getScheduleItemsFromBackEndAndWarp(new_date);
+    var tmp_items = schedule.warpScheduleItems(this.getScheduleItemsFromBackEndAndWarp(new_date));
+    console.log(tmp_items);
     app.globalData.scheduleItems = tmp_items;
     this.setData({
       showItems: tmp_items,
