@@ -8,6 +8,7 @@ import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
 import com.codemover.xplanner.Model.Entity.Scheduleitme;
 import com.codemover.xplanner.Model.Entity.User;
 import com.codemover.xplanner.Service.ScheduleService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public HashMap<String, Object> findUserSchedule(String username) {
 
+
         HashMap<String, Object> response = new HashMap<>();
         User user = userRepository.findByUserName(username);
         if (user == null) {
@@ -41,8 +43,10 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new NullPointerException("Query user's scheduleitems: user not found");
         }
 
+
         Set<Scheduleitme> scheduleitmes = user.getScheduleitmes();
-        response.put("scheduleItems", scheduleitmes);
+        Set<ScheduleitmeDTO> scheduleitmeDTOS = ScheduleitemConverter.entitiesToDTOs(scheduleitmes);
+        response.put("scheduleItems", scheduleitmeDTOS);
         return response;
 
     }
@@ -50,7 +54,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public HashMap<String, Object> addScheduleItem(ScheduleitmeDTO scheduleitmeDTO, String username) {
-
+        logger.debug("Get scheduleitem title:'{}'", scheduleitmeDTO.title);
         HashMap<String, Object> response = new HashMap<>();
 
         User user = userRepository.findByUserName(username);
@@ -61,7 +65,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Scheduleitme scheduleitme = ScheduleitemConverter.DTOToEntity(scheduleitmeDTO);
         scheduleitme.setUser(user);
-        scheduleItemRepository.save(scheduleitme);
+        System.out.println(scheduleitme.getTitle());
+        Scheduleitme s = scheduleItemRepository.save(scheduleitme);
+
+        response.put("scheduleitme", ScheduleitemConverter.entityToDTO(scheduleitme));
+
+
         return response;
 
 
@@ -91,7 +100,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
         ScheduleitemConverter.modifyEntity(scheduleitme, scheduleitmeDTO);
         scheduleItemRepository.save(scheduleitme);
-
         return response;
 
     }
@@ -166,7 +174,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Collection<Scheduleitme> scheduleitmeList =
                 scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user, beginning, endding);
 
-        response.put("scheduleitems",scheduleitmeList);
+        response.put("scheduleitems", scheduleitmeList);
         return response;
 
     }
@@ -198,7 +206,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new NullPointerException("Delete a  scheduleitem: user not found");
         }
         List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetween(user, beginning, endding);
-
 
 
         Map<Integer, int[]> date_map = new HashMap<>();

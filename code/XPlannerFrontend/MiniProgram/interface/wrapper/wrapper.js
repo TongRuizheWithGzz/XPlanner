@@ -48,9 +48,10 @@ var wrapper = {
         data,
         header: {
           'Cookie': Cookie,
+          'content-Type':'application/json;charset=UTF-8',
+         
         },
         success: function(res) {
-
 
           switch (res.data.errno) {
             case (0):

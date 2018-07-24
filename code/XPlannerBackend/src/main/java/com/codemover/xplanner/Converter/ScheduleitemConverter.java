@@ -27,7 +27,7 @@ public class ScheduleitemConverter {
         DTO.completed = entity.isCompleted();
         DTO.start_time = TimeStamp2String(entity.getStartTime());
         DTO.end_time = TimeStamp2String(entity.getEndTime());
-
+        DTO.scheduleItem_id = entity.getScheduleItmeId();
         return DTO;
     }
 

@@ -1,6 +1,8 @@
 package com.codemover.xplanner.Model.DTO;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 
@@ -26,6 +28,13 @@ public class ScheduleitmeDTO implements Serializable {
         this.completed = completed;
     }
 
+    public Integer getScheduleItem_id() {
+        return scheduleItem_id;
+    }
+
+    public void setScheduleItem_id(Integer scheduleItem_id) {
+        this.scheduleItem_id = scheduleItem_id;
+    }
 
     public String start_time;
     public String end_time;
@@ -33,6 +42,8 @@ public class ScheduleitmeDTO implements Serializable {
     public String address;
     public String title;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public Integer scheduleItem_id;
 
     public boolean completed;
 

@@ -16,6 +16,7 @@ import java.util.ListIterator;
 @Entity
 public class Notification {
 
+    @JsonIgnore
     private Integer notificationId;
     public String start_time;
     public String end_time;
@@ -23,11 +24,14 @@ public class Notification {
     public String address;
     public String title;
     public String imageUrl;
+
+    @JsonIgnore
     public String UUID;
+    @JsonIgnore
     private Timestamp createTime;
 
+    
     @Basic
-    @JsonIgnore
     public String getUUID() {
         return UUID;
     }
@@ -55,7 +59,6 @@ public class Notification {
 
     @Id
     @Column(name = "notification_id")
-    @JsonIgnore
     public Integer getNotificationId() {
         return notificationId;
     }
@@ -132,7 +135,6 @@ public class Notification {
 
     @Basic
     @Column(name = "create_time")
-    @JsonIgnore
     public Timestamp getCreateTime() {
         return createTime;
     }

@@ -193,40 +193,46 @@ Page({
       content: '是否删除选中日程？',
       success: function(res) {
         if (res.confirm) { // 确认删除
-
+          var id = app.globalData.scheduleItems[e.currentTarget.dataset.index].scheduleItem_id;
           /* 向后端发送请求 */
-          wrapper.wxRequestWrapper(api.deleteScheduleitme, "DELETE", {}).then(() => {
-
-          }).catch(() => {
-
-          });
-
-
-          /* 更改scheduleItems */
-          var tmp_items = app.globalData.scheduleItems;
-          tmp_items.splice(e.currentTarget.dataset.index, 1);
-          app.globalData.scheduleItems = tmp_items;
-          that.setData({
-            showItems: tmp_items,
-          });
-
-          if (tmp_items.length == 0) {
-            var day_list = this.data.dayList;
-            day_list[app.globalData.day - 1].haveItems = 0;
+          wrapper.wxRequestWrapper(api.deleteScheduleitme + id, "DELETE", {}).then(() => {
+            /* 更改scheduleItems */
+            var tmp_items = app.globalData.scheduleItems;
+            tmp_items.splice(e.currentTarget.dataset.index, 1);
+            app.globalData.scheduleItems = tmp_items;
             that.setData({
-              dayList: day_list,
-            })
-          }
+              showItems: tmp_items,
+            });
+          
+            if (tmp_items.length == 0) {
+              var day_list = this.data.dayList;
+              day_list[app.globalData.day - 1].haveItems = 0;
+              that.setData({
+                dayList: day_list,
+              })
+            }
 
-          that.setData({
-            showSelect: -1,
-          })
+            that.setData({
+              showSelect: -1,
+            })
+          }).catch((errno) => {
+            console.log("服务器删除失败：", errno);
+            wx.showModal({
+              title: '删除失败',
+              content: '请检查网络设置',
+              showCancel: false,
+            })
+          });
+
+
+
         } else if (res.cancel) {
           return;
         }
       }
     });
   },
+
 
   changeVisible: function(e) {
     var tmp_show_complete = this.data.showComplete;
@@ -666,7 +672,7 @@ Page({
             dayList: day_list,
           });
         }).catch((errno) => {
-          console.log("不在当前月内并进行了选择【出错}",errno);
+          console.log("不在当前月内并进行了选择【出错}", errno);
         })
       }
     }).catch((errno) => {

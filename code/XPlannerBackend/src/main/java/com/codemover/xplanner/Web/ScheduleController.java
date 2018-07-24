@@ -11,8 +11,6 @@ import java.text.ParseException;
 import java.util.Map;
 
 
-
-
 @RestController
 public class ScheduleController {
 
@@ -29,9 +27,12 @@ public class ScheduleController {
     @PostMapping(value = "/api/schedules")
     public Map<String, Object> addScheduleitem(Principal principal,
                                                @RequestBody ScheduleitmeDTO scheduleitmeDTO) {
+
+
         String username = principal.getName();
         return ControllerUtil.successHandler(scheduleService.addScheduleItem(scheduleitmeDTO, username));
     }
+
 
 
     @PutMapping(value = "/api/schedules/{id}")
