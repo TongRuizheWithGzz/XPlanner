@@ -2,7 +2,7 @@ Page({
   data: {
     files: [],
     inputValue: "",
-    activeIndex: 0, // 当前激活的tab序数
+    activeIndex: 1, // 当前激活的tab序数
   },
 
   /*

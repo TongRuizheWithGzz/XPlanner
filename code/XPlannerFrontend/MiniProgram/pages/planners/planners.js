@@ -1,6 +1,5 @@
 var app = getApp();
 var sliderWidth = 120; // 需要设置slider的宽度，用于计算中间位置
-// var User_planner_setting = [0, 1, 2]; //从后端传来的已安装扩展数组
 var extensions = app.globalData.extensions;
 var mtabW;
 
@@ -15,14 +14,28 @@ Page({
     })
   },
 
+  /*
+   * undo
+   * 关闭删除模式
+   */
   undo: function () {
     this.setData({
       move: false
     })
   },
+
+  /*
+   * remove
+   * 开启删除模式
+   */
   remove: function () {
     this.setData({ move: true })
   },
+
+  /*
+   * rem
+   * 删除扩展
+   */
   rem: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
@@ -30,23 +43,23 @@ Page({
       title: '是否删除插件' + this.data.extensions[id].name,
       content: '模态弹窗',
       success: function (res) {
-        app.globalData.extensions[id].visible = false;
-        that.setData({
-          extensions: app.globalData.extensions,
-        });
+        if (res.confirm) {
+          app.globalData.extensions[id].visible = false;
+          that.setData({
+            extensions: app.globalData.extensions,
+          });
 
-        /* 写数据库 */
+          /* 写数据库 */
 
+        }
       }
     })
   },
-  /*
-   * gotoManagement
-   * 前往管理扩展页面
-   */
-  gotoManagement: function (e) {
+
+  direct: function (e) {
+    console.log("sb");
     wx.navigateTo({
-      url: "/pages/planners/management/management"
+      url: e.currentTarget.dataset.url,
     })
   }
 })
