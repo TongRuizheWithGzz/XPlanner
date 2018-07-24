@@ -43,17 +43,17 @@ App({
     /* 向后端发送选择的日期，获取当月有日程的日期的数组和当天的日期，设置globalData，注意要使用包装函数 */
     /* 另外，使用wx.getStorage获取存储的选区的日期，也需要设置globalData */
 
-    // this.globalData.date = "2018-07-18";
-    // this.globalData.year = 2018;
-    // this.globalData.month = 7;
-    // this.globalData.day = 18;
-    // this.globalData.userInfo = userInfo;
-    // this.globalData.extensions = extension.warpExtensions(extensions);
-    // this.globalData.userFoodEaten = [];
-    // this.globalData.scheduleItems = schedule.warpScheduleItems(scheduleItems);
-    // this.globalData.dayWithItem = { 17: [1], 18: [3], 20: [2] };
-    // this.globalData.ifAddSchedule = false;
-    // this.globalData.ifSameDay = false;
+    this.globalData.date = "2018-07-18";
+    this.globalData.year = 2018;
+    this.globalData.month = 7;
+    this.globalData.day = 18;
+    this.globalData.userInfo = userInfo;
+    this.globalData.extensions = extension.warpExtensions(extensions);
+    this.globalData.userFoodEaten = [];
+    this.globalData.scheduleItems = schedule.warpScheduleItems(scheduleItems);
+    this.globalData.dayWithItem = { 17: [1], 18: [3], 20: [2] };
+    this.globalData.ifAddSchedule = false;
+    this.globalData.ifSameDay = false;
   },
   globalData: {
     date: "",
