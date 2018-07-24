@@ -166,7 +166,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         Collection<Scheduleitme> scheduleitmeList =
                 scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user, beginning, endding);
 
-        response.put("scheduleitems", ScheduleitemConverter.entitiesToDTOs(scheduleitmeList));
+        response.put("scheduleitems",scheduleitmeList);
         return response;
 
     }
