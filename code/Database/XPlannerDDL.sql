@@ -50,7 +50,7 @@ create table JAccount_user (
   primary key (user_id),
   foreign key (user_id) references user (user_id)
 );
-
+ 
 create table Weixin_user (
   user_id   INTEGER,
   nick_name varchar(128),
