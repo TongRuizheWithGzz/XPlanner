@@ -1,11 +1,11 @@
 {
   "pages": [
+    "pages/store/store",
     "pages/schedular/schedular",
     "pages/schedular/scheduleDetails/scheduleDetails",
     "pages/schedular/addSchedule/add",
     "pages/planners/planners",
-    "pages/planners/management/management",
-    "pages/planners/extensionDetails/extensionDetails",
+    "pages/store/detail/detail",
     "pages/settings/settings",
     "pages/settings/userSettings/userSettings",
     "pages/settings/login/login",
@@ -34,10 +34,16 @@
         "text": "扩展"
       },
       {
+        "selectedIconPath": "icons/bag.png",
+        "iconPath": "icons/bag2.png",
+        "pagePath": "pages/store/store",
+        "text": "商城"
+      },
+      {
         "selectedIconPath": "icons/personal-selected.png",
         "iconPath": "icons/personal.png",
         "pagePath": "pages/settings/settings",
-        "text": "我"
+        "text": "我的"
       }
     ]
   },

@@ -1,0 +1,22 @@
+<view class='top'>
+  <view class='time'>
+    {{time}}
+  </view>
+  <view class='title'>
+    插件商城
+  </view>
+</view>
+<view class='list'>
+  <view class='item card' wx:for="{{extensions}}" wx:key="key" style="background:url({{item.background}})" bindtap='show' data-id="{{index}}">
+    <view class='down'>
+      <image src='{{item.icon}}' class='icon'></image>
+      <view class='right'>
+        <text class='name'>{{item.name}}</text>
+        <text class='msg'>{{item.msg}}</text>
+      </view>
+      <view class='button' hover-class='press' catchtap="{{item.visible ? 'open' : 'install'}}" data-url='{{item.extension_path}}' data-id="{{index}}">
+        {{item.visible? '打开':'安装'}}
+      </view>
+    </view>
+  </view>
+</view>
