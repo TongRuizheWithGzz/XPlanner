@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 public interface NotificationRepository extends PagingAndSortingRepository<Notification, Integer> {
    // Page<Notification> findAll(Pageable pageable);
 
-
 }
 
 

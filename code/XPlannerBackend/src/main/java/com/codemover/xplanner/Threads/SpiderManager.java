@@ -11,6 +11,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.Order;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -18,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Component
 @Scope("prototype")
+@Order(-1)
 public class SpiderManager implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpiderManager.class);
 
@@ -39,6 +42,7 @@ public class SpiderManager implements CommandLineRunner {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
+    @Async
     public void run(String... args) throws Exception {
         while (true) {
             logger.info("I'm awake!");
@@ -92,5 +96,3 @@ public class SpiderManager implements CommandLineRunner {
 
     }
 }
-
-
