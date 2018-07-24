@@ -34,8 +34,14 @@ var extension = {
   filterExtensions: function (extensions, array) {
     var tmp = extensions;
     for (var i = 0; i < array.length; i++) {
-      extensions[array[i]].visible = true;
+      for (var j = 0; j < extensions.length; j++) {
+        if (extensions[j].id == array[i].planner_id) {
+          console.log(extensions[j]);
+          tmp[j].visible = true;
+        }
+      }
     }
+    console.log(tmp);
     return tmp;
   }
 }

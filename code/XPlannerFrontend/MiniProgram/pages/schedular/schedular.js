@@ -513,10 +513,20 @@ Page({
     //   return [];
     // }
     var tmp;
-    wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {}).then(() => {
+    console.log("SB");
+    wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
+      "year":app.globalData.year,
+      "month":app.globalData.month,
+      "day": app.globalData.day,
 
-    }).catch(() => {
-
+    }).then((data) => {
+      tmp = schedule.warpScheduleItems(data.scheduleitems);
+      console.log(data.scheduleitems);
+      console.log("finish")
+      console.log("tmp:",tmp);
+      // tmp = data.scheduleitems;
+    }).catch((errno) => {
+      console.log("用户选择日历一天，服务器返回错误: ",errno)
     });
 
     // /* 处理后端传来的scheduleItems数组 */
@@ -564,6 +574,7 @@ Page({
    * 响应点击某天的事件
    */
   selectDay: function (e) {
+    console.log("进入SelectDay函数");
     var new_year = e.detail.year;
     var new_month = e.detail.month;
     var new_day = e.detail.day;
@@ -589,36 +600,53 @@ Page({
     app.globalData.month = new_month;
     app.globalData.day = new_day;
     app.globalData.date = new_date;
-
+    
+    
     /* 本地存储新日期 */
-    wx.setStorage({
-      key: "date",
-      data: new_date
-    });
-
+    wx.setStorageSync("date", new_date);
+   
     /* 设置控制日程显示的showItems和scheduleItems */
-    var tmp_items = schedule.warpScheduleItems(this.getScheduleItemsFromBackEndAndWarp(new_date));
-    console.log(tmp_items);
-    app.globalData.scheduleItems = tmp_items;
-    this.setData({
-      showItems: tmp_items,
-    });
+    // var tmp_items = schedule.warpScheduleItems(this.getScheduleItemsFromBackEndAndWarp(new_date));
+    var tmp_items;
+    console.log("SB");
+    wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
+      "year": app.globalData.year,
+      "month": app.globalData.month,
+      "day": app.globalData.day,
 
-    /* 设置控制月历显示的dayList */
-    if (new_month == old_month && new_year == old_year) { // 在当前月内选择
-      var day_list = this.data.dayList;
-      day_list[old_day - 1] = this.getModifiedOldDay(day_list[old_day - 1]);
-      day_list[new_day - 1] = this.getModifiedNewDay(day_list[new_day - 1]);
-    } else { // 不在当前月内选择
-      var day_list = this.generateDayList(this.getDayWithItemsFromBackEnd(new_year, new_month), new_year, new_month, new_day);
-      console.log(new_year + " " + new_day);
-      console.log(this.getDayWithItemsFromBackEnd(new_year, new_day));
-      console.log(day_list);
-      day_list[new_day - 1] = this.getModifiedNewDay(day_list[new_day - 1]);
-      console.log("flag");
-    }
-    this.setData({
-      dayList: day_list,
+    }).then((data) => { // 正常返回
+      tmp_items = schedule.warpScheduleItems(data.scheduleitems);
+      console.log(data.scheduleitems);
+      console.log("finish")
+      console.log("tmp:", tmp_items);
+      // tmp = data.scheduleitems;
+
+      console.log("Wang Zhehao");
+      console.log(tmp_items);
+      app.globalData.scheduleItems = tmp_items;
+      this.setData({
+        showItems: tmp_items,
+      });
+
+      /* 设置控制月历显示的dayList */
+      if (new_month == old_month && new_year == old_year) { // 在当前月内选择
+        var day_list = this.data.dayList;
+        day_list[old_day - 1] = this.getModifiedOldDay(day_list[old_day - 1]);
+        day_list[new_day - 1] = this.getModifiedNewDay(day_list[new_day - 1]);
+      } else { // 不在当前月内选择
+        var day_list = this.generateDayList(this.getDayWithItemsFromBackEnd(new_year, new_month), new_year, new_month, new_day);
+        console.log(new_year + " " + new_day);
+        console.log(this.getDayWithItemsFromBackEnd(new_year, new_day));
+        console.log(day_list);
+        day_list[new_day - 1] = this.getModifiedNewDay(day_list[new_day - 1]);
+        console.log("flag");
+      }
+      console.log("Tong Ruizhe");
+      this.setData({
+        dayList: day_list,
+      });
+    }).catch((errno) => {
+      console.log("用户选择日历一天，服务器返回错误: ", errno)
     });
   }
 })

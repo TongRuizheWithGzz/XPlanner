@@ -1,14 +1,23 @@
 package com.codemover.xplanner.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 public class Plannerstore {
+    @JsonProperty(value="planner_id")
     private int plannerId;
+    @JsonProperty(value="planner_name")
     private String plannerName;
+    @JsonProperty(value="picture_path_name")
     private Integer picturePathName;
+
+    @JsonProperty(value="description")
     private String description;
+
 
     @Id
     @Column(name = "planner_id")
@@ -52,6 +61,7 @@ public class Plannerstore {
         this.description = description;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,6 +72,7 @@ public class Plannerstore {
                 Objects.equals(picturePathName, that.picturePathName) &&
                 Objects.equals(description, that.description);
     }
+
 
     @Override
     public int hashCode() {

@@ -18,6 +18,7 @@ var schedule = {
       tmp.visible = true;
       array.push(tmp);
     }
+    console.log("处理结束完后端传来的schedule:",array);
     return array;
   },
 

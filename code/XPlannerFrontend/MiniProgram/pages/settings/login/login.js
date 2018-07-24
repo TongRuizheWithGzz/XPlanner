@@ -59,17 +59,16 @@ Page({
           console.log(app.globalData.date);
           wx.setStorageSync('date', app.globalData.date);
         }
-        console.log(app.globalDate);
+        console.log(app.globalData);
         return wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
           "year": app.globalData.year,
-          "month": app.globalDate.month,
-          "day": app.globalDate.day,
+          "month": app.globalData.month,
+          "day": app.globalData.day,
         });
-
       })
       .then((data) => {
         console.log("得到用户某天的数据", data, "开始请求一个月的日程")
-        app.globalData.scheduleItems = schedule.warpScheduleItems(data); // 设置对应全局变量
+        app.globalData.scheduleItems = schedule.warpScheduleItems(data.scheduleitems); // 设置对应全局变量
         return wrapper.wxRequestWrapper(api.queryDaysHavingScheduletimesInMonth, "GET", {
           year: app.globalData.year,
           month: app.globalData.month
@@ -77,17 +76,17 @@ Page({
       })
       .then((data) => {
         console.log("得到一月日程", data, "开始请求用户信息")
-        app.globalData.dayWithItem = data; // 设置对应全局变量
+        app.globalData.dayWithItem = data.dateMap; // 设置对应全局变量
         return wrapper.wxRequestWrapper(api.queryUserInfo, "GET", {});
       })
       .then((data) => {
         console.log("获得用户信息，开始请求用户的设置");
-        app.globalData.userInfo = data;
+        app.globalData.userInfo = data.userInfo;
         return wrapper.wxRequestWrapper(api.queryEnabledExtensionsArray, "GET", {})
       })
       .then((data) => {
-        console.log("获得用户的设置全局变量");
-        app.globalData.extensions = extension.warpExtensions(data); // 设置对应全局变量
+        console.log("获得用户的设置全局变量:", data.userSettings);
+        app.globalData.extensions = extension.filterExtensions(extension.warpExtensions(extensions), data.userSettings); // 设置对应全局变量
         app.globalData.userFoodEaten = [];
         app.globalData.logined = true;
         wx.switchTab({
