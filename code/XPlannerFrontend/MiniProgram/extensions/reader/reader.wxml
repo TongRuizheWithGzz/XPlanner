@@ -36,7 +36,7 @@
       </view>
     </view>
     <view class="button-sp-area">
-      <button class="weui-btn" bindtap="showResult" type="primary">提交文本</button>
+      <button class="weui-btn" bindtap="showResult">提交文本</button>
     </view>
   </swiper-item>
 </swiper>
