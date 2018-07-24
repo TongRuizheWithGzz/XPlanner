@@ -8,9 +8,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class XplannerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(XplannerApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(XplannerApplication.class, args);
+    }
 }
 
 

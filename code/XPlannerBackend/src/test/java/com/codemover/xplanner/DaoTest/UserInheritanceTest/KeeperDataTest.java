@@ -63,7 +63,6 @@ public class KeeperDataTest {
             System.out.println("end_time");
             System.out.println(start_time.getTime());
             scheduleitme.setEndTime(keeperService.Calendar2Timestamp(start_time));
-            scheduleitme.setImageUrl(null);
             scheduleItemRepository.save(scheduleitme);
         }
     }
