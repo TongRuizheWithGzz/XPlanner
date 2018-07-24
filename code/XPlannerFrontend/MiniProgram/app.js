@@ -8,6 +8,8 @@ var extension = require("/common/extension");
 //app.js
 App({
   onLaunch: function () {
+    //var Cookie=wx.getStorageSync("Cookie");
+
     // 展示本地存储能力
     // var logs = wx.getStorageSync('logs') || []
     // logs.unshift(Date.now())
@@ -56,6 +58,7 @@ App({
     // this.globalData.ifAddSchedule = false;
     // this.globalData.ifSameDay = false;
   },
+
   globalData: {
     date: "",
     year: new Date().getFullYear(),

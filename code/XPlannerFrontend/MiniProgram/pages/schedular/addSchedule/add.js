@@ -3,7 +3,7 @@ var scheduleItems = app.globalData.scheduleItems;
 var wrapper = require("../../../interface/wrapper/wrapper");
 var api = require("../../../interface/config/api");
 var schedule = require("../../../common/schedule");
-
+var time=require("../../../common/time.js");
 Page({
   data: {
     startDate: "选择日期",
@@ -118,10 +118,32 @@ Page({
   },
   save: function () {
     if (this.data.ifAddPage) { // 如果是添加页面
+    var tmp_start_date = this.data.startDate === "选择日期" ? app.globalData.date : this.data.startDate;
+    var tmp_start_concret_time = this.data.startTime === "选择时间" ? time.getConcreteTime(new Date().getHours(), new Date().getMinutes()) : this.data.startTime;
+    var tmp_end_date = this.data.endDate === "选择日期" ? app.globalData.date : this.data.endDate;
+    var tmp_end_concret_time = this.data.endTime === "选择时间" ? time.getConcreteTime(new Date().getHours(), new Date().getMinutes()) : this.data.endTime;
+    this.setData({
+      startDate: tmp_start_date,
+      startTime: tmp_start_concret_time,
+      endDate: tmp_end_date,
+      endTime: tmp_end_concret_time,
+    });
+
+    var tmp_start_time = tmp_start_date + " " + tmp_start_concret_time;
+    var tmp_end_time = tmp_end_date + " " + tmp_end_concret_time;
+    if (tmp_end_time < tmp_start_time) {
+      wx.showModal({
+        title: '时间错误',
+        content: '请设置正确的时间',
+        showCancel: false,
+      })
+      return;
+    }
+    var tmp_title = this.data.title == "" ? "无标题" : this.data.title;
       var item = schedule.generateScheduleItem(
-        this.data.title,
-        this.data.startDate + " " + this.data.startTime,
-        this.data.endDate + " " + this.data.endTime,
+        tmp_title,
+        tmp_start_time,
+        tmp_end_time,
         this.data.description,
         this.data.address
       );

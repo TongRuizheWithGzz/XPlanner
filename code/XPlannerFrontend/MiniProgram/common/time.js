@@ -30,6 +30,13 @@ var time = {
      */
     ZeroGetDay: function () {
 
+    },
+
+    getConcreteTime: function (hour, min) {
+      if (hour < 10) hour = "0" + hour;
+      if (min < 10) min = "0" + min;
+      console.log("" + hour + ":" + min);
+      return "" + hour + ":" + min;
     }
 }
 
