@@ -1,14 +1,14 @@
 {
   "pages": [
-    "pages/store/store",
+    "pages/settings/login/login",
     "pages/schedular/schedular",
     "pages/schedular/scheduleDetails/scheduleDetails",
     "pages/schedular/addSchedule/add",
     "pages/planners/planners",
+    "pages/store/store",
     "pages/store/detail/detail",
     "pages/settings/settings",
     "pages/settings/userSettings/userSettings",
-    "pages/settings/login/login",
     "extensions/reader/reader",
     "extensions/keeper/keeper",
     "extensions/keeper/selector/selector",
