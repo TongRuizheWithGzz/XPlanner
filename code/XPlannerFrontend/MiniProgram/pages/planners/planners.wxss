@@ -3,71 +3,10 @@ page {
   background-color: white;
 }
 
-.weui-navbar {
-  height: 28px;
-  background-color: #fff;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.weui-navbar .default-item {
-  width: 20%;
-  text-align: center;
-  font-size: 33rpx;
-  color: #8a8a8a;
-  font-family: Courier New, Courier, monospace;
-  font-weight: bolder;
-}
-
-.weui-navbar .item_on {
-  font-weight: bold;
-  color: #000;
-  border-bottom: 2px solid #000;
-}
-
-.weui-navbar-slider {
-  position: absolute;
-  width: 160rpx;
-  content: "";
-  background: #3e3;
-  left: 12.5rpx;
-  transition: transform 0.3s;
-}
-
-.swiper-box {
-  height: 100%;
-  border-bottom: 1px solid #d1d1d1;
-}
-
-.swiper-box .swiper-item {
-  text-align: center;
-  padding-top: 0rpx;
-  height: 50%;
-}
-
-.placeholder {
-  margin: 5px;
-  padding: 0 10px;
-  text-align: center;
-  background-color: #ebebeb;
-  height: 2.3em;
-  line-height: 2.3em;
-  color: #cfcfcf;
-}
-
-.manage-btn {
-  margin-top: 10px;
-  clear: both;
-  width: 95%;
-  align-items: center;
-}
-
 .weui-grids {
   display: flex;
   flex-direction:row;
   flex-wrap: wrap;
-  height:100%;
 }
 
 .weui-grid {
@@ -76,13 +15,8 @@ page {
   padding: 20px 10px;
   width: 33.33333333%;
   height: 120px;
-  /* width: 25%; */
   box-sizing: border-box;
-  /* border-right: 1rpx solid #fff; */
-  /* border-bottom: 1rpx solid #fff; */
 }
-
-
 
 .weui-badge_dot {
   padding: 0.4em;
