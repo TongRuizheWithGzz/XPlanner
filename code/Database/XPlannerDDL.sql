@@ -10,8 +10,9 @@ drop table if exists user_role;
 drop table if exists role;
 drop table if exists JAccount_user;
 drop table if exists Weixin_user;
+drop table if exists keeper_recommand;
 drop table if exists user;
-drop table if exists notification;
+
 
 CREATE TABLE user (
   user_id       INTEGER auto_increment,
@@ -19,24 +20,22 @@ CREATE TABLE user (
   user_password varchar(64),
   avatar_url    varchar(2056),
   enabled       boolean,
+  last_keeper_fresh     datetime,
+
   PRIMARY KEY (user_id)
 );
 
-create table notification (
-  notification_id integer primary key,
-  title           varchar(256),
-  description     varchar(2056),
-  start_time      char(16) not null,
-  end_time        char(16) not null,
+create table keeper_recommand(
+  recommand_id    INTEGER auto_increment,
+  user_id     INTEGER,
+  start_time      DATETIME      not null,
+  end_time        DATETIME      not null,
+  title           varchar(1024) not null,
+  description     varchar(1024),
   address         varchar(256),
-  imageUrl        varchar(1024),
-  website         varchar(64),
-  UUID            varchar(64) default '',
-  create_time     timestamp(3)
+  primary key (recommand_id),
+  foreign key (user_id) references user (user_id)
 );
-
-create index create_time_index
-  on notification (create_time);
 
 create table JAccount_user (
   user_id       INTEGER,
@@ -74,7 +73,6 @@ create table user_role (
   foreign key (user_id) references user (user_id),
   foreign key (role_id) references role (role_id)
 );
-
 
 create table food_type (
   food_type_id   integer auto_increment,
@@ -141,6 +139,9 @@ CREATE TABLE sportsItem (
   sportsItem_id      INTEGER auto_increment,
   sport_name         varchar(64),
   calorie_per_minute INTEGER unsigned,
+  description         varchar(1024),
+  start_time      TIME      not null,
+  end_time        TIME      not null,
   address            varchar(256),
   imageUrl           varchar(2048),
   PRIMARY KEY (sportsItem_id)
@@ -183,10 +184,33 @@ insert into plannerStore values (2, 'Spider', null, '您曾经是否因为一时
 insert into role values (null, 'ROLE_JACCOUNT_USER');
 insert into role values (null, 'ROLE_WEIXIN_USER');
 insert into role values (null, 'ROLE_COMMON_USER');
-insert into user values (NULL, 'tongruizhe', '$2a$10$ZSDkqq6AnVUQIwxrxaIiVevEGLTEhd7d8T8DosIXoPuTCEcyfWmQ2', null, 1);
+insert into user values (NULL, 'tongruizhe', '$2a$10$ZSDkqq6AnVUQIwxrxaIiVevEGLTEhd7d8T8DosIXoPuTCEcyfWmQ2', null, 1,null );
+insert into user values (NULL, 'lihu', '$2a$10$ZSDkqq6AnsVUQIwxrxaIiVevEGLTEhd7d8T8DosIXoPuTCEcyfWmQ2', null, 1,null );
 #Give tongruizhe full authorities
 insert into user_role values (null, 1, 3);
 insert into user_role values (null, 1, 2);
 insert into user_role values (null, 1, 1);
+
+# <-------------------  Sports Info  ------------------->
+insert into sportsItem values (null,'游泳',7,'游泳衣裤,泳帽,浴巾、拖鞋,备用衣裤','10:00:00','20:30:00','致远游泳馆',null);
+insert into sportsItem values (null,'慢跑',10,'','06:00:00','23:30:00','南区体育馆操场',null);
+insert into sportsItem values (null,'慢跑',10,'','06:00:00','21:00:00','光明体育场',null);
+insert into sportsItem values (null,'打篮球',8,'','09:00:00','21:30:00','东转篮球场',null);
+insert into sportsItem values (null,'骑自行车',11,'','06:00:00','23:30:00','校园',null);
+insert into sportsItem values (null,'打乒乓球',6,'','09:00:00','21:30:00','南区体育馆',null);
+insert into sportsItem values (null,'打羽毛球',12,'','09:00:00','21:30:00','霍英东体育馆',null);
+insert into sportsItem values (null,'打高尔夫球',4,'','06:00:00','17:30:00','电院大草坪',null);
+
+
+# <-------------------  Food Info  ------------------->
+insert into food values (null,'炸鸡腿',261,'第五餐厅',null);
+insert into food values (null,'炒蚕豆',134,'第五餐厅',null);
+insert into food values (null,'香葱豆腐',53,'第五餐厅',null);
+insert into food values (null,'麻婆豆腐',137,'第五餐厅',null);
+insert into food values (null,'粉条',339,'第五餐厅',null);
+insert into food values (null,'手撕包菜',37,'第五餐厅',null);
+
+#<-------------------  user_food_eaten  ------------------->
+
 
 #insert schedule itmes
