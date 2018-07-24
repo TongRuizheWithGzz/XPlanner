@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -47,9 +48,9 @@ public class ScheduleDaoTest {
     public void setup() throws ParseException {
         Scheduleitme scheduleitme = new Scheduleitme();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        java.sql.Timestamp start_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-20 15:00").getTime());
+        java.sql.Timestamp start_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-21 21:00").getTime());
         scheduleitme.setStartTime(start_time);
-        java.sql.Timestamp end_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-20 16:00").getTime());
+        java.sql.Timestamp end_time = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-21 22:00").getTime());
         scheduleitme.setEndTime(end_time);
         scheduleitme.setDescription("软件工程");
         scheduleitme.setAddress("软件大楼");
@@ -58,9 +59,9 @@ public class ScheduleDaoTest {
         scheduleitme.setUser(user);
         scheduleItemRepository.save(scheduleitme);
         Scheduleitme scheduleitme1 = new Scheduleitme();
-        java.sql.Timestamp start_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-20 17:00").getTime());
+        java.sql.Timestamp start_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-21 22:00").getTime());
         scheduleitme1.setStartTime(start_time1);
-        java.sql.Timestamp end_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-20 18:30").getTime());
+        java.sql.Timestamp end_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-21 22:30").getTime());
         scheduleitme1.setEndTime(end_time1);
         scheduleitme1.setDescription("软件工程");
         scheduleitme1.setAddress("软件大楼");
@@ -70,10 +71,16 @@ public class ScheduleDaoTest {
     }
 
     @Test
-    public void autoFindTime(){
+    public void autoFindTime() throws ParseException {
         //input
-        int minutes;
+        ArrayList<Integer> timelist = new ArrayList<>();
+        timelist.add(20);
+        timelist.add(30);
+        timelist.add(60);
         String username = "lihu";
+
+        //output
+        ArrayList<HashMap<String,String>> foundlist = new ArrayList<>();
 
         //get now time
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -90,11 +97,13 @@ public class ScheduleDaoTest {
         calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
         calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
         Timestamp end_of_day = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+        String s_end_of_day = simpleDateFormat.format(end_of_day.getTime());
 
         //get today's scheduleitems
         User user = userRepository.findByUserName(username);
         List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user,begin_of_day, end_of_day);
 
+        //get now status
         int index = -1;
         int size = scheduleitmeList.size();
         for(int i =0;i<size;i++){
@@ -104,7 +113,90 @@ public class ScheduleDaoTest {
             }
         }
 
-        System.out.println(index);
+        if(index == -1){
+            for (int i=0;i<timelist.size();i++){
+                int minutes = timelist.get(i);
+                HashMap<String,String> foundMap = new HashMap<>();
+
+                int relax_minute = (int) ((end_of_day.getTime()-now.getTime())/(1000*60));
+
+                //failed to find time because of too little time left
+                if(relax_minute < 30 + minutes){
+                    foundMap.put("errMsg","failed");
+                    foundlist.add(foundMap);
+                    continue;
+                }
+
+                //relax_minute > (24-4.5)*60
+                else if (relax_minute > 1170){
+                    relax_minute = 1170;
+                }
+
+                //start random
+                Random random = new Random();
+                int ran = random.nextInt(relax_minute-(30+minutes)+1) + (30+minutes);
+
+                //start time
+                Calendar startTime = Calendar.getInstance();
+                startTime.setTime(simpleDateFormat.parse(s_end_of_day));
+                startTime.add(Calendar.MINUTE,-ran);
+                SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                String start_time = DateFormat.format(startTime.getTime());
+
+                //end time
+                startTime.add(Calendar.MINUTE,minutes);
+                String end_time = DateFormat.format(startTime.getTime());
+
+                //set data
+                foundMap.put("errMsg","ok");
+                foundMap.put("start_time",start_time);
+                foundMap.put("end_time",end_time);
+                foundlist.add(foundMap);
+            }
+
+            //return foundlist
+        }
+        else{
+            ArrayList<HashMap<String,Calendar>> relax_time_pool = new ArrayList<>();
+
+            if(scheduleitmeList.get(index).getStartTime().after(now)){
+                Timestamp first_end = scheduleitmeList.get(index).getStartTime();
+                push_time_pool(relax_time_pool,now,first_end);
+            }
+
+        }
+
+        for(int i=0;i<foundlist.size();i++){
+            System.out.println(foundlist.get(i).get("start_time"));
+            System.out.println(foundlist.get(i).get("end_time"));
+        }
+    }
+
+    public void push_time_pool(ArrayList<HashMap<String,Calendar>> relax_time_pool,Timestamp start_time,Timestamp end_time) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        HashMap<String,Calendar> relax_time = new HashMap<>();
+
+        String s_start_time = simpleDateFormat.format(start_time.getTime());
+        Calendar c_start_time = Calendar.getInstance();
+        c_start_time.setTime(simpleDateFormat.parse(s_start_time));
+
+        String s_end_time = simpleDateFormat.format(end_time.getTime());
+        Calendar c_end_time = Calendar.getInstance();
+        c_end_time.setTime(simpleDateFormat.parse(s_end_time));
+
+        Calendar end_of_keeper = Calendar.getInstance();
+        end_of_keeper.set(Calendar.HOUR_OF_DAY, end_of_keeper.getActualMaximum(Calendar.HOUR_OF_DAY));
+        end_of_keeper.set(Calendar.MINUTE, end_of_keeper.getActualMaximum(Calendar.MINUTE));
+        end_of_keeper.set(Calendar.SECOND, end_of_keeper.getActualMaximum(Calendar.SECOND));
+        end_of_keeper.add(Calendar.MINUTE,-30);
+
+        int relax_minutes = (int) ((end_time.getTime()-start_time.getTime())/(60*1000));
+
+        if(c_start_time.before(end_of_keeper)&&c_end_time.before(end_of_keeper)&&relax_minutes>15){
+            relax_time.put("start_time",c_start_time);
+            relax_time.put("end_time",c_end_time);
+            relax_time_pool.add(relax_time);
+        }
     }
 
     @Test
