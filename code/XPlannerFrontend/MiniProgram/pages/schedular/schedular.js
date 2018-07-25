@@ -50,12 +50,12 @@ Page({
     console.log("on show");
     console.log(app.globalData.scheduleItems)
     this.setData({
-      showSelect:-1,
+      showSelect: -1,
     });
 
     if (app.globalData.ifAddSchedule) { // 从add页面返回并且添加了日程
       if (app.globalData.ifSameDay) { // 添加的日程和目前显示的日期是相同的
-      console.log(this.data.showItems);
+        console.log(this.data.showItems);
         if (this.data.dayList[app.globalData.day - 1].haveItems == false) { // 当前日期原来没有日程
           console.log("当前日期原来没有日程");
           var tmp_day_list = this.data.dayList;
@@ -109,7 +109,7 @@ Page({
           tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
           tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
           tmp_day_list[tmp_day - 1].haveItems = true;
-          
+
           if (this.data.showItems.length == 1) { // 如果当前的日期只有一个即将被移到别的日期的日程
             tmp_day_list[app.globalData.day - 1].haveItems = false;
           }
@@ -186,17 +186,26 @@ Page({
   selectCheckbox: function(e) {
     console.log(e.currentTarget.dataset.index);
     var tmp = app.globalData.scheduleItems[e.currentTarget.dataset.index].completed;
-    app.globalData.scheduleItems[e.currentTarget.dataset.index].completed = !tmp;
-    this.setData({
-      showItems: app.globalData.scheduleItems
-    });
+
 
     /* 注意，需要通知后端数据已经更改 */
-    wrapper.wxRequestWrapper(api.updateScheduleitem, "PUT", {}).then(() => {
-
-    }).catch(() => {
-
-    });
+    wrapper.wxRequestWrapper(api.updateScheduleitem + app.globalData.scheduleItems[e.currentTarget.dataset.index].scheduleItem_id + '/complete', "PUT", {
+        completed: !tmp,
+      })
+      .then(() => {
+        app.globalData.scheduleItems[e.currentTarget.dataset.index].completed = !tmp;
+        this.setData({
+          showItems: app.globalData.scheduleItems
+        });
+        console.log("修改状态成功！");
+      }).catch((errno) => {
+        console.log("修改状态出错", errno);
+        wx.showModal({
+          title: '修改失败',
+          content: '请检查网络设置',
+          showCancel: false,
+        })
+      });
   },
 
   /*
@@ -230,7 +239,7 @@ Page({
             that.setData({
               showItems: tmp_items,
             });
-          
+
             if (tmp_items.length == 0) {
               var day_list = that.data.dayList;
               day_list[app.globalData.day - 1].haveItems = 0;

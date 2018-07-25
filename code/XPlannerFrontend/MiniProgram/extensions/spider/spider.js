@@ -109,7 +109,7 @@ Page({
           crawled: notifications,
         })
         this.setData({
-          pageNumber: this.data.pageNumber + 1 //爬取后段
+          pageNumber: this.data.pageNumber - 1 - 1//爬取后段
         })
         wx.hideLoading()
         this.slidethis()

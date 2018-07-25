@@ -21,5 +21,5 @@ public interface ScheduleService {
 
     public HashMap<String, Object> getScheduledDays(String username, int year, int month) throws ParseException;
 
-
+    public HashMap<String, Object> changeCompleteState(String username, Integer id, boolean completed);
 }

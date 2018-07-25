@@ -64,11 +64,12 @@ function wxRequestWrapper(apiUrl, method, data) {
             //用户权限认证过期(Cookie无效)
           case (2):
             //没有权限访问该接口
-            resolve(res.data.errno);
+            reject(res.data.errno);
             break;
         }
       },
       fail: function(res) {
+        console.log(res);
         switch (res.statusCode) {
           case 400:
             reject(7);

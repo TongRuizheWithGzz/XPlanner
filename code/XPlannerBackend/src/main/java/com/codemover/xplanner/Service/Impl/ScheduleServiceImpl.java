@@ -210,7 +210,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Collection<Scheduleitme> scheduleitmeList =
                 scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user, beginning, endding);
-        ObjectMapper mapper=new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
 
         return scheduleitmeList;
 
@@ -262,6 +262,29 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         }
         response.put("dateMap", date_map);
+        return response;
+    }
+
+    @Override
+    public HashMap<String, Object> changeCompleteState(String username, Integer id, boolean completed) {
+        User user = userRepository.findByUserName(username);
+        if (user == null) {
+            logger.warn("No such user: '{}',will ignore", username);
+            throw new NullPointerException("Change the state of  a  scheduleitem: user not found");
+        }
+        Scheduleitme scheduleitme = scheduleItemRepository.findById(id).orElseThrow(
+                () -> {
+                    logger.warn("No such scheduleitem:'{}', will ignore", id);
+                    return new NullPointerException("No such ");
+                }
+        );
+        if (scheduleitme.isCompleted() == completed) {
+            logger.warn("Unused modification for schedueitem:'{}'", id);
+        }
+
+        HashMap<String, Object> response = new HashMap<>();
+        scheduleitme.setCompleted(completed);
+        scheduleItemRepository.save(scheduleitme);
         return response;
     }
 }
