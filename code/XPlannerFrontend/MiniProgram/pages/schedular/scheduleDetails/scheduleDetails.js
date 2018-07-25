@@ -15,6 +15,7 @@ Page({
         // item: app.globalData.spiderItems[options.spiderIndex],
         item: app.globalData.spiderItems[options.pageNumber - 1][options.spiderIndex],
         id: options.spiderIndex,
+        ifSpider: true,
       })
     } else {
       this.setData({
