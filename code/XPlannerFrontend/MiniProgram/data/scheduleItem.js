@@ -15,7 +15,7 @@ var scheduleItem = [{
     "address": "二餐",
     "scheduleItem_id": 2,
     "user_id": 1
-  },
+  }, 
   {
     "title": "运动",
     "start_time": "2018-07-18 13:00",
