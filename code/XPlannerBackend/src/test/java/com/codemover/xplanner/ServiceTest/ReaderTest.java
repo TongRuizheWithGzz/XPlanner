@@ -19,6 +19,30 @@ public class ReaderTest {
     }
 
 
+    private Pattern p;
+    private Matcher m;
+
+    @Test
+    public void can_Extract(){
+        String in = "早上中午2";
+        String pattern = "(早上|上午|早晨|中午|下午|晚上)";
+        p = Pattern.compile(pattern);
+        m = p.matcher(in);
+        if (m.find()) {
+            String section = m.group(1);
+            in = m.replaceAll("");
+
+            System.out.println(section);
+            System.out.println(in);
+        }
+        System.out.println("false");
+    }
+
+
+
+
+
+
     @Test
     public void canExtractManyDateFormatTest1() {
         extractDateService.dateExtract("2018年7月15日上午9:13分");
@@ -96,6 +120,13 @@ public class ReaderTest {
     }
 
     @Test
+    public void test7_1(){
+        extractDateService.dateExtract("4月9日周一下午一点开始小学期第二轮选课哦~安排在夏季学期19周及以后的执行计划内课程诸如军训、各类实践实习等必修限选类课程，将在夏季学期第二轮抢选及第三轮选课阶段开放，" +
+                "请同学务必在此选课期间选上执行计划内必修及限选课程，" +
+                "选课系统关闭后将不再受理补选补退申请。具体选课流程为：");
+    }
+
+    @Test
     public void test8(){
         extractDateService.dateExtract("2017—2018年度上海交通大学电子信息与电气工程学院五四评优工作正在开展，" +
                 "请仔细阅读相关文件，希望大家积极参评。\n" +
@@ -103,8 +134,13 @@ public class ReaderTest {
     }
 
     @Test
-    public void test9(){
+    public void test9_1(){
         extractDateService.dateExtract("海选：3月28日（第5周周三）13:00—4月3日（第6周周二）8:30；\n");
+    }
+
+    @Test
+    public void test9_2(){
+        extractDateService.dateExtract("海选：本周三 13:00—下周二 8:30；\n");
     }
 
     @Test
@@ -113,7 +149,29 @@ public class ReaderTest {
                 "时间有8.5，8.15，8.25，请各位同学按照指定时间提交作业。同时每组");
     }
 
+    @Test
+    public void test11(){
+        extractDateService.dateExtract("观念比能力重要，策划比实施重要，行动比承诺重要，选择比努力重要，感知比告知重要，创造比证明重要，尊重生命比别人看法重要！\n" +
+                "周六下午15：07-16：00体验课：夏冬秋 -  嗨！你会用PS制作音乐视频相册吗？");
+    }
 
+    @Test
+    public void test12(){
+
+        extractDateService.dateExtract("观念比能力重要，策划比实施重要，行动比承诺重要，选择比努力重要，感知比告知重要，创造比证明重要，尊重生命比别人看法重要！\n" +
+                "下午一点半 体验课：夏冬秋 -  嗨！你会用PS制作音乐视频相册吗？");
+    }
+
+    @Test
+    public void test13(){
+        extractDateService.dateExtract("观念比能力重要，策划比实施重要，行动比承诺重要，选择比努力重要，感知比告知重要，创造比证明重要，尊重生命比别人看法重要！\n" +
+                "下午一点 体验课：夏冬秋 -  嗨！你会用PS制作音乐视频相册吗？");
+    }
+
+    @Test
+    public void tellMe(){
+        extractDateService.tell();
+    }
 
 
 }

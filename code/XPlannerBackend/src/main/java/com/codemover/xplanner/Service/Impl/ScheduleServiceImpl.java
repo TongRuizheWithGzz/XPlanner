@@ -63,8 +63,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         scheduleitme.setUser(user);
         scheduleItemRepository.save(scheduleitme);
         return response;
-
-
     }
 
 

@@ -44,61 +44,50 @@ Page({
       .then((errno) => {
         var date = wx.getStorageSync('date');
         if (date) {
-          app.globalData.date = res.data;
-          app.globalData.year = parseInt(res.data.slice(0, 4));
-          app.globalData.month = parseInt(res.data.slice(5, 7));
-          app.globalData.day = parseInt(res.data.slice(8, 10));
+          console.log("Date found in Local storage");
+          app.globalData.date = date;
+          app.globalData.year = parseInt(date.slice(0, 4));
+          app.globalData.month = parseInt(date.slice(5, 7));
+          app.globalData.day = parseInt(date.slice(8, 10));
         } else {
+          console.log("no date in Local storage");
           var tmp_date = new Date();
           app.globalData.year = tmp_date.getFullYear();
           app.globalData.month = tmp_date.getMonth() + 1;
           app.globalData.day = tmp_date.getDate();
           app.globalData.date = time.getDateStringWithZero(app.globalData.year, app.globalData.month, app.globalData.day);
           console.log(app.globalData.date);
-          wx.setStorage('date', app.globalData.date);
+          wx.setStorageSync('date', app.globalData.date);
         }
-
-
-        /* 获取当天日程 */
-        wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
+        console.log(app.globalDate);
+        return wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
           "year": app.globalData.year,
           "month": app.globalDate.month,
           "day": app.globalDate.day,
-        }).then((data) => {
-          console.log("Get scheduleitems by data:", data)
-          app.globalData.scheduleItems = schedule.warpScheduleItems(data); // 设置对应全局变量
-        }).catch((errno) => {
-          console.log("something wrong when get scheduleItems: " + errno);
         });
 
-        /* 获取当月有日程的日期的对象 */
-        wrapper.wxRequestWrapper(api.queryDaysHavingScheduletimesInMonth, "GET", {
+      })
+      .then((data) => {
+        console.log("得到用户某天的数据", data, "开始请求一个月的日程")
+        app.globalData.scheduleItems = schedule.warpScheduleItems(data); // 设置对应全局变量
+        return wrapper.wxRequestWrapper(api.queryDaysHavingScheduletimesInMonth, "GET", {
           year: app.globalData.year,
           month: app.globalData.month
-        }).then((data) => {
-          console.log("Get scheduleitems in month",data)
-          app.globalData.dayWithItem = data; // 设置对应全局变量
-        }).catch((errno) => {
-          console.log("something wrong when get days with items in selected month: " + errno);
         });
-
-        /* 获取用户信息 */
-        wrapper.wxRequestWrapper(api.queryUserInfo, "GET", {}).then((data) => {
-          app.globalData.userInfo = data;
-        }).catch((errno) => {
-          console.log("something wrong when get user info: " + errno);
-        });
-
-
-
-
-
-        /* 获取用户安装扩展对应的数组 */
-        wrapper.wxRequestWrapper(api.queryEnabledExtensionsArray, "GET", {}).then((data) => {
-          app.globalData.extensions = extension.warpExtensions(data); // 设置对应全局变量
-        }).catch((errno) => {
-          console.log("something wrong when get installed extensions: " + errno);
-        })
+      })
+      .then((data) => {
+        console.log("得到一月日程", data, "开始请求用户信息")
+        app.globalData.dayWithItem = data; // 设置对应全局变量
+        return wrapper.wxRequestWrapper(api.queryUserInfo, "GET", {});
+      })
+      .then((data) => {
+        console.log("获得用户信息，开始请求用户的设置");
+        app.globalData.userInfo = data;
+        return wrapper.wxRequestWrapper(api.queryEnabledExtensionsArray, "GET", {})
+      })
+      .then((data) => {
+        console.log("获得用户的设置全局变量");
+        app.globalData.extensions = extension.warpExtensions(data); // 设置对应全局变量
         app.globalData.userFoodEaten = [];
         app.globalData.logined = true;
         wx.switchTab({
@@ -116,7 +105,6 @@ Page({
             break;
         }
       });
-
 
 
   }

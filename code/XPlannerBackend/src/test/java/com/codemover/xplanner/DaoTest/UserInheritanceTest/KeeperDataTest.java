@@ -31,7 +31,7 @@ public class KeeperDataTest {
     @Autowired
     private ScheduleItemRepository scheduleItemRepository;
 
-    //@Before
+    @Before
     public void setup(){
         DataFactory df = new DataFactory();
         String[] usernames = {"tongruizhe","lihu"};
@@ -69,10 +69,10 @@ public class KeeperDataTest {
 
     @Test
     public void test() throws ParseException {
-        keeperService.setUsername("lihu");
+        /*keeperService.setUsername("lihu");
         keeperService.setCalorie(200);
         keeperService.setSports_number(3);
 
-        System.out.println(keeperService.get_keeperRecommands().size());
+        System.out.println(keeperService.get_keeperRecommands().size());*/
     }
 }

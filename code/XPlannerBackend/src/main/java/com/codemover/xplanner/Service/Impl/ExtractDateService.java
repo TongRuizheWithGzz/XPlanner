@@ -24,6 +24,12 @@ public class ExtractDateService {
     private String hour;
     private String minute;
     private String otherHint;
+    private String in;
+    private String halfHour;
+
+    public void replaceInput(Matcher m, String replacement) {
+        this.in = m.replaceAll(replacement);
+    }
 
     public ExtractDateService() {
 
@@ -41,7 +47,6 @@ public class ExtractDateService {
         }
 
 
-
         fixedStrings.addAll(strings4);
 
 
@@ -51,7 +56,7 @@ public class ExtractDateService {
         List<String> strings2 = Arrays.asList(
                 "早晨", "早上", "上午",
                 "中午",
-                "下午", "傍晚",
+                "下午",
                 "晚上"
         );
 
@@ -80,7 +85,10 @@ public class ExtractDateService {
         p = Pattern.compile(pattern);
         m = p.matcher(in);
         if (m.find()) {
+
             section = m.group(0);
+            replaceInput(m, "@");
+
             return true;
 
         }
@@ -94,7 +102,10 @@ public class ExtractDateService {
         m = p.matcher(in);
 
         if (m.find()) {
+
             hour = m.group(1);
+            this.in = m.replaceAll("@");
+
             return true;
         }
         return false;
@@ -106,9 +117,12 @@ public class ExtractDateService {
         p = Pattern.compile(pattern);
         m = p.matcher(in);
         if (m.find()) {
+
             section = m.group(1);
             hour = m.group(2);
             minute = m.group(3);
+            this.in = m.replaceAll("@");
+
             return true;
         }
         return false;
@@ -116,12 +130,15 @@ public class ExtractDateService {
     }
 
     public boolean sectionAndHourExtract(String in) {
-        String pattern = "(早上|上午|早晨|中午|下午|晚上)([0-9]+|[一二三四五六七八九十]+)(?:[点:：时])([0-9]+|[一二三四五六七八九十]+)";
+        String pattern = "(早上|上午|早晨|中午|下午|晚上)([0-9]+|[一二三四五六七八九十]+)(?:[点:：时])?(半)?";
         p = Pattern.compile(pattern);
         m = p.matcher(in);
         if (m.find()) {
+            halfHour = m.groupCount() == 3 ? m.group(3) : null;
             section = m.group(1);
             hour = m.group(2);
+            this.in = m.replaceAll("@");
+
             return true;
         }
         return false;
@@ -133,8 +150,11 @@ public class ExtractDateService {
         p = Pattern.compile(pattern);
         m = p.matcher(in);
         if (m.find()) {
+
             hour = m.group(1);
             minute = m.group(2);
+            this.in = m.replaceAll("@");
+
             return true;
         }
         return false;
@@ -147,7 +167,10 @@ public class ExtractDateService {
         p = Pattern.compile(pattern);
         m = p.matcher(in);
         if (m.find()) {
+
             day = m.group(1);
+            this.in = m.replaceAll("@");
+
             return true;
         }
         return false;
@@ -159,49 +182,58 @@ public class ExtractDateService {
         p = Pattern.compile(pattern);
         m = p.matcher(in);
         if (m.find()) {
+
             month = m.group(1);
             day = m.group(2);
+            this.in = m.replaceAll("@");
             return true;
         }
         return false;
 
     }
 
-
+    public void tell(){
+        for(String s:fixedStrings){
+            System.out.println(s);
+        }
+    }
     public void dateExtract(String in) {
-
+        this.in = in;
         try {
-            boolean canGetMonthAndDayTogether = monthAndDayExtract(in);
-            if (!canGetMonthAndDayTogether) {
-                dayExtract(in);
-            }
-
-
-            boolean canGetSectionAndHourAndMinuteTogether = sectionAndHourAndMinuteExtract(in);
-            if (!canGetSectionAndHourAndMinuteTogether) {
-                boolean canGetHourAndMinuteTogether = hourAndMinuteExtract(in);
-                if (!canGetHourAndMinuteTogether) {
-                    boolean canGetSectionAndHourTogether = sectionAndHourExtract(in);
-                    if (!canGetSectionAndHourTogether) {
-                        hourExtract(in);
-                    }
-                }
-            }
 
             for (String s : fixedStrings) {
                 p = Pattern.compile(s);
-                m = p.matcher(in);
+                m = p.matcher(this.in);
                 if (m.find()) {
-                    otherHint = m.group(0);
+
+                    this.otherHint = m.group(0);
                     break;
                 }
 
             }
+
+            boolean canGetSectionAndHourAndMinuteTogether = sectionAndHourAndMinuteExtract(this.in);
+
+            if (!canGetSectionAndHourAndMinuteTogether) {
+                boolean canGetHourAndMinuteTogether = hourAndMinuteExtract(this.in);
+                if (!canGetHourAndMinuteTogether) {
+                    boolean canGetSectionAndHourTogether = sectionAndHourExtract(this.in);
+                    if (!canGetSectionAndHourTogether) {
+                        hourExtract(this.in);
+                    }
+                }
+            }
+            boolean canGetMonthAndDayTogether = monthAndDayExtract(this.in);
+            if (!canGetMonthAndDayTogether) {
+                dayExtract(this.in);
+            }
+
         } finally {
             System.out.println("【MONTH】    : " + month);
             System.out.println("【DAY】      : " + day);
             System.out.println("【SECTION】  : " + section);
             System.out.println("【HOUR】     : " + hour);
+            System.out.println("【HALFHOUR】 : " + halfHour);
             System.out.println("【MINUTE】   : " + minute);
             System.out.println("【OTHERHINT】: " + otherHint);
 

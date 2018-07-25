@@ -1,13 +1,9 @@
 package com.codemover.xplanner.Service.Impl;
 
-import com.codemover.xplanner.DAO.KeeperRecommandRepository;
-import com.codemover.xplanner.DAO.ScheduleItemRepository;
-import com.codemover.xplanner.DAO.SportItemRepository;
-import com.codemover.xplanner.DAO.UserRepository;
-import com.codemover.xplanner.Model.Entity.KeeperRecommand;
-import com.codemover.xplanner.Model.Entity.Scheduleitme;
-import com.codemover.xplanner.Model.Entity.Sportsitem;
-import com.codemover.xplanner.Model.Entity.User;
+import com.codemover.xplanner.DAO.*;
+import com.codemover.xplanner.Model.Entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +27,15 @@ public class KeeperService {
 
     @Autowired
     private KeeperRecommandRepository keeperRecommandRepository;
+
+    @Autowired
+    private UserFoodEatenRepository userFoodEatenRepository;
+
+    @Autowired
+    private FoodRepository foodRepository;
+
+    @Autowired
+    private FoodTypeRepository foodTypeRepository;
 
    /* <---------------------------Tools-------------------------->*/
     public Calendar timestamp2calendar(Timestamp timestamp) throws ParseException {
@@ -74,6 +79,8 @@ public class KeeperService {
     }
 
     /* <---------------------------Variables-------------------------->*/
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //todays'scheduleitems
     private List<Scheduleitme> scheduleitmes;
@@ -295,6 +302,7 @@ public class KeeperService {
         }
     }
 
+    /* <---------------------------methods-------------------------->*/
     //whether to refresh recommend-items and refresh recommend-items if needed
     //String username,int sports_number
     public List<KeeperRecommand> get_keeperRecommands() throws ParseException {
@@ -311,6 +319,51 @@ public class KeeperService {
             userRepository.save(user);
         }
         return keeperRecommandRepository.findByUser(user);
+    }
+
+    //to get food the user ate today
+    public List<UserFoodEaten> getTodayFoodEaten(String username){
+        setUsername(username);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        //get begin and end of today
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMinimum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMinimum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMinimum(Calendar.SECOND));
+        Timestamp begin_of_day = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+        Timestamp end_of_day = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+        return userFoodEatenRepository.findByUserAndAteTimeBetweenOrderByAteTime(user,begin_of_day,end_of_day);
+    }
+
+    //to add eaten_food
+    public void addUserFoodEaten(String username,String food_name,int caloriee){
+        UserFoodEaten userFoodEaten = new UserFoodEaten();
+        setUsername(username);
+        if (user == null) {
+            logger.warn("No such user: '{}',will ignore", username);
+            throw new NullPointerException("Add a new scheduleitem: user not found");
+        }
+        Calendar calendar = Calendar.getInstance();
+        Timestamp now = Calendar2Timestamp(calendar);
+        userFoodEaten.setUser(user);
+        userFoodEaten.setAteTime(now);
+        userFoodEaten.setFoodName(food_name);
+        userFoodEaten.setCalorie(caloriee);
+        userFoodEatenRepository.save(userFoodEaten);
+    }
+
+    //to get food by dininghall and foodtype
+    public List<Food> getFoodList(String dininghall, String type_name){
+        FoodType foodType= foodTypeRepository.findByFoodTypeName(type_name);
+        return foodRepository.findByDiningHallAndFoodTypeByFoodTypeId(dininghall,foodType);
+    }
+
+    public List<Food> getFoodList(String dininghall){
+        return foodRepository.findByDiningHall(dininghall);
     }
 
 }

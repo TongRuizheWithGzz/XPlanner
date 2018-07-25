@@ -1,16 +1,20 @@
 package com.codemover.xplanner.DaoTest.UserInheritanceTest;
 
+import com.codemover.xplanner.Service.ReaderService;
 import com.codemover.xplanner.Service.Util.ChineseTool;
 import com.codemover.xplanner.Service.Util.ParseDateStringUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,13 +24,21 @@ import java.util.HashMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@RunWith(SpringRunner.class)
 public class ReaderTest {
+
+    @Autowired
+    private ReaderService readerService;
 
     @Before
     public void setup() {
 
     }
 
+    @Test
+    public void calendarTest() throws ParseException {
+        readerService.extractDate("");
+    }
 
     @Test
     public void getTime() {
