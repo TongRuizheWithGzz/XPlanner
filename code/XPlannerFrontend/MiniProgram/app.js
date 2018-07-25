@@ -68,6 +68,7 @@ App({
     dayWithItem: {}, // 似乎只要用一次
     ifAddSchedule: false, // 指示schedular显示时是否从添加事务的add页面返回
     ifSameDay: false, // 指示添加的日程是否和当天是否是一天
+    newItemDate: "", // 新添加的日程的日期
     logined: false, // 是否登录
     ifChangeSchedule: false, // 指示schedular显示时是否从修改事务的add页面返回
     changeScheduleIndex: 0, // 指示修改事务在全局变量里的索引

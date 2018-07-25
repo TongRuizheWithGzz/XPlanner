@@ -116,6 +116,7 @@ Page({
   },
   save: function () {
     if (this.data.ifAddPage) { // 如果是添加页面
+      console.log("添加日程");
       var item = schedule.generateScheduleItem(
         this.data.title,
         this.data.startDate + " " + this.data.startTime,
@@ -136,8 +137,13 @@ Page({
       var tmp = app.globalData.scheduleItems;
       tmp.push(item);
       app.globalData.scheduleItems = tmp;
+      console.log(app.globalData.scheduleItems);
       app.globalData.ifAddSchedule = true;
       app.globalData.ifSameDay = (app.globalData.date == item.start_time.slice(0, 10));
+      app.globalData.newItemDate = item.start_date;
+      console.log(app.globalData.ifSameDay);
+      console.log(app.globalData.date);
+      console.log(item.start_time.slice(0, 10));
       // console.log(app.globalData.scheduleItems);
       wx.navigateBack({
         delta: 1,

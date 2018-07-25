@@ -46,6 +46,10 @@ Page({
   },
   onShow: function () {
     console.log("on show");
+    this.setData({
+      showSelect: -1,
+    });
+
     if (app.globalData.ifAddSchedule) { // 从add页面返回并且添加了日程
       if (app.globalData.ifSameDay) { // 添加的日程和目前显示的日期是相同的
         if (this.data.showItems.length == 0) { // 当前日期原来没有日程
@@ -63,16 +67,19 @@ Page({
           })
         }
       } else { // 添加的日程和目前显示的日期是不同的
-        var new_item_date = app.globalData.scheduleItems[app.globalData.scheduleItems.length - 1].start_time;
-        var tmp_day_list = this.data.dayList;
-        var tmp_day = parseInt(new_item_date.slice(8, 10));
-        tmp_day_list[tmp_day - 1].haveItems = true;
-        tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
-        tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
+        console.log("添加日程和当前日期不同");
+        if (app.globalData.newItemDate.slice(0, 7) ===
+          time.getMonthStringWithZero(this.data.showYear, this.data.showMonth)) { // 如果是当前显示的月
+          var tmp_day_list = this.data.dayList;
+          var tmp_day = parseInt(app.globalData.newItemDate.slice(8, 10));
+          tmp_day_list[tmp_day - 1].haveItems = true;
+          tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
+          tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
 
-        this.setData({
-          dayList: tmp_day_list,
-        })
+          this.setData({
+            dayList: tmp_day_list,
+          })
+        }
       }
       app.globalData.ifAddSchedule = false;
       app.globalData.ifSameDay = false;
@@ -96,7 +103,7 @@ Page({
             showItems: tmp_items,
           })
         } else { // 如果不是当前月
-        console.log("sb");
+          console.log("sb");
           var tmp_items = app.globalData.scheduleItems;
           tmp_items.splice(app.globalData.changeScheduleIndex, 1);
           app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
@@ -197,7 +204,7 @@ Page({
           });
 
           if (tmp_items.length == 0) {
-            var day_list = this.data.dayList;
+            var day_list = that.data.dayList;
             day_list[app.globalData.day - 1].haveItems = 0;
             that.setData({
               dayList: day_list,
