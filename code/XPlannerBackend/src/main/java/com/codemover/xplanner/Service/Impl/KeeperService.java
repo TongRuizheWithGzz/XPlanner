@@ -1,5 +1,6 @@
 package com.codemover.xplanner.Service.Impl;
 
+import com.codemover.xplanner.Converter.UploadFood.FoodPOJO;
 import com.codemover.xplanner.DAO.*;
 import com.codemover.xplanner.Model.Entity.*;
 import com.codemover.xplanner.Service.IKeeperService;
@@ -347,20 +348,22 @@ public class KeeperService implements IKeeperService {
     }
 
     //to add eaten_food
-    public HashMap<String, Object> addUserFoodEaten(String username, String food_name, int caloriee) {
-        UserFoodEaten userFoodEaten = new UserFoodEaten();
-        setUsername(username);
-        if (user == null) {
-            logger.warn("No such user: '{}',will ignore", username);
-            throw new NullPointerException("Add a new scheduleitem: user not found");
+    public HashMap<String, Object> addUserFoodEaten(String username, LinkedList<FoodPOJO> foodPOJOS) {
+        for (FoodPOJO foodPOJO : foodPOJOS) {
+            UserFoodEaten userFoodEaten = new UserFoodEaten();
+            setUsername(username);
+            if (user == null) {
+                logger.warn("No such user: '{}',will ignore", username);
+                throw new NullPointerException("Add a new scheduleitem: user not found");
+            }
+            Calendar calendar = Calendar.getInstance();
+            Timestamp now = Calendar2Timestamp(calendar);
+            userFoodEaten.setUser(user);
+            userFoodEaten.setAteTime(now);
+            userFoodEaten.setFoodName(foodPOJO.food_name);
+            userFoodEaten.setCalorie(foodPOJO.calorie);
+            userFoodEatenRepository.save(userFoodEaten);
         }
-        Calendar calendar = Calendar.getInstance();
-        Timestamp now = Calendar2Timestamp(calendar);
-        userFoodEaten.setUser(user);
-        userFoodEaten.setAteTime(now);
-        userFoodEaten.setFoodName(food_name);
-        userFoodEaten.setCalorie(caloriee);
-        userFoodEatenRepository.save(userFoodEaten);
         return new HashMap<String, Object>();
 
     }
@@ -368,6 +371,7 @@ public class KeeperService implements IKeeperService {
     @Override
     public void setState(String username, Integer sportsItemNumber, Integer caloriee) {
         this.username = username;
+        this.setUsername(username);
         this.sports_number = sportsItemNumber;
         this.calorie = caloriee;
     }

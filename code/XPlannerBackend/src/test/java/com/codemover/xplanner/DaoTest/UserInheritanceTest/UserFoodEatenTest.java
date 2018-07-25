@@ -66,9 +66,6 @@ public class UserFoodEatenTest {
         System.out.println(keeperService.getTodayFoodEaten("tongruizhe").size());
     }
 
-    @Test
-    public void AddEatenTest(){
-        keeperService.addUserFoodEaten("lihu","delicious",500);
-    }
+
 
 }

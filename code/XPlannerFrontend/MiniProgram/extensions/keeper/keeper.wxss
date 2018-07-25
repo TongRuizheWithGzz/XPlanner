@@ -1,173 +1,311 @@
-page {
+.movie {
+  display: flex;
+}
+
+.title {
+  font-size: 30px;
+}
+
+.movie-swiper {
+  height: 47vh;
+}
+
+.movie-card {
+  height: 100%;
+  width: 360px;
+  background: #fff;
+  margin-right: 15rpx;
+  border-radius: 10px;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+}
+
+.icon {
+  height: 28px;
+  width: 28px;
+  margin: 10px;
+}
+
+.icon1 {
+  height: 20px;
+  width: 20px;
+  margin-left: 3px;
+  margin-right: 13px;
+  margin-top: 3px;
+}
+
+.name {
+  font-size: 19px;
+}
+
+.all {
+  width: 86.3%;
+  border-bottom: 1px solid #ddd;
+  margin-left: 22px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+}
+
+.keeper {
+  background-color: white;
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+}
+
+.top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 60px;
+}
+
+.address {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 16px;
+  margin-top: 7px;
+  font-weight: bolder;
+  color: #a3a3a3;
+}
+
+.description {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 13px;
+  overflow: hidden;
+  display: -webkit-box;
+  font-weight: lighter;
+  font-size: 15px;
+}
+
+.in {
+  margin: 18px;
   height: 100%;
 }
 
-.weui-navbar {
-  height: 28px;
+.add {
+  position: absolute;
+  bottom: 15px;
+  right: 33px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.ca {
+  width: 32px;
+  height: 25px;
+}
+
+.controller {
   background-color: #fff;
+  float: right;
+  position: fixed;
+  bottom: 0px;
+  /* border-radius: 70px; */
+  height: 80rpx;
+  width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
-}
-
-.weui-navbar .default-item {
-  width: 20%;
-  text-align: center;
-  font-size: 33rpx;
-  color: #8a8a8a;
-  font-family: Courier New, Courier, monospace;
-  font-weight: bolder;
-}
-
-.weui-navbar .item_on {
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: -2px 0px 9px #a3a3a3;
+  font-size: 17px;
   font-weight: bold;
+}
+
+.left {
+  margin-left: 13px;
+}
+
+.right {
+  margin-right: 13px;
+}
+
+.black {
   color: #000;
-  border-bottom: 2px solid #000;
 }
 
-.weui-navbar-slider {
-  position: absolute;
-  width: 160rpx;
-  content: "";
-  left: 12.5rpx;
-  transition: transform 0.3s;
+.add-name {
+  margin-top: 23px;
+  color: #999;
+  font-weight: bold;
+  font-size: 17px;
+  margin-left: 5px;
+  margin-bottom:8px;
 }
 
-.swiper-box {
+.foodinfo {
+  margin-left: 6%;
+}
+
+.card {
+  background-color: white;
+  transition: all 0.3s;
+  box-shadow: 0px 0px 6px #d3d3d3;
+  border-radius: 15px;
+  z-index: 0;
+}
+
+.foods {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.food-item {
+  width: 21%;
+  height: 300rpx;
+  margin-right: 4%;
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.list-item {
-  color:#3f81c1;
-  padding-top: 4%;
-  padding-left: 17px;
-  width: 100%;
+.food-name {
+  font-size: 16px;
+  text-align: center;
+  width: 80%;
 }
 
-.item-title {
-  font-size: 25px;
-}
-
-.item-time {
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  color: #8a8a8a;
+.food-cal {
   font-size: 13px;
+  color: #999;
+  font-weight: bold;
 }
 
-.picture {
-  height: 250px;
-  width: 100%;
+.food-icon {
+  height: 28px;
+  width: 30px;
+  margin-top: 8px;
 }
 
-.input {
-  height: 50px;
+.box {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 10px;
 }
 
-.xplanner {
-  flex-direction: column;
+.block {
   display: flex;
-  background-color: black;
-  height: 200px;
+  flex-direction: row;
+}
+
+.pad {
+  height: 40px;
+}
+
+.bot {
+  width: 100%;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.line1 {
-  font-size: 40px;
-  color: white;
-  font-weight: lighter;
+.press {
+  background-color: #eee;
 }
 
-.line2 {
-  font-size: 14px;
-  color: white;
-  width: 70%;
-  text-align: center;
-  font-family: Courier New, Courier, monospace;
+.eaten-title {
+  color: #999;
+  font-weight: bold;
+  font-size: 17px;
+  margin-left: 28px;
+  margin-top: 23px;
+  margin-bottom:10px;
 }
 
-.add-schedule {
-  float: right;
-  /* background-color: #fff; */
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  border: 0 solid #fff;
-  border-radius: 500px;
-  height: 40px;
-  width: 40px;
+.card {
+  background-color: white;
+  transition: all 0.3s;
+  box-shadow: 2px 3px 3px #a3a3a3;
+  border-radius: 10px;
+  z-index: 0;
 }
 
-.item0 {
-  color: #f7f;
+.eaten-items{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-left:6%;
+  flex-wrap:wrap;
+  width:90.5%;
+  
 }
 
-.item1 {
-  color: aqua;
-}
-
-.item2 {
-  color: #ff7f00;
-}
-
-.item3 {
-  color: #0f0;
-}
-
-.top, .fixTop{
-  width:100%;
-  background-color: #e6e6e6;
-  height: 45px;
+.eaten-item{
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
-  font-family: Courier New, Courier, monospace;
-  padding-left: 5%;
-  font-size: 14px;
-  font-weight: bolder;
-  justify-content: center;
-}
-.top {
-  z-index:100;
-}
-.fixTop{
-  position:fixed;
-  top:0;
-  z-index: -1;
-}
-
-.item{
-  height: 70px;
-  border-top: 2px solid #e6e6e6;
-  border-bottom: 1px solid #e6e6e6;
-  width: 100%;
-  display :flex;
-  flex-direction: row;
+  align-items: flex-start;
   justify-content: space-around;
-}
-.item-checkbox{
-  padding-top: 8%;
-  padding-left: 5%;
-  color:deepskyblue;
-  zoom: 70%;
+  height:90px;
+  width:48%;
 }
 
-.food, .camera {
-  float: right;
-  /* background-color: #fff; */
-  position: fixed;
-  bottom: 40px;
-  right: 20px;
-  border: 0 solid #fff;
-  border-radius: 500px;
-  height: 40px;
-  width: 40px;
-  zoom:110%;
+.note{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background-color:#eee;
+  box-shadow: 0px 0px 0px #555;
+  
 }
 
-.food{
-  bottom: 40px;
+.not{
+  width:80%;
+  font-size:28rpx;
+  height:80%;
+  margin-top:20rpx;
+  color:#333;
+  font-weight:bold;
 }
-.camera{
-  bottom:100px;
+
+.fd-name{
+  margin-left:17px;
+  margin-top:6px;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+}
+
+.fd-title{
+  margin-left:12px;
+  font-weight: bold;
+  font-size:18px;
+}
+
+.ca-icon{
+  height:30px;
+  width:30px;
+}
+
+.fd-title-down{
+  margin-left:10px;
+}
+
+.down{
+  margin-bottom:15px;
+  font-weight: bold;
+  color:#999
+}
+.card1{
+  background-color: white;
+  transition: all 0.3s;
+  border-radius: 10px;
+  z-index:0;
 }

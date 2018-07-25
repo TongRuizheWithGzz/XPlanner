@@ -1,6 +1,6 @@
-package com.codemover.xplanner.Converter;
+package com.codemover.xplanner.Converter.UploadFood;
 
-public class UploadFoodEatenRequest {
+public class FoodPOJO {
     public String food_name;
     public Integer calorie;
 
@@ -19,4 +19,6 @@ public class UploadFoodEatenRequest {
     public void setCalorie(Integer calorie) {
         this.calorie = calorie;
     }
+
+
 }
