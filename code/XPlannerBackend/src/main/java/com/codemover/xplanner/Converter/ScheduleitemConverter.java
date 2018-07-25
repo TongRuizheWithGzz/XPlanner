@@ -40,13 +40,14 @@ public class ScheduleitemConverter {
         entity.setDescription(dto.description);
     }
 
-    public static Set<ScheduleitmeDTO> entitiesToDTOs(@NotNull Collection<Scheduleitme> entities) {
-        Set<ScheduleitmeDTO> DTOs = new HashSet<ScheduleitmeDTO>();
+    public static LinkedList<ScheduleitmeDTO> entitiesToDTOs(@NotNull Collection<Scheduleitme> entities) {
+
+        LinkedList<ScheduleitmeDTO> DTOs = new LinkedList<>();
 
         Iterator<Scheduleitme> it = entities.iterator();
         while (it.hasNext()) {
             ScheduleitmeDTO scheduleitmeDTO = entityToDTO(it.next());
-            DTOs.add(scheduleitmeDTO);
+            DTOs.addLast(scheduleitmeDTO);
         }
 
         return DTOs;

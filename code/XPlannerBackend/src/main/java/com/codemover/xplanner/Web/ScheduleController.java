@@ -1,5 +1,6 @@
 package com.codemover.xplanner.Web;
 
+import com.codemover.xplanner.Converter.UpdateScheduleitmeRequest;
 import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
 import com.codemover.xplanner.Service.ScheduleService;
 import com.codemover.xplanner.Web.Util.ControllerUtil;
@@ -26,21 +27,28 @@ public class ScheduleController {
 
     @PostMapping(value = "/api/schedules")
     public Map<String, Object> addScheduleitem(Principal principal,
-                                               @RequestBody ScheduleitmeDTO scheduleitmeDTO) {
+                                               @RequestBody UpdateScheduleitmeRequest request) {
 
 
         String username = principal.getName();
-        return ControllerUtil.successHandler(scheduleService.addScheduleItem(scheduleitmeDTO, username));
+        return ControllerUtil.successHandler(scheduleService.addScheduleItem(request, username));
     }
 
+    @PutMapping(value="/api/schedules/{id}/complete")
+    public Map<String,Object> changeCompleteState(Principal principal,
+                                                  @RequestBody ScheduleitmeDTO scheduleitmeDTO,
+                                                  @PathVariable Integer id){
+        String username=principal.getName();
+        return null;
 
+    }
 
     @PutMapping(value = "/api/schedules/{id}")
     public Map<String, Object> updateScheduleitem(Principal principal,
-                                                  @RequestBody ScheduleitmeDTO scheduleitmeDTO,
+                                                  @RequestBody UpdateScheduleitmeRequest request,
                                                   @PathVariable Integer id) {
         String username = principal.getName();
-        return ControllerUtil.successHandler(scheduleService.updateScheduleItem(id, scheduleitmeDTO, username));
+        return ControllerUtil.successHandler(scheduleService.updateScheduleItem(id, request, username));
     }
 
     @DeleteMapping(value = "/api/schedules/{id}")
@@ -68,6 +76,7 @@ public class ScheduleController {
         return ControllerUtil.successHandler(scheduleService.findSchedule4OneDay(principal.getName(),
                 year, month, day));
     }
+
 
 
 }

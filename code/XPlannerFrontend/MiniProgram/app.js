@@ -4,27 +4,28 @@ var scheduleItems = require("/data/scheduleItem");
 var wrapper = require("/interface/wrapper/wrapper.js");
 var schedule = require("/common/schedule");
 var extension = require("/common/extension");
-
+var time = require('/common/time.js');
 //app.js
 App({
   onLaunch: function() {
 
+
     var date = wx.getStorageSync('date');
     if (date) {
       console.log("Date found in Local storage");
-      app.globalData.date = date;
-      app.globalData.year = parseInt(date.slice(0, 4));
-      app.globalData.month = parseInt(date.slice(5, 7));
-      app.globalData.day = parseInt(date.slice(8, 10));
+      this.globalData.date = date;
+      this.globalData.year = parseInt(date.slice(0, 4));
+      this.globalData.month = parseInt(date.slice(5, 7));
+      this.globalData.day = parseInt(date.slice(8, 10));
     } else {
       console.log("no date in Local storage");
       var tmp_date = new Date();
-      app.globalData.year = tmp_date.getFullYear();
-      app.globalData.month = tmp_date.getMonth() + 1;
-      app.globalData.day = tmp_date.getDate();
-      app.globalData.date = time.getDateStringWithZero(app.globalData.year, app.globalData.month, app.globalData.day);
-      console.log(app.globalData.date);
-      wx.setStorageSync('date', app.globalData.date);
+      this.globalData.year = tmp_date.getFullYear();
+      this.globalData.month = tmp_date.getMonth() + 1;
+      this.globalData.day = tmp_date.getDate();
+      this.globalData.date = time.getDateStringWithZero(this.globalData.year, this.globalData.month, this.globalData.day);
+      console.log(this.globalData.date);
+      wx.setStorageSync('date', this.globalData.date);
     }
     //var Cookie=wx.getStorageSync("Cookie");
 
@@ -94,5 +95,8 @@ App({
     changeScheduleIndex: 0, // 指示修改事务在全局变量里的索引
     ifChangeScheduleStartDate: false, // 指示修改事务时是否有修改开始日期
     spiderItems: [],
+    keeperItems:[],
+    newItemDate:"",
+
   }
 })

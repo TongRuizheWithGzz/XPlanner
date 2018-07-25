@@ -48,9 +48,16 @@ Page({
   },
   onShow: function() {
     console.log("on show");
+    console.log(app.globalData.scheduleItems)
+    this.setData({
+      showSelect:-1,
+    });
+
     if (app.globalData.ifAddSchedule) { // 从add页面返回并且添加了日程
       if (app.globalData.ifSameDay) { // 添加的日程和目前显示的日期是相同的
-        if (this.data.showItems.length == 0) { // 当前日期原来没有日程
+      console.log(this.data.showItems);
+        if (this.data.dayList[app.globalData.day - 1].haveItems == false) { // 当前日期原来没有日程
+          console.log("当前日期原来没有日程");
           var tmp_day_list = this.data.dayList;
           tmp_day_list[app.globalData.day - 1].haveItems = true;
           var tmp_show_items = app.globalData.scheduleItems;
@@ -59,49 +66,69 @@ Page({
             showItems: tmp_show_items,
           })
         } else { // 当前日期原来有日程
+          console.log("当前日期原来有日程");
           var tmp_show_items = app.globalData.scheduleItems;
+          console.log(tmp_show_items);
           this.setData({
             showItems: tmp_show_items,
           })
         }
       } else { // 添加的日程和目前显示的日期是不同的
-        var new_item_date = app.globalData.scheduleItems[app.globalData.scheduleItems.length - 1].start_time;
-        var tmp_day_list = this.data.dayList;
-        var tmp_day = parseInt(new_item_date.slice(8, 10));
-        tmp_day_list[tmp_day - 1].haveItems = true;
-        tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
-        tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
+        // var new_item_date = app.globalData.scheduleItems[app.globalData.scheduleItems.length - 1].start_time;
+        // var tmp_day_list = this.data.dayList;
+        // var tmp_day = parseInt(new_item_date.slice(8, 10));
+        // tmp_day_list[tmp_day - 1].haveItems = true;
+        // tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
+        // tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
 
-        this.setData({
-          dayList: tmp_day_list,
-        })
+        // this.setData({
+        //   dayList: tmp_day_list,
+        // })
+        console.log("添加日程和当前日期不同");
+        if (app.globalData.newItemDate.slice(0, 7) ===
+          time.getMonthStringWithZero(this.data.showYear, this.data.showMonth)) { // 如果是当前显示的月
+          var tmp_day_list = this.data.dayList;
+          var tmp_day = parseInt(app.globalData.newItemDate.slice(8, 10));
+          tmp_day_list[tmp_day - 1].haveItems = true;
+          tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
+          tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
+
+          this.setData({
+            dayList: tmp_day_list,
+          })
+        }
       }
       app.globalData.ifAddSchedule = false;
       app.globalData.ifSameDay = false;
     } else if (app.globalData.ifChangeSchedule) { // 从add页面返回并且修改了日程
       if (app.globalData.ifChangeScheduleStartDate) { // 如果修改了日程的开始日期
-        var tmp_item = app.globalData.scheduleItems[app.globalData.changeScheduleIndex];
-        if (parseInt(tmp_item.start_time.slice(5, 7)) == app.globalData.month) { // 如果是当前月
+        // var tmp_item = app.globalData.scheduleItems[app.globalData.changeScheduleIndex];
+        if (parseInt(app.globalData.newItemDate.slice(5, 7)) == app.globalData.month) { // 如果是当前月
           var tmp_day_list = this.data.dayList;
-          var tmp_day = parseInt(tmp_item.start_time.slice(8, 10));
+          var tmp_day = parseInt(app.globalData.newItemDate.slice(8, 10));
           tmp_day_list[tmp_day - 1].background = WORK_DAY_BACKGROUND;
           tmp_day_list[tmp_day - 1].color = WORK_DAY_COLOR;
           tmp_day_list[tmp_day - 1].haveItems = true;
+          
+          if (this.data.showItems.length == 1) { // 如果当前的日期只有一个即将被移到别的日期的日程
+            tmp_day_list[app.globalData.day - 1].haveItems = false;
+          }
+
           this.setData({
             dayList: tmp_day_list,
           })
 
           var tmp_items = app.globalData.scheduleItems;
-          tmp_items.splice(app.globalData.changeScheduleIndex, 1);
-          app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
+          // tmp_items.splice(app.globalData.changeScheduleIndex, 1);
+          // app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
           this.setData({
             showItems: tmp_items,
           })
         } else { // 如果不是当前月
           console.log("sb");
           var tmp_items = app.globalData.scheduleItems;
-          tmp_items.splice(app.globalData.changeScheduleIndex, 1);
-          app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
+          // tmp_items.splice(app.globalData.changeScheduleIndex, 1);
+          // app.globalData.scheduleItems = tmp_items; // 删除被修改的日程，因为日程被移动到了另外的日期
           this.setData({
             showItems: tmp_items,
           })
@@ -205,7 +232,7 @@ Page({
             });
           
             if (tmp_items.length == 0) {
-              var day_list = this.data.dayList;
+              var day_list = that.data.dayList;
               day_list[app.globalData.day - 1].haveItems = 0;
               that.setData({
                 dayList: day_list,
@@ -581,8 +608,11 @@ Page({
    * 更新旧日期的显示
    */
   getModifiedOldDay: function(day) {
+    console.log("更改旧日期样式");
+    console.log(day);
     var day_obj = day;
     if (day_obj.haveItems) { // 如果旧日期有日程
+      console.log("如果旧日期有日程");
       day_obj.selected = false;
       day_obj.background = WORK_DAY_BACKGROUND;
       day_obj.color = WORK_DAY_COLOR;

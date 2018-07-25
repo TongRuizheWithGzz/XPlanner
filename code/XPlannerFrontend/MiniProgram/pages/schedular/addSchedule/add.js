@@ -140,13 +140,13 @@ Page({
         return;
       }
       var tmp_title = this.data.title == "" ? "无标题" : this.data.title;
-      var item = schedule.generateScheduleItem(
-        tmp_title,
-        tmp_start_time,
-        tmp_end_time,
-        this.data.description,
-        this.data.address
-      );
+      // var item = schedule.generateScheduleItem(
+      //   tmp_title,
+      //   tmp_start_time,
+      //   tmp_end_time,
+      //   this.data.description,
+      //   this.data.address
+      // );
 
       /* 向后端发送请求，获取schduleItem_id，增加对应的项目，注意可能有错误处理 */
       wrapper.wxRequestWrapper(api.addScheduleitem, "POST", {
@@ -155,21 +155,28 @@ Page({
         title: tmp_title,
         description: this.data.description,
         address: this.data.address,
+        completed: false,
+        year: app.globalData.year,
+        month: app.globalData.month,
+        day: app.globalData.day,
       }).then((data) => {
-        var scheduleitem = data.scheduleitme;
-        console.log("得到服务器返回的scheduleitem", scheduleitem);
-        item.scheduleItem_id = scheduleitem.scheduleItem_id;
-        item.start_concret_time = scheduleitem.startTime;
-        item.end_concret_time = this.data.endTime;
-        item.start_date = this.data.startDate;
-        item.start_date = this.data.startDate;
-        item.complete = false;
-        item.visible = true;
-        var tmp = app.globalData.scheduleItems;
-        tmp.push(item);
-        app.globalData.scheduleItems = tmp;
+        var newScheduleitem = data["newScheduleitem"];
+        var newScheduleitmesForDay = data["newScheduleitmesForDay"];
+        console.log("得到服务器返回的新scheduleitem", newScheduleitem);
+        console.log("得到服务器返回的当天scheduleitems", newScheduleitmesForDay);
+        // item.scheduleItem_id = scheduleitem.scheduleItem_id;
+        newScheduleitem.start_concret_time = this.data.startTime;
+        newScheduleitem.end_concret_time = this.data.endTime;
+        newScheduleitem.start_date = this.data.startDate;
+        newScheduleitem.start_date = this.data.startDate;
+        newScheduleitem.complete = false;
+        newScheduleitem.visible = true;
+
+        app.globalData.scheduleItems = schedule.warpScheduleItems(newScheduleitmesForDay);
+        console.log(app.globalData.scheduleItems);
         app.globalData.ifAddSchedule = true;
-        app.globalData.ifSameDay = (app.globalData.date == item.start_time.slice(0, 10));
+        app.globalData.newItemDate = this.data.startDate;
+        app.globalData.ifSameDay = (app.globalData.date == this.data.startDate.slice(0, 10));
         wx.navigateBack({
           delta: 1,
         });
@@ -183,46 +190,57 @@ Page({
         })
 
       });
-
-      // item.scheduleItem_id = 19; // 需要修改
-      // item.start_concret_time = this.data.startTime;
-      // item.end_concret_time = this.data.endTime;
-      // item.start_date = this.data.startDate;
-      // item.complete = false;
-      // item.visible = true;
-
-      // var tmp = app.globalData.scheduleItems;
-      // tmp.push(item);
-      // app.globalData.scheduleItems = tmp;
-      // app.globalData.ifAddSchedule = true;
-      // app.globalData.ifSameDay = (app.globalData.date == item.start_time.slice(0, 10));
-      // // console.log(app.globalData.scheduleItems);
-      // wx.navigateBack({
-      //   delta: 1,
-      // });
-      // this.setData({
-      //   showModal: true,
-      //   msg: "是否保存信息?",
-      // })
     } else { // 如果是修改页面
-      var tmp_item = app.globalData.scheduleItems[this.data.itemIndex];
-      tmp_item.start_time = this.data.startDate + " " + this.data.startTime;
-      tmp_item.end_time = this.data.endDate + " " + this.data.endTime;
-      tmp_item.start_concret_time = this.data.startTime;
-      tmp_item.end_concret_time = this.data.endTime;
-      tmp_item.title = this.data.title;
-      tmp_item.description = this.data.description;
-      tmp_item.address = this.data.address;
-      tmp_item.start_date = this.data.startDate;
-      app.globalData.scheduleItems[this.data.itemIndex] = tmp_item;
+      /* 检测错误输入 */
+      var tmp_start_date = this.data.startDate === "选择日期" ? app.globalData.date : this.data.startDate;
+      var tmp_start_concret_time = this.data.startTime === "选择时间" ? time.getConcreteTime(new Date().getHours(), new Date().getMinutes()) : this.data.startTime;
+      var tmp_end_date = this.data.endDate === "选择日期" ? app.globalData.date : this.data.endDate;
+      var tmp_end_concret_time = this.data.endTime === "选择时间" ? time.getConcreteTime(new Date().getHours(), new Date().getMinutes()) : this.data.endTime;
+      this.setData({
+        startDate: tmp_start_date,
+        startTime: tmp_start_concret_time,
+        endDate: tmp_end_date,
+        endTime: tmp_end_concret_time,
+      });
 
-      app.globalData.ifChangeSchedule = true;
-      app.globalData.changeScheduleIndex = this.data.itemIndex;
-      app.globalData.ifChangeScheduleStartDate = !(this.data.oldStartDate == this.data.startDate);
+      var tmp_start_time = tmp_start_date + " " + tmp_start_concret_time;
+      var tmp_end_time = tmp_end_date + " " + tmp_end_concret_time;
+      if (tmp_end_time < tmp_start_time) {
+        wx.showModal({
+          title: '时间错误',
+          content: '请设置正确的时间',
+          showCancel: false,
+        })
+        return;
+      }
 
-      /* 向后端发送请求，注意，如果涉及开始时间点的变化而且开始日期不变，需要更新globalData */
-      wrapper.wxRequestWrapper(api.updateScheduleitem, "POST", {}).then((data) => {
+      /* 向后端发送请求，无论如何都需要更新globalData中的日程数组 */
+      console.log("试图修改日程");
+      console.log(app.globalData.scheduleItems[this.data.itemIndex]);
+      wrapper.wxRequestWrapper(api.updateScheduleitem + app.globalData.scheduleItems[this.data.itemIndex].scheduleItem_id, "PUT", {
+        //在这里把修改传的参数写上
+        start_time: tmp_start_time,
+        end_time: tmp_end_time,
+        description: this.data.description,
+        address: this.data.address,
+        title: this.data.title === "" ? "无标题" : this.data.title,
+        completed: false,
+        year: app.globalData.year,
+        month: app.globalData.month,
+        day: app.globalData.day,
+      }).then((data) => {
+        //处理成功 修改一些变量，如一些全局变量
+        console.log(data);
+        app.globalData.scheduleItems = schedule.warpScheduleItems(data["scheduleItems"]); // ?
+        console.log("修改后返回当天日程", app.globalData.scheduleItems);
+        app.globalData.ifChangeSchedule = true;
+        // app.globalData.changeScheduleIndex = this.data.itemIndex;
+        app.globalData.ifChangeScheduleStartDate = !(this.data.oldStartDate == this.data.startDate);
+        app.globalData.newItemDate = this.data.startDate;
 
+        wx.navigateBack({
+          delta: 2,
+        });
       }).catch((errno) => {
         console.log("修改日程服务器返回错误：", errno);
         wx.showModal({
@@ -232,9 +250,7 @@ Page({
         })
       });
 
-      wx.redirectTo({
-        url: "/pages/schedular/scheduleDetails/scheduleDetails?id=" + this.data.itemIndex,
-      })
+
     }
   },
 
