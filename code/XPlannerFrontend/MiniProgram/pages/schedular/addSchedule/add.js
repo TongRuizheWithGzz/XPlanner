@@ -69,6 +69,18 @@ Page({
         address: tmp_item.address,
         ifAddPage: true, // 添加spider项目本质上和添加普通项目相同
       });
+    } else if (options.readerDescription) {
+      console.log("从Reader进入到了add界面");
+      this.setData({
+        startDate: options.start_time.slice(0, 10),
+        startTime: options.start_time.slice(11, 16),
+        endDate: options.end_time.slice(0, 10),
+        endTime: options.end_time.slice(11, 16),
+        title: "",
+        description: options.readerDescription,
+        address: "",
+        ifAddPage: true,
+      });
     } else { // 如果是添加页面
       this.setData({
         startDate: "选择日期",
@@ -177,9 +189,20 @@ Page({
         app.globalData.ifAddSchedule = true;
         app.globalData.newItemDate = this.data.startDate;
         app.globalData.ifSameDay = (app.globalData.date == this.data.startDate.slice(0, 10));
-        wx.navigateBack({
-          delta: 1,
-        });
+        wx.showToast({
+          title: '日程添加成功',
+          image: "/icons/success.png",
+          duration: 1000,
+          success: function() {
+            setTimeout(() => {
+              (wx.navigateBack({
+                delta: 1,
+              }))
+            }, 1000)
+
+          }
+        })
+
 
       }).catch((errno) => {
         console.log("添加日程服务器返回错误：", errno);
@@ -237,10 +260,20 @@ Page({
         // app.globalData.changeScheduleIndex = this.data.itemIndex;
         app.globalData.ifChangeScheduleStartDate = !(this.data.oldStartDate == this.data.startDate);
         app.globalData.newItemDate = this.data.startDate;
+        wx.showToast({
+          title: '日程修改成功',
+          image: "/icons/success.png",
+          duration: 1500,
+          success: function () {
+            setTimeout(() => {
+              (wx.navigateBack({
+                delta: 1,
+              }))
+            }, 1000)
 
-        wx.navigateBack({
-          delta: 2,
-        });
+          }
+        })
+
       }).catch((errno) => {
         console.log("修改日程服务器返回错误：", errno);
         wx.showModal({

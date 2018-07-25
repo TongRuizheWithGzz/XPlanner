@@ -50,7 +50,8 @@ public class KeeperTest {
 
     private List<KeeperRecommand> keeperRecommandList;
 
-    @Before
+//    @Before
+    
     public void setup() throws ParseException {
         user=new User();
         user.setUserName("lihu");

@@ -31,7 +31,9 @@ public class KeeperDataTest {
     @Autowired
     private ScheduleItemRepository scheduleItemRepository;
 
+/*
     @Before
+*/
     public void setup(){
         DataFactory df = new DataFactory();
         String[] usernames = {"tongruizhe","lihu"};

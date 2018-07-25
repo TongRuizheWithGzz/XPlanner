@@ -9,4 +9,4 @@
 </view>
 
 <textarea class='input' placeholder='输入大致事项文本' placeholder-class='ph' bindinput='getInputText'></textarea>
-<view class='des'>上传日程描述</view>
+<view class='des' catchtap='uploadstring'>上传日程描述</view>
