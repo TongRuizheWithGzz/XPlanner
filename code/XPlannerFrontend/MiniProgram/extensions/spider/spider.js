@@ -1,9 +1,7 @@
 var sedata = require("../../data/spiderItems.js")
 var spider = require("../../common/spider");
 var wrapper = require("../../interface/wrapper/wrapper.js");
-
 var api = require("../../interface/config/api.js");
-
 var app = getApp();
 
 Page({
@@ -20,122 +18,90 @@ Page({
     x2: -1,
     page: 1,
     crawled: [],
-
+    maxNumber: 0,
   },
-  onLoad: function() {
-
-    // app.globalData.spiderItems = [spider.warpSpiderItems(tmp)];
-    // this.setData({
-    //   crawled: tmp,
-    // })
-  },
-  onShow: function() {
-
-    //load page 1
-    wx.showLoading({
-      title: "正在加载",
-      mask: true,
-    })
-    //向后端发送请求，获取5个东西
-    // var tmp = sedata;
-    wrapper.wxRequestWrapper(api.spiderAPI, "GET", {
-      pageNumber: 0,
-      size: 5,
-    }).then((data) => {
-      var notifications = data.notifications;
-      app.globalData.spiderItems = [spider.warpSpiderItems(notifications)];
+  spiderRequestWrapper: function (requestPageNumber) {
+    console.log("requestPageNumber: ", requestPageNumber);
+    console.log("maxNumber:", this.data.maxNumber);
+    //当前已缓存页面数量:maxNumber
+    //已缓存大于请求页面，直接提取
+    if (this.data.maxNumber >= requestPageNumber) {
       this.setData({
-        crawled: notifications,
+        crawled: app.globalData.spiderItems[requestPageNumber - 1],
+        pageNumber: requestPageNumber
       })
-      wx.hideLoading()
-    }).catch((errno) => {
-      wx.hideLoading()
-      console.log("Spider 加载失败", errno);
-      wx.showModal({
-        title: '请求失败',
-        content: '请检查网络设置',
-        showCancel: false,
+    } else {
+      console.log("准备爬取");
+      console.log("requestPageNumber: ", requestPageNumber);
+      console.log("maxNumber:", this.data.maxNumber);
+      wx.showLoading({
+        title: '拼命加载中~',
       })
+      wrapper.wxRequestWrapper(api.spiderAPI, "GET", {
+        pageNumber: requestPageNumber - 1,
+        size: 5,
+      }).then((data) => {
+        app.globalData.spiderItems.push(spider.warpSpiderItems(data["notifications"]));
+        wx.hideLoading();
+        this.setData({
+          pageNumber: requestPageNumber, //爬取后段
+          maxNumber: requestPageNumber,
+          crawled: data["notifications"]
+        })
+      }).catch((errno) => {
+        this.spiderRequestErrorWrapper(errno);
+      })
+    }
+  },
+  spiderRequestErrorWrapper: function (errno) {
+    wx.hideLoading();
+    console.log("Spider OnShow失败: ", errno);
+    wx.showModal({
+      title: '爬虫失败o(╥﹏╥)o',
+      content: '请检查网络连接',
+      showCancel: false,
     })
   },
-  start: function(e) {
+  onLoad: function () { },
+  onShow: function () {
+    if (this.data.maxNumber > 0)
+      return;
+    wx.showLoading({
+      title: '拼命加载中(#^.^#)',
+      mask: true,
+    });
+
+    this.spiderRequestWrapper(1);
+    //向后端发送请求，获取5个东西
+    this.slidethis();
+
+  },
+  start: function (e) {
     this.setData({
       x1: e.changedTouches[0].pageX,
     })
   },
-  end: function(e) {
+  end: function (e) {
     this.setData({
       x2: e.changedTouches[0].pageX,
     })
     if (this.data.x1 === this.data.x2)
       return;
+
+
     if (this.data.x1 > this.data.x2) {
-      wrapper.wxRequestWrapper(api.spiderAPI, "GET", {
-        pageNumber: this.data.pageNumber + 1 - 1,
-        size: 5,
-      }).then((data) => {
-        var notifications = data.notifications;
-        app.globalData.spiderItems = [spider.warpSpiderItems(notifications)];
-        this.setData({
-          crawled: notifications,
-        })
-        this.setData({
-          pageNumber: this.data.pageNumber + 1 //爬取后段
-        })
-        wx.hideLoading()
-        this.slidethis()
-      }).catch((errno) => {
-        wx.hideLoading()
-        console.log("Spider 加载失败", errno);
-        wx.showModal({
-          title: '请求失败',
-          content: '请检查网络设置',
-          showCancel: false,
-        })
-      })
-      // this.setData({
-      //   pageNumber: this.data.pageNumber + 1 //爬取后段
-      // })
+      this.spiderRequestWrapper(this.data.pageNumber + 1);
     } else if (this.data.x1 < this.data.x2) {
       if (this.data.pageNumber === 1)
         return;
-      wrapper.wxRequestWrapper(api.spiderAPI, "GET", {
-        pageNumber: this.data.pageNumber + 1 - 1,
-        size: 5,
-      }).then((data) => {
-        var notifications = data.notifications;
-        app.globalData.spiderItems = [spider.warpSpiderItems(notifications)];
-        this.setData({
-          crawled: notifications,
-        })
-        this.setData({
-          pageNumber: this.data.pageNumber + 1 //爬取后段
-        })
-        wx.hideLoading()
-        this.slidethis()
-      }).catch((errno) => {
-        wx.hideLoading()
-        console.log("Spider 加载失败", errno);
-        wx.showModal({
-          title: '请求失败',
-          content: '请检查网络设置',
-          showCancel: false,
-        })
-        this.setData({
-          pageNumber: this.data.pageNumber - 1 - 1
-        });
-
-      })
-      // this.setData({
-      //   pageNumber: this.data.pageNumber - 1
-      // });
+      this.spiderRequestWrapper(this.data.pageNumber - 1);
     }
-   
+    this.slidethis()
   },
-  //事件处理函数
-  slidethis: function(e) {
-    console.log("slide")
 
+  //事件处理函数
+  slidethis: function (e) {
+    console.log("slide")
     var self = this;
     if (this.data.isAnimation) {
       return false;
@@ -200,7 +166,7 @@ Page({
       animationlist: [],
       animationlistyet: self.data.animationlistyet
     });
-    setTimeout(function() {
+    setTimeout(function () {
       var zindex = self.data.zindex;
       var slidethis = self
         .data
@@ -216,26 +182,40 @@ Page({
       });
     }, 100);
   },
-  refresh: function(e) {
-    this.slidethis();
 
-    /* 向后端请求page1 */
-
-    var tmp = sedata;
-    var tmp_items = app.globalData.spiderItems;
-    tmp_items[0] = spider.warpSpiderItems(tmp); // 更新全局数据，需要更改
-    app.globalData.spiderItems = tmp_items;
+  refresh: function (e) {
+    //清除缓存
     this.setData({
-      crawled: app.globalData.spiderItems[0],
-      pageNumber: 1
+      maxNumber: 0,
+    });
+    wx.showLoading({
+      title: '刷新ing^_^',
     })
+    wrapper.wxRequestWrapper(api.spiderAPI, "GET", {
+      pageNumber: 1 - 1,
+      size: 5,
+    }).then((data) => {
+
+      //设置globalData
+      app.globalData.spiderItems = [spider.warpSpiderItems(data["notifications"])];
+      wx.hideLoading();
+      this.setData({
+        pageNumber: 1, //爬取后段
+        crawled: data["notifications"],
+        maxNumber: 1,
+      })
+      this.slidethis();
+    }).catch((errno) => {
+      this.spiderRequestErrorWrapper(errno);
+    })
+
   },
-  detail: function(e) {
+  detail: function (e) {
     wx.navigateTo({
       url: '/pages/schedular/scheduleDetails/scheduleDetails?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
     })
   },
-  addSpiderItem: function(e) {
+  addSpiderItem: function (e) {
     wx.navigateTo({
       url: '/pages/schedular/addSchedule/add?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
     })

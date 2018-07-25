@@ -1,29 +1,92 @@
-<view class="weui-cells__title">{{user_food_eaten[0].ate_time}}</view>
+<view class='all'>
+  <view class='title'>健身计划</view>
+  <image src="{{keeper.icon}}" class='keeper'></image>
+</view>
+<view class=''>
+  <swiper class='movie-swiper' previous-margin="37rpx" next-margin="37rpx" duration='400'>
+    <swiper-item class='movie' wx:for="{{keeperItems}}" wx:key="key">
+      <view class='item'>
+        <view class='top'>
+          <image src="{{icons[index + 1]}}" class='icon'></image>
+          <view class='name'>{{item.title}}</view>
+        </view>
+        <view class='movie-card'>
+          <view class='in'>
 
-<view wx:for="{{scheduleItems}}" wx:key='{{*this}}' data-id='{{index}}' bind:longpress='showCheck'>
-  <view hidden='{{true}}' class='top' bindtap='unfold'>
-    <text>{{index}}:00 PM</text>
+            <view class='block'>
+              <image src="/icons/time.png" class="icon1"></image>
+              <text class='time'>{{"开始："+item.start_time + "\n" +"结束："+item.end_time}}</text>
+            </view>
+            <view class='address'>
+              <image src="/icons/loc.png" style="height:25px;width:25px;margin-right:10px;"></image>
+              <text>{{item.address}}</text>
+            </view>
+            <view>
+              <view class='description'>
+                <text>{{item.description}}</text>
+              </view>
+              <view class='add' catchtap='addSchedule' data-id='{{index}}'>加入到今日日程</view>
+
+            </view>
+          </view>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+</view>
+
+<view class='all'>
+  <view class='title'>饮食统计</view>
+  <image src="/icons/ca.png" class='ca' hover-class='press' catchtap="choosePicture"></image>
+</view>
+
+<view class='eaten'>
+  <view class='eaten-title'>
+    今日统计
   </view>
-
-  <view class="item">
-    <checkbox hidden="{{showCheckbox}}" class="item-checkbox" color="deepskyblue"></checkbox>
-
-    <view class='list-item' catchtap='detail' data-id="{{index}}">
-      <text class='item-title'>{{item.title}}</text>
-      <text class='item-time'>
-            {{"FROM "+item.start_time + " TO " + item.end_time}}
-          </text>
+  <view class='eat'>
+    <view class='eaten-items'>
+      <view wx:if="{{user_food_eaten.length == 0}}" class='eaten-item card note'>
+        <view class='not'>
+          你今天还没有进行统计,勾选食物图片或拍摄食物照片进行统计
+        </view>
+      </view>
+      <view class='eaten-item card1' wx:for="{{user_food_eaten}}" wx:key="key">
+        <view class='fd-name'>
+          <image src='/icons/1e.png' class='food-icon' />
+          <view class='fd-title'>{{item.food_name}}</view>
+        </view>
+        <view class='fd-name down'>
+          <image src='/icons/calorie.png' class='ca-icon' />
+          <view class='fd-title-down'>{{item.calorie+' calories'}}</view>
+        </view>
+      </view>
     </view>
   </view>
-
 </view>
+<view class='foodinfo'>
+  <view class='add-name'>{{address}}</view>
+  <view class='foods'>
+    <view class='food-item card' wx:for='{{foodmap[address]}}' wx:key='key'>
 
-<view class="weui-cells weui-cells_after-title">
-  <view class="weui-cell" wx:key="{{*this}}">
-    <view class="weui-cell__bd">{{item.food_name}}</view>
-    <view class="weui-cell__ft">{{item.calorie}}</view>
+      <image src="{{'/icons/'+item.food_type_id + 'e.png'}}" class='food-icon' />
+      <view class='food-name'>{{item.food_name}}</view>
+      <view class='food-cal'>{{item.calorie + ' cal'}}</view>
+
+      <view class='bot' catchtap="select" data-index="{{index}}" data-add='{{address}}'>
+        <image class='box' wx:if="{{item.selected}}" src="/icons/checkbox-checked.png"></image>
+        <image class='box' wx:if="{{!item.selected}}" src="/icons/checkbox.png"></image>
+      </view>
+    </view>
   </view>
+  <view class='pad' />
 </view>
 
-<image src="/icons/food.png" class="food" bindtap="gotoSelector"></image>
-<image src="/icons/camera.png" class="camera" bindtap="gotoCamera"></image>
+<view class="controller">
+  <picker bindchange="bindPickerChange" value="{{index}}" range="{{addresses}}">
+    <view class="left">
+      选择餐厅
+    </view>
+  </picker>
+  <view class="right" bindtap="additems">加入到今日饮食</view>
+</view>

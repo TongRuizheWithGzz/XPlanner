@@ -19,6 +19,7 @@ Page({
    * 关闭删除模式
    */
   undo: function () {
+    console.log("关闭删除模式");
     this.setData({
       move: false
     })

@@ -1,5 +1,6 @@
 package com.codemover.xplanner.Web;
 
+import com.codemover.xplanner.Converter.CompleteRequest;
 import com.codemover.xplanner.Converter.UpdateScheduleitmeRequest;
 import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
 import com.codemover.xplanner.Service.ScheduleService;
@@ -7,6 +8,7 @@ import com.codemover.xplanner.Web.Util.ControllerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.text.ParseException;
 import java.util.Map;
@@ -34,12 +36,19 @@ public class ScheduleController {
         return ControllerUtil.successHandler(scheduleService.addScheduleItem(request, username));
     }
 
-    @PutMapping(value="/api/schedules/{id}/complete")
-    public Map<String,Object> changeCompleteState(Principal principal,
-                                                  @RequestBody ScheduleitmeDTO scheduleitmeDTO,
-                                                  @PathVariable Integer id){
-        String username=principal.getName();
-        return null;
+
+    @PutMapping(value = "/api/schedules/{id}/complete")
+    public Map<String, Object> changeCompleteState(Principal principal,
+                                                   @RequestBody CompleteRequest completed,
+                                                   @PathVariable Integer id
+    ) {
+
+        String username = principal.getName();
+        return ControllerUtil.successHandler(scheduleService.changeCompleteState(
+                username,
+                id,
+                completed.completed
+        ));
 
     }
 
@@ -76,7 +85,6 @@ public class ScheduleController {
         return ControllerUtil.successHandler(scheduleService.findSchedule4OneDay(principal.getName(),
                 year, month, day));
     }
-
 
 
 }

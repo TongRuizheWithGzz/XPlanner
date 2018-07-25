@@ -4,6 +4,7 @@ Page({
     item: {},
     id: 0,
     ifSpider: false,
+    pageNumber: 0,
   },
 
   onLoad: function (options) {
@@ -15,6 +16,8 @@ Page({
         // item: app.globalData.spiderItems[options.spiderIndex],
         item: app.globalData.spiderItems[options.pageNumber - 1][options.spiderIndex],
         id: options.spiderIndex,
+        pageNumber: options.pageNumber,
+        ifSpider: true,
       })
     } else {
       this.setData({
@@ -36,5 +39,11 @@ Page({
     wx.navigateTo({
       url: "/pages/schedular/addSchedule/add?id=" + this.data.id
     });
+  },
+
+  add: function () {
+    wx.navigateTo({
+      url: '/pages/schedular/addSchedule/add?spiderIndex=' + this.data.id + '&pageNumber=' + this.data.pageNumber,
+    })
   }
 })

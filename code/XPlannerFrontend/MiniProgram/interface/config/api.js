@@ -17,5 +17,6 @@ module.exports = {
   // getUserSettings,
   //Spider: Get newset notifications
   spiderAPI: ApiRootUrl + "notifications",
-
+  keeperAddFoodApi: ApiRootUrl +"addFood",
+  keeperApi: ApiRootUrl +"keeper",
 }
