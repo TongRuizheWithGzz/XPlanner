@@ -1,5 +1,9 @@
 var sedata = require("../../data/spiderItems.js")
 var spider = require("../../common/spider");
+var wrapper = require("../../interface/wrapper/wrapper.js");
+
+var api = require("../../interface/config/api.js");
+
 var app = getApp();
 
 Page({
@@ -18,45 +22,120 @@ Page({
     crawled: [],
 
   },
-  onLoad: function () {
-    //向后端发送请求，获取5个东西
-    var tmp = sedata;
-    app.globalData.spiderItems = [spider.warpSpiderItems(tmp)];
-    this.setData({
-      crawled: tmp,
-    })
+  onLoad: function() {
+
+    // app.globalData.spiderItems = [spider.warpSpiderItems(tmp)];
+    // this.setData({
+    //   crawled: tmp,
+    // })
   },
-  onShow: function () {
+  onShow: function() {
 
     //load page 1
+    wx.showLoading({
+      title: "正在加载",
+      mask: true,
+    })
+    //向后端发送请求，获取5个东西
+    // var tmp = sedata;
+    wrapper.wxRequestWrapper(api.spiderAPI, "GET", {
+      pageNumber: 0,
+      size: 5,
+    }).then((data) => {
+      var notifications = data.notifications;
+      app.globalData.spiderItems = [spider.warpSpiderItems(notifications)];
+      this.setData({
+        crawled: notifications,
+      })
+      wx.hideLoading()
+    }).catch((errno) => {
+      wx.hideLoading()
+      console.log("Spider 加载失败", errno);
+      wx.showModal({
+        title: '请求失败',
+        content: '请检查网络设置',
+        showCancel: false,
+      })
+    })
   },
-  start: function (e) {
+  start: function(e) {
     this.setData({
       x1: e.changedTouches[0].pageX,
     })
   },
-  end: function (e) {
+  end: function(e) {
     this.setData({
       x2: e.changedTouches[0].pageX,
     })
     if (this.data.x1 === this.data.x2)
       return;
     if (this.data.x1 > this.data.x2) {
-      this.setData({
-        pageNumber: this.data.pageNumber + 1 //爬取后段
+      wrapper.wxRequestWrapper(api.spiderAPI, "GET", {
+        pageNumber: this.data.pageNumber + 1 - 1,
+        size: 5,
+      }).then((data) => {
+        var notifications = data.notifications;
+        app.globalData.spiderItems = [spider.warpSpiderItems(notifications)];
+        this.setData({
+          crawled: notifications,
+        })
+        this.setData({
+          pageNumber: this.data.pageNumber + 1 //爬取后段
+        })
+        wx.hideLoading()
+        this.slidethis()
+      }).catch((errno) => {
+        wx.hideLoading()
+        console.log("Spider 加载失败", errno);
+        wx.showModal({
+          title: '请求失败',
+          content: '请检查网络设置',
+          showCancel: false,
+        })
       })
+      // this.setData({
+      //   pageNumber: this.data.pageNumber + 1 //爬取后段
+      // })
     } else if (this.data.x1 < this.data.x2) {
       if (this.data.pageNumber === 1)
         return;
-      this.setData({
-        pageNumber: this.data.pageNumber - 1
-      });
+      wrapper.wxRequestWrapper(api.spiderAPI, "GET", {
+        pageNumber: this.data.pageNumber + 1 - 1,
+        size: 5,
+      }).then((data) => {
+        var notifications = data.notifications;
+        app.globalData.spiderItems = [spider.warpSpiderItems(notifications)];
+        this.setData({
+          crawled: notifications,
+        })
+        this.setData({
+          pageNumber: this.data.pageNumber + 1 //爬取后段
+        })
+        wx.hideLoading()
+        this.slidethis()
+      }).catch((errno) => {
+        wx.hideLoading()
+        console.log("Spider 加载失败", errno);
+        wx.showModal({
+          title: '请求失败',
+          content: '请检查网络设置',
+          showCancel: false,
+        })
+        this.setData({
+          pageNumber: this.data.pageNumber - 1 - 1
+        });
+
+      })
+      // this.setData({
+      //   pageNumber: this.data.pageNumber - 1
+      // });
     }
-    this.slidethis()
+   
   },
   //事件处理函数
-  slidethis: function (e) {
+  slidethis: function(e) {
     console.log("slide")
+
     var self = this;
     if (this.data.isAnimation) {
       return false;
@@ -121,7 +200,7 @@ Page({
       animationlist: [],
       animationlistyet: self.data.animationlistyet
     });
-    setTimeout(function () {
+    setTimeout(function() {
       var zindex = self.data.zindex;
       var slidethis = self
         .data
@@ -137,7 +216,7 @@ Page({
       });
     }, 100);
   },
-  refresh: function (e) {
+  refresh: function(e) {
     this.slidethis();
 
     /* 向后端请求page1 */
@@ -151,12 +230,12 @@ Page({
       pageNumber: 1
     })
   },
-  detail: function (e) {
+  detail: function(e) {
     wx.navigateTo({
       url: '/pages/schedular/scheduleDetails/scheduleDetails?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
     })
   },
-  addSpiderItem: function (e) {
+  addSpiderItem: function(e) {
     wx.navigateTo({
       url: '/pages/schedular/addSchedule/add?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
     })

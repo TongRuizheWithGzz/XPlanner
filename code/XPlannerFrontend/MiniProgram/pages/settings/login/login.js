@@ -10,11 +10,69 @@ var extension = require("../../../common/extension");
 var api = require("../../../interface/config/api");
 
 Page({
+  fetchUserInfoAfterLogin: function() {
+    return new Promise(function(resolve, reject) {
+      wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
+          "year": app.globalData.year,
+          "month": app.globalData.month,
+          "day": app.globalData.day,
+        }).then((data) => {
+          console.log("得到用户某天的数据", data, "开始请求一个月的日程")
+          app.globalData.scheduleItems = schedule.warpScheduleItems(data.scheduleitems); // 设置对应全局变量
+          return wrapper.wxRequestWrapper(api.queryDaysHavingScheduletimesInMonth, "GET", {
+            year: app.globalData.year,
+            month: app.globalData.month
+          });
+        }).then((data) => {
+          console.log("得到一月日程", data, "开始请求用户信息")
+          app.globalData.dayWithItem = data.dateMap; // 设置对应全局变量
+          return wrapper.wxRequestWrapper(api.queryUserInfo, "GET", {});
+        })
+        .then((data) => {
+          console.log("获得用户信息，开始请求用户的设置");
+          app.globalData.userInfo = data.userInfo;
+          return wrapper.wxRequestWrapper(api.queryEnabledExtensionsArray, "GET", {})
+        })
+        .then((data) => {
+          console.log("获得用户的设置全局变量:", data.userSettings);
+          app.globalData.extensions = extension.filterExtensions(extension.warpExtensions(extensions), data.userSettings); // 设置对应全局变量
+          app.globalData.userFoodEaten = [];
+          app.globalData.logined = true;
+        }).then((errno) => {
+          resolve(errno);
+        })
+        .catch((errno) => {
+          app.globalData.logined = false;
+          console.log("Get errno when fectchUserInfo: ", errno);
+          reject(errno);
+        })
+    })
+
+  },
+
   data: {
     name: "",
     password: "",
   },
-
+  onShow: function() {
+    wrapper.checkSessionWrapper().then((errno) => {
+      console.log("在App.js中检查登录成功");
+      this.fetchUserInfoAfterLogin().then((errno) => {
+        wx.switchTab({
+          url: '/pages/schedular/schedular',
+        })
+      }).catch((errno) => {
+        console.log("在App.js中建成登录成功，随后获取用户信息失败：", errno);
+        wx.showModal({
+          title: '获取用户信息失败',
+          content: '请检查网络设置',
+          showCancel: false,
+        });
+      })
+    }).catch((errno) => {
+      console.log("在App.js中检查登录失败,等待登录", errno);
+    })
+  },
   /*
    * getName
    * 获取名称
@@ -42,34 +100,16 @@ Page({
     /* 向后端发送用户名和密码 */
     wrapper.loginByUsernamePassword(this.data.name, this.data.password)
       .then((errno) => {
-        var date = wx.getStorageSync('date');
-        if (date) {
-          console.log("Date found in Local storage");
-          app.globalData.date = date;
-          app.globalData.year = parseInt(date.slice(0, 4));
-          app.globalData.month = parseInt(date.slice(5, 7));
-          app.globalData.day = parseInt(date.slice(8, 10));
-        } else {
-          console.log("no date in Local storage");
-          var tmp_date = new Date();
-          app.globalData.year = tmp_date.getFullYear();
-          app.globalData.month = tmp_date.getMonth() + 1;
-          app.globalData.day = tmp_date.getDate();
-          app.globalData.date = time.getDateStringWithZero(app.globalData.year, app.globalData.month, app.globalData.day);
-          console.log(app.globalData.date);
-          wx.setStorageSync('date', app.globalData.date);
-        }
-        console.log(app.globalDate);
+        console.log(app.globalData);
         return wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
           "year": app.globalData.year,
-          "month": app.globalDate.month,
-          "day": app.globalDate.day,
+          "month": app.globalData.month,
+          "day": app.globalData.day,
         });
-
       })
       .then((data) => {
         console.log("得到用户某天的数据", data, "开始请求一个月的日程")
-        app.globalData.scheduleItems = schedule.warpScheduleItems(data); // 设置对应全局变量
+        app.globalData.scheduleItems = schedule.warpScheduleItems(data.scheduleitems); // 设置对应全局变量
         return wrapper.wxRequestWrapper(api.queryDaysHavingScheduletimesInMonth, "GET", {
           year: app.globalData.year,
           month: app.globalData.month
@@ -77,17 +117,17 @@ Page({
       })
       .then((data) => {
         console.log("得到一月日程", data, "开始请求用户信息")
-        app.globalData.dayWithItem = data; // 设置对应全局变量
+        app.globalData.dayWithItem = data.dateMap; // 设置对应全局变量
         return wrapper.wxRequestWrapper(api.queryUserInfo, "GET", {});
       })
       .then((data) => {
         console.log("获得用户信息，开始请求用户的设置");
-        app.globalData.userInfo = data;
+        app.globalData.userInfo = data.userInfo;
         return wrapper.wxRequestWrapper(api.queryEnabledExtensionsArray, "GET", {})
       })
       .then((data) => {
-        console.log("获得用户的设置全局变量");
-        app.globalData.extensions = extension.warpExtensions(data); // 设置对应全局变量
+        console.log("获得用户的设置全局变量:", data.userSettings);
+        app.globalData.extensions = extension.filterExtensions(extension.warpExtensions(extensions), data.userSettings); // 设置对应全局变量
         app.globalData.userFoodEaten = [];
         app.globalData.logined = true;
         wx.switchTab({
@@ -99,9 +139,25 @@ Page({
         console.log("Get errno when login: ", errno);
         switch (errno) {
           case 1:
-            console.log("wrong name or password");
+            wx.showModal({
+              title: '用户名或密码错误',
+              content: '请重新输入',
+              showCancel: false,
+            });
+            break;
+          case 4:
+            wx.showModal({
+              title: '请求失败',
+              content: '请检查网络连接',
+              showCancel: false,
+            });
             break;
           default:
+            wx.showModal({
+              title: '获取用户信息失败',
+              content: '请检查网络连接',
+              showCancel: false,
+            });
             break;
         }
       });

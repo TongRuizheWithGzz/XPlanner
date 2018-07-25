@@ -1,13 +1,34 @@
 var extensions = require("/data/extensions");
 var userInfo = require("/data/userInfo");
 var scheduleItems = require("/data/scheduleItem");
-
+var wrapper = require("/interface/wrapper/wrapper.js");
 var schedule = require("/common/schedule");
 var extension = require("/common/extension");
-
+var time = require('/common/time.js');
 //app.js
 App({
-  onLaunch: function () {
+  onLaunch: function() {
+
+
+    var date = wx.getStorageSync('date');
+    if (date) {
+      console.log("Date found in Local storage");
+      this.globalData.date = date;
+      this.globalData.year = parseInt(date.slice(0, 4));
+      this.globalData.month = parseInt(date.slice(5, 7));
+      this.globalData.day = parseInt(date.slice(8, 10));
+    } else {
+      console.log("no date in Local storage");
+      var tmp_date = new Date();
+      this.globalData.year = tmp_date.getFullYear();
+      this.globalData.month = tmp_date.getMonth() + 1;
+      this.globalData.day = tmp_date.getDate();
+      this.globalData.date = time.getDateStringWithZero(this.globalData.year, this.globalData.month, this.globalData.day);
+      console.log(this.globalData.date);
+      wx.setStorageSync('date', this.globalData.date);
+    }
+    //var Cookie=wx.getStorageSync("Cookie");
+
     // 展示本地存储能力
     // var logs = wx.getStorageSync('logs') || []
     // logs.unshift(Date.now())
@@ -56,6 +77,7 @@ App({
     // this.globalData.ifAddSchedule = false;
     // this.globalData.ifSameDay = false;
   },
+
   globalData: {
     date: "",
     year: new Date().getFullYear(),
@@ -73,5 +95,8 @@ App({
     changeScheduleIndex: 0, // 指示修改事务在全局变量里的索引
     ifChangeScheduleStartDate: false, // 指示修改事务时是否有修改开始日期
     spiderItems: [],
+    keeperItems:[],
+    newItemDate:"",
+
   }
 })

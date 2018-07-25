@@ -33,7 +33,7 @@ Page({
   },
 
   edit: function () {
-    wx.redirectTo({
+    wx.navigateTo({
       url: "/pages/schedular/addSchedule/add?id=" + this.data.id
     });
   }

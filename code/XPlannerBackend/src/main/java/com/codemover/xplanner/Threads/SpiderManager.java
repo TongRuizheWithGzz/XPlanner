@@ -90,7 +90,7 @@ public class SpiderManager implements CommandLineRunner {
                 logger.warn(e.getMessage());
             } finally {
                 logger.info("I will sleep");
-                Thread.sleep(5 * 1000 * 3600);
+                Thread.sleep(5 * 1000 * 60);
             }
         }
 

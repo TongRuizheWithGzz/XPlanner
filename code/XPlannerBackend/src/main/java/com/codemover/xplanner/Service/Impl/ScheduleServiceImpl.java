@@ -2,16 +2,17 @@ package com.codemover.xplanner.Service.Impl;
 
 
 import com.codemover.xplanner.Converter.ScheduleitemConverter;
+import com.codemover.xplanner.Converter.UpdateScheduleitmeRequest;
 import com.codemover.xplanner.DAO.ScheduleItemRepository;
 import com.codemover.xplanner.DAO.UserRepository;
 import com.codemover.xplanner.Model.DTO.ScheduleitmeDTO;
 import com.codemover.xplanner.Model.Entity.Scheduleitme;
 import com.codemover.xplanner.Model.Entity.User;
 import com.codemover.xplanner.Service.ScheduleService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -33,6 +34,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public HashMap<String, Object> findUserSchedule(String username) {
 
+
         HashMap<String, Object> response = new HashMap<>();
         User user = userRepository.findByUserName(username);
         if (user == null) {
@@ -41,16 +43,19 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new NullPointerException("Query user's scheduleitems: user not found");
         }
 
+
         Set<Scheduleitme> scheduleitmes = user.getScheduleitmes();
-        response.put("scheduleItems", scheduleitmes);
+        LinkedList<ScheduleitmeDTO> scheduleitmeDTOS = ScheduleitemConverter.entitiesToDTOs(scheduleitmes);
+        response.put("scheduleItems", scheduleitmeDTOS);
         return response;
 
     }
 
 
     @Override
-    public HashMap<String, Object> addScheduleItem(ScheduleitmeDTO scheduleitmeDTO, String username) {
-
+    public HashMap<String, Object>
+    addScheduleItem(UpdateScheduleitmeRequest request, String username) {
+        logger.debug("Get scheduleitem title:'{}'", request.title);
         HashMap<String, Object> response = new HashMap<>();
 
         User user = userRepository.findByUserName(username);
@@ -59,9 +64,14 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new NullPointerException("Add a new scheduleitem: user not found");
         }
 
-        Scheduleitme scheduleitme = ScheduleitemConverter.DTOToEntity(scheduleitmeDTO);
-        scheduleitme.setUser(user);
-        scheduleItemRepository.save(scheduleitme);
+        Scheduleitme newScheduleitem = ScheduleitemConverter.DTOToEntity(request.toScheduleitemDTO());
+        newScheduleitem.setUser(user);
+        Scheduleitme s = scheduleItemRepository.save(newScheduleitem);
+
+        response.put("newScheduleitem", ScheduleitemConverter.entityToDTO(newScheduleitem));
+
+        response.put("newScheduleitmesForDay", ScheduleitemConverter
+                .entitiesToDTOs(getScheduleitemsForDay(user, request.year, request.month, request.day)));
         return response;
     }
 
@@ -79,7 +89,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public HashMap<String, Object> updateScheduleItem(Integer scheduleitemId, ScheduleitmeDTO scheduleitmeDTO, String username) {
+    public HashMap<String, Object> updateScheduleItem(Integer scheduleitemId, UpdateScheduleitmeRequest request, String username) {
+        User user = userRepository.findByUserName(username);
+        if (user == null) {
+            logger.warn("No such user: '{}',will ignore", username);
+            throw new NullPointerException("Delete a  scheduleitem: user not found");
+        }
+
         HashMap<String, Object> response = new HashMap<>();
         Scheduleitme scheduleitme = scheduleItemRepository.findById(scheduleitemId).orElseThrow(
                 () -> {
@@ -87,9 +103,10 @@ public class ScheduleServiceImpl implements ScheduleService {
                     return new NullPointerException("No such ");
                 }
         );
-        ScheduleitemConverter.modifyEntity(scheduleitme, scheduleitmeDTO);
+        ScheduleitemConverter.modifyEntity(scheduleitme, request.toScheduleitemDTO());
         scheduleItemRepository.save(scheduleitme);
-
+        response.put("scheduleItems", ScheduleitemConverter
+                .entitiesToDTOs(getScheduleitemsForDay(user, request.year, request.month, request.day)));
         return response;
 
     }
@@ -143,6 +160,34 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new NullPointerException("Delete a  scheduleitem: user not found");
         }
 
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.clear();
+//        calendar.setLenient(false);
+//        calendar.set(Calendar.YEAR, year);
+//        calendar.set(Calendar.MONTH, month - 1);//注意,Calendar对象默认一月为0
+//        calendar.set(Calendar.DATE, day);
+//
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        Timestamp beginning = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+//
+//
+//        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+//        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+//        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+//
+//
+//        Timestamp endding = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+//
+//        Collection<Scheduleitme> scheduleitmeList =
+//                scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user, beginning, endding);
+
+        response.put("scheduleitems", ScheduleitemConverter
+                .entitiesToDTOs(getScheduleitemsForDay(user, year, month, day)));
+        return response;
+
+    }
+
+    private Collection<Scheduleitme> getScheduleitemsForDay(User user, int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
         calendar.setLenient(false);
@@ -163,9 +208,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Collection<Scheduleitme> scheduleitmeList =
                 scheduleItemRepository.findByUserAndStartTimeBetweenOrderByStartTimeAsc(user, beginning, endding);
+        ObjectMapper mapper=new ObjectMapper();
 
-        response.put("scheduleitems",scheduleitmeList);
-        return response;
+        return scheduleitmeList;
 
     }
 
@@ -196,7 +241,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new NullPointerException("Delete a  scheduleitem: user not found");
         }
         List<Scheduleitme> scheduleitmeList = scheduleItemRepository.findByUserAndStartTimeBetween(user, beginning, endding);
-
 
 
         Map<Integer, int[]> date_map = new HashMap<>();
