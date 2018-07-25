@@ -19,4 +19,5 @@ module.exports = {
   spiderAPI: ApiRootUrl + "notifications",
   keeperAddFoodApi: ApiRootUrl +"addFood",
   keeperApi: ApiRootUrl +"keeper",
+  readerApi:ApiRootUrl+"reader"
 }

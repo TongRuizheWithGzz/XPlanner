@@ -1,3 +1,26 @@
+var api = require("../../interface/config/api.js");
+var wrapper = require("../../interface/wrapper/wrapper.js");
+
+
+var date_string = function () {
+  var dates = new Date();
+  var years = dates.getFullYear();
+  var months = dates.getMonth() + 1;
+  if (months < 10)
+    months = "0" + months;
+  var days = dates.getDate();
+  if (days < 10)
+    days = "0" + days;
+  var hours = dates.getHours();
+  if (hours < 10)
+    hours = "0" + hours;
+  var mins = dates.getMinutes();
+  if (mins < 10)
+    mins = "0" + mins;
+  return years + "." + months + "." + days + " " + hours + ":" + mins
+};
+
+
 Page({
   data: {
     inputValue: "",
@@ -63,10 +86,21 @@ Page({
    * 获取输入的文字
    */
   getInputText: function(e) {
-    console.log(e.detail.value);
+    console.log("这个东西肯定是undefined", this.data.inputValue);
     this.setData({
       inputValue: e.detail.value
     });
+
+    wrapper.wxRequestWrapper(api.readerApi,"GET",{
+      in: e.detail.value,
+    }).then((data)=>{
+      var start_time=data["start_time"];
+      var end_time=start_time.slice()
+    })
+    // console.log(e.detail.value);
+
+    
+   
   },
   
 })
