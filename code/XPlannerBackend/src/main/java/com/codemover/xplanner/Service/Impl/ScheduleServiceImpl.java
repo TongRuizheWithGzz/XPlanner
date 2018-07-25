@@ -73,8 +73,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         response.put("newScheduleitmesForDay", ScheduleitemConverter
                 .entitiesToDTOs(getScheduleitemsForDay(user, request.year, request.month, request.day)));
         return response;
-
-
     }
 
 

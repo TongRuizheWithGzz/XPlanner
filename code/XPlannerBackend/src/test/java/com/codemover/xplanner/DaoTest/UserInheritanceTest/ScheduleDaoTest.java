@@ -6,6 +6,7 @@ import com.codemover.xplanner.Model.Entity.JAccountUser;
 import com.codemover.xplanner.Model.Entity.Role;
 import com.codemover.xplanner.Model.Entity.Scheduleitme;
 import com.codemover.xplanner.Model.Entity.User;
+import com.codemover.xplanner.Service.ScheduleService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +45,7 @@ public class ScheduleDaoTest {
     @Autowired
     private RoleRepository roleRepository;
 
-    @Before
+    //@Before
     public void setup() throws ParseException {
         Scheduleitme scheduleitme = new Scheduleitme();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -375,7 +376,7 @@ public class ScheduleDaoTest {
     public void OneDaySchedule(){
         int year = 2018;
         int month = 7;
-        int day = 18;
+        int day = 24;
 
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
@@ -406,5 +407,4 @@ public class ScheduleDaoTest {
         }
 
     }
-
 }
