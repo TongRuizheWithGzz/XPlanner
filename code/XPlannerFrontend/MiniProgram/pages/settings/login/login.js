@@ -14,7 +14,25 @@ Page({
     name: "",
     password: "",
   },
-
+  onShow: function() {
+    wrapper.checkSessionWrapper().then((errno) => {
+      console.log("在App.js中检查登录成功");
+      wrapper.fetchAfterUserLogin().then((errno) => {
+        wx.switchTab({
+          url: '/pages/schedular/schedular',
+        })
+      }).catch((errno) => {
+        console.log("在App.js中建成登录成功，随后获取用户信息失败：", errno);
+        wx.showModal({
+          title: '获取用户信息失败',
+          content: '请检查网络设置',
+          showCancel: false,
+        });
+      })
+    }).catch((errno) => {
+      console.log("在App.js中检查登录失败:", errno);
+    })
+  },
   /*
    * getName
    * 获取名称
@@ -42,23 +60,6 @@ Page({
     /* 向后端发送用户名和密码 */
     wrapper.loginByUsernamePassword(this.data.name, this.data.password)
       .then((errno) => {
-        var date = wx.getStorageSync('date');
-        if (date) {
-          console.log("Date found in Local storage");
-          app.globalData.date = date;
-          app.globalData.year = parseInt(date.slice(0, 4));
-          app.globalData.month = parseInt(date.slice(5, 7));
-          app.globalData.day = parseInt(date.slice(8, 10));
-        } else {
-          console.log("no date in Local storage");
-          var tmp_date = new Date();
-          app.globalData.year = tmp_date.getFullYear();
-          app.globalData.month = tmp_date.getMonth() + 1;
-          app.globalData.day = tmp_date.getDate();
-          app.globalData.date = time.getDateStringWithZero(app.globalData.year, app.globalData.month, app.globalData.day);
-          console.log(app.globalData.date);
-          wx.setStorageSync('date', app.globalData.date);
-        }
         console.log(app.globalData);
         return wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
           "year": app.globalData.year,

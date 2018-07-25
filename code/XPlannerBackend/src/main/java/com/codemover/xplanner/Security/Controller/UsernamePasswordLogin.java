@@ -1,5 +1,7 @@
 package com.codemover.xplanner.Security.Controller;
 
+import com.codemover.xplanner.DAO.UserRepository;
+import com.codemover.xplanner.Model.Entity.User;
 import com.codemover.xplanner.Security.Config.MyUserDetailsService;
 import com.codemover.xplanner.Security.Exception.AuthenticationException;
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.HashMap;
 
 @Controller
@@ -30,6 +33,9 @@ public class UsernamePasswordLogin {
     @Autowired
     private MyUserDetailsService myUserDetailsService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Resource(name = "authenticationManager")
     private AuthenticationManager authManager;
 
@@ -39,7 +45,7 @@ public class UsernamePasswordLogin {
                                                            @RequestParam("password") String password,
                                                            final HttpServletRequest request)
             throws AuthenticationException {
-        logger.info("LoginByUsernamePassword, username:'{}',password:'{}'",username,password);
+        logger.info("LoginByUsernamePassword, username:'{}',password:'{}'", username, password);
         UsernamePasswordAuthenticationToken authReq =
                 new UsernamePasswordAuthenticationToken(username, password);
         Authentication auth = authManager.authenticate(authReq);
@@ -53,4 +59,19 @@ public class UsernamePasswordLogin {
         return response;
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/api/auth/checkSession", method = RequestMethod.GET)
+    public HashMap<String, Object> checkSession(Principal principal) {
+        HashMap<String, Object> result = new HashMap<>();
+
+        String username = principal.getName();
+        User user = userRepository.findByUserName(username);
+        if (user != null) {
+            result.put("errno", 0);
+            result.put("errMsg", "checkSession:have logined");
+        } else {
+            result.put("errno", 1);
+        }
+        return result;
+    }
 }

@@ -1,13 +1,31 @@
 var extensions = require("/data/extensions");
 var userInfo = require("/data/userInfo");
 var scheduleItems = require("/data/scheduleItem");
-
+var wrapper = require("/interface/wrapper/wrapper.js");
 var schedule = require("/common/schedule");
 var extension = require("/common/extension");
 
 //app.js
 App({
-  onLaunch: function () {
+  onLaunch: function() {
+
+    var date = wx.getStorageSync('date');
+    if (date) {
+      console.log("Date found in Local storage");
+      app.globalData.date = date;
+      app.globalData.year = parseInt(date.slice(0, 4));
+      app.globalData.month = parseInt(date.slice(5, 7));
+      app.globalData.day = parseInt(date.slice(8, 10));
+    } else {
+      console.log("no date in Local storage");
+      var tmp_date = new Date();
+      app.globalData.year = tmp_date.getFullYear();
+      app.globalData.month = tmp_date.getMonth() + 1;
+      app.globalData.day = tmp_date.getDate();
+      app.globalData.date = time.getDateStringWithZero(app.globalData.year, app.globalData.month, app.globalData.day);
+      console.log(app.globalData.date);
+      wx.setStorageSync('date', app.globalData.date);
+    }
     //var Cookie=wx.getStorageSync("Cookie");
 
     // 展示本地存储能力

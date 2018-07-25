@@ -30,7 +30,7 @@ public class Notification {
     @JsonIgnore
     private Timestamp createTime;
 
-    
+
     @Basic
     public String getUUID() {
         return UUID;
