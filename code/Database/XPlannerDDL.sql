@@ -24,6 +24,7 @@ CREATE TABLE user (
 
   PRIMARY KEY (user_id)
 );
+
 create table keeper_recommand(
   recommand_id    INTEGER auto_increment,
   user_id     INTEGER,
@@ -155,6 +156,9 @@ CREATE TABLE sportsItem (
   sportsItem_id      INTEGER auto_increment,
   sport_name         varchar(64),
   calorie_per_minute INTEGER unsigned,
+  description         varchar(1024),
+  start_time      TIME      not null,
+  end_time        TIME      not null,
   address            varchar(256),
   imageUrl           varchar(2048),
   PRIMARY KEY (sportsItem_id)
@@ -197,10 +201,18 @@ insert into plannerStore values (2, 'Spider', null, '您曾经是否因为一时
 insert into role values (null, 'ROLE_JACCOUNT_USER');
 insert into role values (null, 'ROLE_WEIXIN_USER');
 insert into role values (null, 'ROLE_COMMON_USER');
-insert into user values (NULL, 'tongruizhe', '$2a$10$ZSDkqq6AnVUQIwxrxaIiVevEGLTEhd7d8T8DosIXoPuTCEcyfWmQ2', null, 1);
+insert into user values (NULL, 'tongruizhe', '$2a$10$ZSDkqq6AnVUQIwxrxaIiVevEGLTEhd7d8T8DosIXoPuTCEcyfWmQ2', null, 1,null);
+
+#User planner settings
+insert into user_planner_settings values (NULL,1,1);
+insert into user_planner_settings values (NULL,1,2);
+insert into user_planner_settings values (NULL,1,0);
+
+
 #Give tongruizhe full authorities
 insert into user_role values (null, 1, 3);
 insert into user_role values (null, 1, 2);
 insert into user_role values (null, 1, 1);
 
 #insert schedule itmes
+

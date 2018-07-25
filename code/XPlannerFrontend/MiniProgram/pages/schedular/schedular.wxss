@@ -130,6 +130,14 @@ page {
   color: #a3a3a3;
 }
 
+.title{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 .title, .se-title {
   margin-left: 5px;
 }

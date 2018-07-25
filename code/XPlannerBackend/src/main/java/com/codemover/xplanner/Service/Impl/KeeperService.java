@@ -306,8 +306,12 @@ public class KeeperService {
     //whether to refresh recommend-items and refresh recommend-items if needed
     //String username,int sports_number
     public List<KeeperRecommand> get_keeperRecommands() throws ParseException {
+
+        //TODO get User
+
         if(need_to_fresh()){
             keeperRecommandRepository.deleteByUser(user);
+            setSports_number(3);
 
             //set calorie
             get_user_busy_time_pool();

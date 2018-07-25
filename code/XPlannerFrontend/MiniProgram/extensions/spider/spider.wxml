@@ -20,10 +20,10 @@
               </view>
               <view class='line'>
                 <view class='right'>
-                  <text>{{item.title}}</text>
+                  <text class='dw-title'>{{item.title}}</text>
                   <view class='right-down'>
-                    <text>{{item.address}}</text>
-                    <text>{{item.website}}</text>
+                    <text class='dw-add'>{{item.address}}</text>
+                    <text class='web'>{{item.website}}</text>
                   </view>
                 </view>
               </view>

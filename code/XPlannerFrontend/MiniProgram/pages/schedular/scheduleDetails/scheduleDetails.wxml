@@ -5,6 +5,7 @@
         <view class='top-line'>
           <text class='name'>{{item.title}}</text>
           <image src="/icons/edit.png" class="pen" catchtap='edit' wx:if="{{!ifSpider}}"></image>
+          <image src="/icons/edit.png" class="pen" catchtap='add' wx:if="{{ifSpider}}"></image>
         </view>
         <view class='block'>
           <image src="/icons/time.png" class="icon1"></image>

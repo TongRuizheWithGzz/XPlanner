@@ -20,14 +20,14 @@ Page({
     crawled: [],
     maxNumber: 0,
   },
-  spiderRequestWrapper: function(requestPageNumber) {
+  spiderRequestWrapper: function (requestPageNumber) {
     console.log("requestPageNumber: ", requestPageNumber);
     console.log("maxNumber:", this.data.maxNumber);
     //当前已缓存页面数量:maxNumber
     //已缓存大于请求页面，直接提取
     if (this.data.maxNumber >= requestPageNumber) {
       this.setData({
-        crawled: app.globalData.spiderItems[requestPageNumber],
+        crawled: app.globalData.spiderItems[requestPageNumber - 1],
         pageNumber: requestPageNumber
       })
     } else {
@@ -53,7 +53,7 @@ Page({
       })
     }
   },
-  spiderRequestErrorWrapper: function(errno) {
+  spiderRequestErrorWrapper: function (errno) {
     wx.hideLoading();
     console.log("Spider OnShow失败: ", errno);
     wx.showModal({
@@ -62,9 +62,9 @@ Page({
       showCancel: false,
     })
   },
-  onLoad: function() {},
-  onShow: function() {
-    if(this.data.maxNumber>0)
+  onLoad: function () { },
+  onShow: function () {
+    if (this.data.maxNumber > 0)
       return;
     wx.showLoading({
       title: '拼命加载中(#^.^#)',
@@ -76,12 +76,12 @@ Page({
     this.slidethis();
 
   },
-  start: function(e) {
+  start: function (e) {
     this.setData({
       x1: e.changedTouches[0].pageX,
     })
   },
-  end: function(e) {
+  end: function (e) {
     this.setData({
       x2: e.changedTouches[0].pageX,
     })
@@ -100,7 +100,7 @@ Page({
   },
 
   //事件处理函数
-  slidethis: function(e) {
+  slidethis: function (e) {
     console.log("slide")
     var self = this;
     if (this.data.isAnimation) {
@@ -166,7 +166,7 @@ Page({
       animationlist: [],
       animationlistyet: self.data.animationlistyet
     });
-    setTimeout(function() {
+    setTimeout(function () {
       var zindex = self.data.zindex;
       var slidethis = self
         .data
@@ -183,7 +183,7 @@ Page({
     }, 100);
   },
 
-  refresh: function(e) {
+  refresh: function (e) {
     //清除缓存
     this.setData({
       maxNumber: 0,
@@ -210,12 +210,12 @@ Page({
     })
 
   },
-  detail: function(e) {
+  detail: function (e) {
     wx.navigateTo({
       url: '/pages/schedular/scheduleDetails/scheduleDetails?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
     })
   },
-  addSpiderItem: function(e) {
+  addSpiderItem: function (e) {
     wx.navigateTo({
       url: '/pages/schedular/addSchedule/add?pageNumber=' + this.data.pageNumber + '&spiderIndex=' + e.currentTarget.dataset.index,
     })
