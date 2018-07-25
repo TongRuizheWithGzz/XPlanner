@@ -4,6 +4,7 @@ import com.codemover.xplanner.Service.Util.ChineseTool;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -26,6 +27,18 @@ public class ExtractDateService {
     private String otherHint;
     private String in;
     private String halfHour;
+
+    public void clean(){
+        month=null;
+        day=null;
+        section=null;
+        hour=null;
+        minute=null;
+        otherHint=null;
+        in=null;
+        halfHour=null;
+    }
+
 
     public void replaceInput(Matcher m, String replacement) {
         this.in = m.replaceAll(replacement);
@@ -236,10 +249,60 @@ public class ExtractDateService {
             System.out.println("【HALFHOUR】 : " + halfHour);
             System.out.println("【MINUTE】   : " + minute);
             System.out.println("【OTHERHINT】: " + otherHint);
-
         }
-
     }
+
+    public HashMap<String,String> dateExtract2hash(String in) {
+        this.in = in;
+        try {
+
+            for (String s : fixedStrings) {
+                p = Pattern.compile(s);
+                m = p.matcher(this.in);
+                if (m.find()) {
+
+                    this.otherHint = m.group(0);
+                    break;
+                }
+
+            }
+
+            boolean canGetSectionAndHourAndMinuteTogether = sectionAndHourAndMinuteExtract(this.in);
+
+            if (!canGetSectionAndHourAndMinuteTogether) {
+                boolean canGetHourAndMinuteTogether = hourAndMinuteExtract(this.in);
+                if (!canGetHourAndMinuteTogether) {
+                    boolean canGetSectionAndHourTogether = sectionAndHourExtract(this.in);
+                    if (!canGetSectionAndHourTogether) {
+                        hourExtract(this.in);
+                    }
+                }
+            }
+            boolean canGetMonthAndDayTogether = monthAndDayExtract(this.in);
+            if (!canGetMonthAndDayTogether) {
+                dayExtract(this.in);
+            }
+
+        } finally {
+            System.out.println("【MONTH】    : " + month);
+            System.out.println("【DAY】      : " + day);
+            System.out.println("【SECTION】  : " + section);
+            System.out.println("【HOUR】     : " + hour);
+            System.out.println("【HALFHOUR】 : " + halfHour);
+            System.out.println("【MINUTE】   : " + minute);
+            System.out.println("【OTHERHINT】: " + otherHint);
+            HashMap<String,String> date_detial = new HashMap<>();
+            date_detial.put("month",month);
+            date_detial.put("day",day);
+            date_detial.put("section",section);
+            date_detial.put("hour",hour);
+            date_detial.put("halfhour",halfHour);
+            date_detial.put("minute",minute);
+            date_detial.put("otherhint",otherHint);
+            return date_detial;
+        }
+    }
+
 
 
 }
