@@ -1,6 +1,6 @@
 var app = getApp();
 var keeperItems = require("../../data/scheduleItem"); //后端加载推荐事项
-var test_data_food = require("../../data/food"); //food 测试数据
+// var test_data_food = require("../../data/food"); //food 测试数据
 var food_types = require("../../data/food_type"); //food_type测试数据
 var keeper = app.globalData.extensions[1] //keeper 插件信息
 var addresses = require("../../data/addresses.js"); //所有地址，写死在前端
@@ -69,27 +69,41 @@ Page({
       this.data.foodmap[this.data.address] != undefined) {
       return;
     }
-    wrapper.wxRequestWrapper(api.keeperApi, "POST", {}).then((data) => {
+
+    var tmpAddress = this.data.address
+    console.log("进入页面时发送请求的tmpAddress: " + tmpAddress);
+    //通过餐厅请求食物
+    var that = this;
+
+    wrapper.wxRequestWrapper(api.getFoodByDinningHall, "GET", {
+      diningHall: tmpAddress,
+    }).then((data) => {
+      var foodInfos = data["foodInfo"];
+      var k = 'foodmap.' + tmpAddress;
+      // that.data.foodmap[tmpAddress]=foodInfos;
+      that.setData({
+        [tmp]: food_wrap(foodInfos)
+      });
+      return wrapper.wxRequestWrapper(api.keeperApi, "POST", {});
+    }).then((data) => {
       var temp = data["recommands"];
-      console.log("recommand:",temp);
-      this.setData({
+      that.setData({
         keeperItems: temp,
-        [tmp]: food_wrap(test_data_food)
       })
-      app.globalData.keeperItems = this.data.keeperItems;
+      app.globalData.keeperItems = that.data.keeperItems;
     }).catch((errno) => {
-      console.log("获取用户推荐运动事项失败: ", errno);
+      console.log("获取事务列表或推荐运动事项失败: ", errno);
       wx.showModal({
-        title: '推荐失败',
+        title: '请求失败',
         content: '请检查网络设置',
         showCancel: false,
-
       })
     })
 
     // app.globalData.keeperItems = this.data.keeperItems; // 向全局写入keeperItems, 方便跳转传参
     //后端加载第一餐厅食物
     //后端加载推荐运动事项
+
   },
 
 
@@ -142,22 +156,44 @@ Page({
                 }
                 //图片识别成功，向后端发送user_food_eaten
                 else {
-                  //向后端返回user_food_eaten
-                  //设置页面数据
+                  console.log("result" , result);
                   var temp = that.data.user_food_eaten;
 
                   temp.push({
                     food_name: result.name,
                     calorie: result.calorie,
                   })
-                  wx.showToast({
-                    title: '成功，已统计',
-                    image: "/icons/success.png",
-                    duration: 1500
-                  })
+
                   that.setData({
                     user_food_eaten: temp
                   })
+                  //向后端返回user_food_eaten
+                  //设置页面数据
+                  wrapper.wxRequestWrapper(api.keeperAddFoodApi, "POST", {
+                    foodPOJOS: [{
+                      food_name: result.name,
+                      calorie: result.calorie,
+                    }],//向后端发的数组 temp,
+                  }).then((data) => {
+
+                    
+
+                  
+                    wx.showToast({
+                      title: '成功，已统计',
+                      image: "/icons/success.png",
+                      duration: 1500
+                    })
+                    
+                  }).catch((errno) => {
+                    console.log("用户添加食物失败:", errno);
+                    wx.showModal({
+                      title: '添加食物失败',
+                      content: '请检查网络连接',
+                      showCancel: false,
+                    });
+                  })
+                  
                 }
               }
             })
@@ -169,20 +205,29 @@ Page({
 
   //后端有关
   bindPickerChange: function(e) {
+    var add = addresses[parseInt(e.detail.value)];
     this.setData({
-      address: addresses[parseInt(e.detail.value)]
+      address: add
     })
-    /*从后端请求该餐厅食物*/
-    var tmp = 'foodmap.' + this.data.address
+
 
     //已请求此地址过食物
-    if (this.data.foodmap[this.data.address] != undefined)
+    if (this.data.foodmap[add] != undefined)
       return;
-    //未请求过此地址食物,
-    else
-      this.setData({
-        [tmp]: food_wrap(test_data_food) //后端返回该地址食物， 向foodmap加入此地址到食物的映射
-      })
+    var that = this;
+    //请求后端
+    wrapper.wxRequestWrapper(api.getFoodByDinningHall, "GET", {
+      diningHall: add,
+    }).then((data) => {
+      var foodInfos = data["foodInfo"];
+      // console.log("foodInfos:", foodInfos);
+      var k = 'foodmap.' + add;
+      // that.data.foodmap[tmpAddress]=foodInfos;
+
+      that.setData({
+        [k]: food_wrap(foodInfos)
+      });
+    })
   },
 
   //此处与后端无关！
@@ -204,7 +249,6 @@ Page({
     wx.showModal({
       title: '保存饮食统计信息？',
       success: function(res) {
-
         // console.log(that);
         var temp = get_eaten(that.data.foodmap);
         // console.log(temp)
@@ -248,5 +292,6 @@ Page({
         }
       }
     })
-  }
+  },
+
 })

@@ -81,6 +81,19 @@ Page({
         address: "",
         ifAddPage: true,
       });
+    } else if (options.keeperIndex) {
+      console.log("从Keeper进入了add界面");
+      var tmp_item = app.globalData.keeperItems[options.keeperIndex];
+      this.setData({
+        startDate: tmp_item.start_time.slice(0, 10),
+        startTime: tmp_item.start_time.slice(11, 16),
+        endDate: tmp_item.end_time.slice(0, 10),
+        endTime: tmp_item.end_time.slice(11, 16),
+        title: tmp_item.title,
+        description: tmp_item.description,
+        address: tmp_item.address,
+        ifAddPage: true,
+      });
     } else { // 如果是添加页面
       this.setData({
         startDate: "选择日期",

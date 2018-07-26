@@ -2,6 +2,7 @@ package com.codemover.xplanner.Service.Impl;
 
 import com.codemover.xplanner.Converter.UploadFood.FoodPOJO;
 import com.codemover.xplanner.DAO.*;
+import com.codemover.xplanner.Model.DTO.FoodDTO;
 import com.codemover.xplanner.Model.Entity.*;
 import com.codemover.xplanner.Service.IKeeperService;
 import org.slf4j.Logger;
@@ -126,6 +127,7 @@ public class KeeperService implements IKeeperService {
 
     //it is used in get_user_busy_time_pool() to calculate for busy_time_pool
     public void get_busy_time_pool() throws ParseException {
+        System.out.println("进入get_busy_time_pool");
         Collections.sort(scheduleitmes, new ScheduletimeComperator());
         for (Scheduleitme scheduleitme : scheduleitmes) {
             if (busy_time_pool.isEmpty() || busy_time_pool.getLast().get("end_time").before(timestamp2calendar(scheduleitme.getStartTime()))) {
@@ -145,6 +147,7 @@ public class KeeperService implements IKeeperService {
 
     //get user's today's scheduleitems and then calculate for busy_time_pool
     public void get_user_busy_time_pool() throws ParseException {
+        System.out.println("进入get_user_busy_pool");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar = Calendar.getInstance();
         //get begin and end of today
@@ -175,7 +178,7 @@ public class KeeperService implements IKeeperService {
             Calendar e_time = Calendar.getInstance();
             e_time.setTime(end_time.getTime());
             HashMap<String, Calendar> relax_time = new HashMap<>();
-            System.out.println("push:");
+            System.out.println("推入空闲池:");
             System.out.println(s_time.getTime());
             System.out.println(e_time.getTime());
             relax_time.put("start_time", s_time);
@@ -186,11 +189,11 @@ public class KeeperService implements IKeeperService {
 
     //it is used in random_n_relax_by_sports() to get a item's start_time and end_time by random
     private void randomFreeTime(HashMap<String, Calendar> time_node) throws ParseException {
+        System.out.println("进入randomFreeTime");
         Calendar start_time = Calendar.getInstance();
         start_time.setTime(time_node.get("start_time").getTime());
         Calendar end_time = Calendar.getInstance();
         end_time.setTime(time_node.get("end_time").getTime());
-
         Timestamp t_start_time = Calendar2Timestamp(start_time);
         Timestamp t_end_time = Calendar2Timestamp(end_time);
         int relax = (int) ((t_end_time.getTime() - t_start_time.getTime()) / (60 * 1000));
@@ -202,9 +205,12 @@ public class KeeperService implements IKeeperService {
 
         start_time.add(Calendar.MINUTE, ran);
         keeperRecommand.setStart_time(Calendar2Timestamp(start_time));
+        System.out.println("推荐该运动开始与结束时间：");
+        System.out.println(start_time.getTime());
 
         start_time.add(Calendar.MINUTE, minutes);
         keeperRecommand.setEnd_time(Calendar2Timestamp(start_time));
+        System.out.println(start_time.getTime());
 
         keeperRecommand.setTitle(sportsitem.getSportName());
 
@@ -219,6 +225,7 @@ public class KeeperService implements IKeeperService {
     //it is used in get_keeperRecommands() whether to refresh recomment-items
     public boolean need_to_fresh() {
         Timestamp last_keeper_fresh = user.getLast_keeper_fresh();
+        System.out.println("user");
         if (last_keeper_fresh == null) {
             return true;
         }
@@ -236,6 +243,7 @@ public class KeeperService implements IKeeperService {
 
     //it is used in get_keeperRecommands() to get recomment-items
     public void random_n_relax_by_sports() throws ParseException {
+        System.out.println("进入random_n_relax_by_sports");
         int sportsItem_number = (int) sportItemRepository.count();
         Random random = new Random();
         Calendar now = Calendar.getInstance();
@@ -243,13 +251,15 @@ public class KeeperService implements IKeeperService {
         for (int i = 0; i < sports_number; i++) {
             int sportItem_id = random.nextInt(sportsItem_number) + 1;
             sportsitem = sportItemRepository.findById(sportItem_id).get();
-
+            System.out.println("该运动为：");
+            System.out.println(sportsitem.getSportName());
             int calorie_per_minute = sportsitem.getCaloriePerMinute();
             minutes = calorie / calorie_per_minute;
 
             //get start_time and end_time for a sports'relax time
             Calendar start_time = Time2TodayCalendar(sportsitem.getStartTime());
             Calendar end_time = Time2TodayCalendar(sportsitem.getEndTime());
+            System.out.println("运动开始与结束时间：");
             System.out.println(start_time.getTime());
             System.out.println(end_time.getTime());
             if (now.after(end_time)) continue;
@@ -257,6 +267,7 @@ public class KeeperService implements IKeeperService {
 
             //find_relax_time
             relax_time_pool.clear();
+            System.out.println(busy_time_pool.size());
             for (HashMap<String, Calendar> node : busy_time_pool) {
                 if (start_time.after(node.get("end_time"))) continue;
                 if (end_time.before(node.get("start_time"))) break;
@@ -287,7 +298,12 @@ public class KeeperService implements IKeeperService {
                 }
 
             }
+            System.out.println("该运动修正后的开始与结束时间");
+            System.out.println(start_time.getTime());
+            System.out.println(end_time.getTime());
             if (time_flag == 0) push_time_pool(start_time, end_time);
+            System.out.println("空闲池数量：");
+            System.out.println(relax_time_pool.size());
 
             Random random1 = new Random();
             int relax_time_pool_size = relax_time_pool.size();
@@ -308,8 +324,11 @@ public class KeeperService implements IKeeperService {
 
         //TODO get User
         try {
+            System.out.println("进入need_to_fresh");
             if (need_to_fresh()) {
+                System.out.println("删除user的过期推荐项目");
                 keeperRecommandRepository.deleteByUser(user);
+                System.out.println("推荐项目个数：" + String.valueOf(sports_number));
                 setSports_number(3);
 
                 //set calorie
@@ -355,6 +374,8 @@ public class KeeperService implements IKeeperService {
                 logger.warn("No such user: '{}',will ignore", username);
                 throw new NullPointerException("Add a new scheduleitem: user not found");
             }
+
+
             Calendar calendar = Calendar.getInstance();
             Timestamp now = Calendar2Timestamp(calendar);
             userFoodEaten.setUser(user);
@@ -381,8 +402,13 @@ public class KeeperService implements IKeeperService {
         return foodRepository.findByDiningHallAndFoodTypeByFoodTypeId(dininghall, foodType);
     }
 
-    public List<Food> getFoodList(String dininghall) {
-        return foodRepository.findByDiningHall(dininghall);
+    public List<FoodDTO> getFoodList(String dininghall) {
+        List<Food> foods = foodRepository.findByDiningHall(dininghall);
+        ArrayList<FoodDTO> foodDTOS = new ArrayList<>();
+        for (Food food : foods) {
+            foodDTOS.add(food.toFoodDTO());
+        }
+        return foodDTOS;
     }
 
 }

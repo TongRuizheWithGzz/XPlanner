@@ -22,7 +22,7 @@
                 <view class='right'>
                   <text class='dw-title'>{{item.title}}</text>
                   <view class='right-down'>
-                    <text class='dw-add'>{{item.address}}</text>
+                    <text class=''>{{item.address}}</text>
                     <text class='web'>{{item.website}}</text>
                   </view>
                 </view>

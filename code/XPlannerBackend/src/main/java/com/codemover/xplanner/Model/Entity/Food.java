@@ -1,10 +1,13 @@
 package com.codemover.xplanner.Model.Entity;
 
+import com.codemover.xplanner.Model.DTO.FoodDTO;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 public class Food {
+
     private int foodId;
     private String foodName;
     private Integer calorie;
@@ -76,5 +79,17 @@ public class Food {
 
     public void setFoodTypeByFoodTypeId(FoodType foodTypeByFoodTypeId) {
         this.foodTypeByFoodTypeId = foodTypeByFoodTypeId;
+    }
+
+
+    public FoodDTO toFoodDTO() {
+        FoodDTO foodDTO = new FoodDTO();
+        foodDTO.calorie = this.calorie;
+        foodDTO.dininghall = this.diningHall;
+        foodDTO.food_id = this.foodId;
+        foodDTO.food_name = this.foodName;
+        foodDTO.food_type_id = this.foodTypeByFoodTypeId == null ? null : this.foodTypeByFoodTypeId.getFoodTypeId();
+
+        return foodDTO;
     }
 }

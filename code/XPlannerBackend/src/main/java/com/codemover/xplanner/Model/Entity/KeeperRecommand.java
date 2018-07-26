@@ -1,5 +1,6 @@
 package com.codemover.xplanner.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,7 +12,11 @@ import java.sql.Timestamp;
 public class KeeperRecommand {
     @JsonIgnore
     private int recommand_id;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Timestamp start_time;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Timestamp end_time;
     private String title;
     private String description;
