@@ -1,19 +1,30 @@
+var api = require("../../interface/config/api.js");
+var wrapper = require("../../interface/wrapper/wrapper.js");
+
+
+var date_string = function() {
+  var dates = new Date();
+  var years = dates.getFullYear();
+  var months = dates.getMonth() + 1;
+  if (months < 10)
+    months = "0" + months;
+  var days = dates.getDate();
+  if (days < 10)
+    days = "0" + days;
+  var hours = dates.getHours();
+  if (hours < 10)
+    hours = "0" + hours;
+  var mins = dates.getMinutes();
+  if (mins < 10)
+    mins = "0" + mins;
+  return years + "." + months + "." + days + " " + hours + ":" + mins
+};
+
+
 Page({
   data: {
-    files: [],
     inputValue: "",
-    activeIndex: 1, // 当前激活的tab序数
-  },
-
-  /*
-   * previewPicture
-   * 控制图片预览
-   */
-  previewPicture: function(e) {
-    wx.previewImage({
-      current: e.currentTarget.id, // 当前显示图片的http链接
-      urls: this.data.files // 需要预览的图片http链接列表
-    })
+    description: "",
   },
 
   /*
@@ -35,73 +46,125 @@ Page({
           success: function(res) {
             var base64 = wx.arrayBufferToBase64(res.data);
             wx.request({
-              url: 'https://aip.baidubce.com/rest/2.0/image-classify/v2/dish',
+              url: 'https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic',
               method: 'POST',
               header: {
                 'Content-Type': 'application/x-www-form-urlencoded'
               },
               data: {
-                access_token: '24.fe56be76c54ed3a23516812df8559fbd.2592000.1534314608.282335-11541012',
+                access_token: '24.8cc9ce430d27729ba7d725b2b3e4245e.2592000.1535118010.282335-11588118',
                 image: base64,
-                filter_threshold: 0.95,
+                probability: true
               },
               success: function(res) {
-                var result = res.data.result[0];
-                console.log(result);
-                if ((result.calorie <= 0) || (result.probability < 0.1)) {
-                  /* do something for error */
-                } else {
-                  /* do something for ok */
+                var result = res.data;
+                var words_reslt = result["words_result"];
+                var upload = "";
+                for (var i = 0; i < words_reslt.length; i++) {
+                  upload += words_reslt[i]["words"];
                 }
+              console.log("连接起来的字符创",upload)
+                console.log(result)
+                wx.showToast({
+                  title: '图片识别成功',
+                  image: "/icons/success.png",
+                  duration: 1500,
+                })
+                setTimeout(() => {
+                  wrapper.wxRequestWrapper(api.readerApi, "GET", {
+                    "in": upload,
+        
+                  }).then((data) => {
+                    var start_time = data["start_time"];
+                    var end_time = data["end_time"];
+                    wx.showModal({
+                      title: '生成日程成功(#^.^#)',
+                      content: '开始时间----' + start_time + '\r\n 结束时间: ' + end_time,
+                      confirmText: "导入日程",
+                      cancelText: "放弃",
+                      success: function(res) {
+                        if (res.confirm) {
+                          wx.navigateTo({
+                            url: "/pages/schedular/addSchedule/add?readerDescription=" + upload + "&start_time=" + start_time + "&end_time=" + end_time,
+                          })
+                          console.log('用户点击确定')
+                        } else if (res.cancel) {
+                          console.log('用户点击取消')
+                        }
+                      }
+                    })
+
+                  }).catch((errno) => {
+                    console.log("通过识图api提取日期失败：", errno);
+                    wx.showModal({
+                      title: 'o(╥﹏╥)o',
+                      content: '请检查网络设置',
+                      showCancel: false,
+                    })
+                  })
+                },1500);
               }
             })
           }
         });
-        that.setData({
-          files: that.data.files.concat(res.tempFilePaths),
-        });
+
         console.log("choose image succeed");
       },
     })
   },
 
-  /*
-   * showResult
-   * 提交输入，跳转到生成的日程界面
-   */
-  showResult: function() {
-    console.log("hand in result");
-  },
+  // /*
+  //  * showResult
+  //  * 提交输入，跳转到生成的日程界面
+  //  */
+  // showResult: function() {
+  //   console.log("hand in result");
+  // },
 
   /*
    * getInputText
    * 获取输入的文字
    */
   getInputText: function(e) {
-    console.log(e.detail.value);
     this.setData({
-      inputValue: e.detail.value
+      inputValue: e.detail.value,
+      description: e.detail.value
     });
   },
 
-  /*
-   * swipeContent
-   * 滑动切换文字识别和图片识别
-   */
-  swipeContent: function(e) {
-    this.setData({
-      activeIndex: e.detail.current,
-    });
-  },
+  uploadstring: function() {
+    var that = this;
+    wrapper.wxRequestWrapper(api.readerApi, "GET", {
+      "in": that.data.inputValue,
+    }).then((data) => {
+      var start_time = data["start_time"];
+      var end_time = data["end_time"];
+      wx.showModal({
+        title: '生成日程成功(#^.^#)',
+        content: '开始时间----' + start_time + ' 结束时间: ' + end_time,
+        confirmText: "导入日程",
+        cancelText: "放弃",
+        success: function(res) {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: "/pages/schedular/addSchedule/add?readerDescription=" + that.data.description + "&start_time=" + start_time + "&end_time=" + end_time,
+            })
+            console.log('用户点击确定')
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
 
-  /*
-   * tabClick
-   * 点击切换文字识别和图片识别
-   */
-  tabClick: function(e) {
-    console.log(e.currentTarget.dataset.id);
-    this.setData({
-      activeIndex: e.currentTarget.dataset.id,
+    }).catch((errno) => {
+      console.log("通过输入文字提取日期失败：", errno);
+      wx.showModal({
+        title: 'o(╥﹏╥)o',
+        content: '请检查网络设置',
+        showCancel: false,
+      })
     })
+
   }
+
 })

@@ -2,6 +2,7 @@ package com.codemover.xplanner.Service.Impl;
 
 import com.codemover.xplanner.Converter.UploadFood.FoodPOJO;
 import com.codemover.xplanner.DAO.SportItemRepository;
+import com.codemover.xplanner.Model.DTO.FoodDTO;
 import com.codemover.xplanner.Model.Entity.KeeperRecommand;
 import com.codemover.xplanner.Model.Entity.Sportsitem;
 import com.codemover.xplanner.Service.IKeeperService;
@@ -82,5 +83,10 @@ public class RandomKeeperServiceImpl implements IKeeperService {
     @Override
     public void setState(String username, Integer sportsItemNumber, Integer caloriee) {
 
+    }
+
+    @Override
+    public List<FoodDTO> getFoodList(String dininghall) {
+        return null;
     }
 }

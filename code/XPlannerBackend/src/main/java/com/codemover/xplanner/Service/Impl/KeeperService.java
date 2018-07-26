@@ -2,6 +2,7 @@ package com.codemover.xplanner.Service.Impl;
 
 import com.codemover.xplanner.Converter.UploadFood.FoodPOJO;
 import com.codemover.xplanner.DAO.*;
+import com.codemover.xplanner.Model.DTO.FoodDTO;
 import com.codemover.xplanner.Model.Entity.*;
 import com.codemover.xplanner.Service.IKeeperService;
 import org.slf4j.Logger;
@@ -224,6 +225,7 @@ public class KeeperService implements IKeeperService {
     //it is used in get_keeperRecommands() whether to refresh recomment-items
     public boolean need_to_fresh() {
         Timestamp last_keeper_fresh = user.getLast_keeper_fresh();
+        System.out.println("user");
         if (last_keeper_fresh == null) {
             return true;
         }
@@ -265,6 +267,7 @@ public class KeeperService implements IKeeperService {
 
             //find_relax_time
             relax_time_pool.clear();
+            System.out.println(busy_time_pool.size());
             for (HashMap<String, Calendar> node : busy_time_pool) {
                 if (start_time.after(node.get("end_time"))) continue;
                 if (end_time.before(node.get("start_time"))) break;
@@ -325,7 +328,7 @@ public class KeeperService implements IKeeperService {
             if (need_to_fresh()) {
                 System.out.println("删除user的过期推荐项目");
                 keeperRecommandRepository.deleteByUser(user);
-                System.out.println("推荐项目个数："+String.valueOf(sports_number));
+
                 setSports_number(3);
 
                 //set calorie
@@ -371,6 +374,8 @@ public class KeeperService implements IKeeperService {
                 logger.warn("No such user: '{}',will ignore", username);
                 throw new NullPointerException("Add a new scheduleitem: user not found");
             }
+
+
             Calendar calendar = Calendar.getInstance();
             Timestamp now = Calendar2Timestamp(calendar);
             userFoodEaten.setUser(user);
@@ -397,8 +402,13 @@ public class KeeperService implements IKeeperService {
         return foodRepository.findByDiningHallAndFoodTypeByFoodTypeId(dininghall, foodType);
     }
 
-    public List<Food> getFoodList(String dininghall) {
-        return foodRepository.findByDiningHall(dininghall);
+    public List<FoodDTO> getFoodList(String dininghall) {
+        List<Food> foods = foodRepository.findByDiningHall(dininghall);
+        ArrayList<FoodDTO> foodDTOS = new ArrayList<>();
+        for (Food food : foods) {
+            foodDTOS.add(food.toFoodDTO());
+        }
+        return foodDTOS;
     }
 
 }

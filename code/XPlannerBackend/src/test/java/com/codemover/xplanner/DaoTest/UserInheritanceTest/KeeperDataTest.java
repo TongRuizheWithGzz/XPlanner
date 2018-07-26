@@ -69,7 +69,7 @@ public class KeeperDataTest {
 
     @Test
     public void test() throws ParseException {
-        keeperService.setUsername("lihu");
+        keeperService.setUsername("tongruizhe");
         keeperService.setCalorie(200);
         keeperService.setSports_number(3);
 

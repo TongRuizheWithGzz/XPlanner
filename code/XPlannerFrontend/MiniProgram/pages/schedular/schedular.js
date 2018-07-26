@@ -197,6 +197,11 @@ Page({
         this.setData({
           showItems: app.globalData.scheduleItems
         });
+        wx.showToast({
+          title: '修改成功',
+          image: "/icons/success.png",
+          duration: 500
+        })
         console.log("修改状态成功！");
       }).catch((errno) => {
         console.log("修改状态出错", errno);
