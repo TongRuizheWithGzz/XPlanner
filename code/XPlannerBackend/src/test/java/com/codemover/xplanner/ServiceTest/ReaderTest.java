@@ -29,6 +29,13 @@ public class ReaderTest {
     }
 
     @Test
+    public void a() throws ParseException {
+        System.out.println(String.valueOf(3));
+
+    }
+
+
+    @Test
     public void canExtractManyDateFormatTest1() {
         extractDateService.dateExtract("2018年7月15日上午9:13分");
     }

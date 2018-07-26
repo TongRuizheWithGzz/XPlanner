@@ -24,15 +24,15 @@ import java.util.Random;
 public class KeeperDataTest {
     @Autowired
     private KeeperService keeperService;
-
+/*
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private ScheduleItemRepository scheduleItemRepository;
+    private ScheduleItemRepository scheduleItemRepository;*/
 
-    @Before
-    public void setup(){
+    //@Before
+    /*public void setup(){
         DataFactory df = new DataFactory();
         String[] usernames = {"tongruizhe","lihu"};
         String[] title = {"item1","item2","item3","item4","item5","item6","item7"};
@@ -65,7 +65,7 @@ public class KeeperDataTest {
             scheduleitme.setEndTime(keeperService.Calendar2Timestamp(start_time));
             scheduleItemRepository.save(scheduleitme);
         }
-    }
+    }*/
 
     @Test
     public void test() throws ParseException {

@@ -74,6 +74,10 @@ public class ReaderServiceImpl implements ReaderService {
         this.infectHour = infects;
     }
 
+    public void resetInfectHour(){
+        this.infectHour = false;
+    }
+
     //<--------Executable-------->
     public String calculateDateWithoutHint(Integer month,Integer day,Integer hour,boolean half,Integer minute,String section) throws ParseException {
         Calendar calendar = Calendar.getInstance();
@@ -319,6 +323,7 @@ public class ReaderServiceImpl implements ReaderService {
         }catch (ParseException e){
             System.out.println("不可能出现的ParseException");
         }
+        resetInfectHour();
         return result;
     }
 }

@@ -147,6 +147,7 @@ public class ExtractDateService {
         p = Pattern.compile(pattern);
         m = p.matcher(in);
         if (m.find()) {
+
             halfHour = m.groupCount() == 3 ? m.group(3) : null;
             section = m.group(1);
             hour = m.group(2);
@@ -163,7 +164,6 @@ public class ExtractDateService {
         p = Pattern.compile(pattern);
         m = p.matcher(in);
         if (m.find()) {
-
             hour = m.group(1);
             minute = m.group(2);
             this.in = m.replaceAll("@");

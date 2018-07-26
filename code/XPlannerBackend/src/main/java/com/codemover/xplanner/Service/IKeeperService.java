@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IKeeperService {
 
-    List<KeeperRecommand> get_keeperRecommands();
+    List<KeeperRecommand> get_keeperRecommands() throws ParseException;
 
     HashMap<String, Object> addUserFoodEaten(String username, LinkedList<FoodPOJO>foodPOJOS);
 
