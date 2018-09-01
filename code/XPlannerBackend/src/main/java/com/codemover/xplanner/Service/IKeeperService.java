@@ -21,3 +21,4 @@ public interface IKeeperService {
     List<FoodDTO> getFoodList(String dininghall);
 
 }
+
