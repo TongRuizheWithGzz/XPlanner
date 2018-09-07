@@ -1,12 +1,10 @@
 package com.codemover.xplanner.Service.Impl;
 
 import com.codemover.xplanner.Service.Util.ChineseTool;
+import com.codemover.xplanner.Service.Util.ParseDateStringUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +14,7 @@ public class ExtractDateService {
     private Pattern p;
     private Matcher m;
     private List<String> fixedStrings;
+    private List<String> fixedPlaces;
     private ChineseTool chineseTool;
 
 
@@ -27,6 +26,7 @@ public class ExtractDateService {
     private String otherHint;
     private String in;
     private String halfHour;
+    private String place;
 
     public void clean(){
         month=null;
@@ -37,6 +37,11 @@ public class ExtractDateService {
         otherHint=null;
         in=null;
         halfHour=null;
+
+    }
+
+    public void cleanPlace(){
+        place = "";
     }
 
 
@@ -49,6 +54,13 @@ public class ExtractDateService {
 
         chineseTool = new ChineseTool();
         fixedStrings = new LinkedList<>();
+        fixedPlaces = new LinkedList<>();
+
+        List<String> places = Arrays.asList("光明体育场","光体","光明网球场","菁菁堂","程及美术馆","致远游泳馆","行政楼","学生活动中心","包玉刚图书馆","包图","上院","中院","下院","第一餐饮大楼","一餐","华联","玉兰苑",
+                "力学楼","物理楼","数学楼","土建楼","材料楼","信控楼","能源楼","激光制造","环境楼","印刷厂","工程训练中心","总务楼","第四餐饮大楼","四餐","新体","霍英东体育馆","铁生馆","人武部","校医院","留园","大智居","第三餐饮大楼","三餐","光彪楼","第二餐饮大楼","二餐","逸夫科技楼","学生服务中心","光彪楼北面","光彪楼北侧","新图","陈瑞球楼","法学院","媒设学院",
+                "新图书馆","杨咏曼楼","人文学院","行政楼","医学楼","电子信息与电气工程学院","电院","电群","软院演播厅","软件大楼","软院","微电子学院","空天楼","密西根学院","密歇更学院","密院","农学大楼","生物药学楼","船海建工学院大楼","综合实验楼","机械动力大楼","海洋深水试验池");
+        fixedPlaces.addAll(places);
+
         List<String> strings4 = Arrays.asList(
                 "周一", "周一", "周二", "周三", "周四", "周五", "周六", "周日"
         );
@@ -150,6 +162,7 @@ public class ExtractDateService {
 
             halfHour = m.groupCount() == 3 ? m.group(3) : null;
             section = m.group(1);
+            System.out.println("sectionAndHourExtract "+section);
             hour = m.group(2);
             this.in = m.replaceAll("@");
 
@@ -160,12 +173,16 @@ public class ExtractDateService {
 
     public boolean hourAndMinuteExtract(String in) {
 
-        String pattern = "([0-9]+|[一二三四五六七八九十]+)(?:[点:：])([0-9]+|[一二三四五六七八九十]+)";
+        String pattern = "([0-9]+|[一二三四五六七八九十]+)(?:[点:：])([0-9]+|[一二三四五六七八九十]+|半)";
         p = Pattern.compile(pattern);
         m = p.matcher(in);
         if (m.find()) {
             hour = m.group(1);
             minute = m.group(2);
+            if(minute.equals("半")){
+                halfHour = "半";
+                minute = null;
+            }
             this.in = m.replaceAll("@");
 
             return true;
@@ -190,7 +207,7 @@ public class ExtractDateService {
 
     }
 
-    public boolean monthAndDayExtract(String in) {
+    public boolean monthAndDayExtract2(String in) {
         String pattern = "([0-9]+|[一二三四五六七八九十]+)(?:[月.\\-/])([0-9]+|[一二三四五六七八九十]+)日?";
         p = Pattern.compile(pattern);
         m = p.matcher(in);
@@ -203,6 +220,48 @@ public class ExtractDateService {
         }
         return false;
 
+    }
+
+    private ParseDateStringUtil parseDateStringUtil = new ParseDateStringUtil();
+
+    public boolean valid_month_and_day(int month_in,int day_in){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setLenient(false);
+        try{
+            calendar.set(Calendar.DATE,day_in);
+            calendar.set(Calendar.MONTH,month_in-1);
+            calendar.getTime();
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    public boolean monthAndDayExtract(String in) {
+        String pattern = "([0-9]+|[一二三四五六七八九十]+)(?:[月.\\-/])([0-9]+|[一二三四五六七八九十]+)日?";
+        p = Pattern.compile(pattern);
+        m = p.matcher(in);
+        String in_2 = in;
+
+        while(m.find()){
+
+            month = m.group(1);
+            day = m.group(2);
+
+            Integer month_in = parseDateStringUtil.parseDay(month);
+            Integer day_in = parseDateStringUtil.parseDay(day);
+
+            if(valid_month_and_day(month_in,day_in)){
+                return true;
+            }
+            else {
+                m.replaceAll("@");
+                month = null;
+                day = null;
+            }
+        }
+        this.in = in_2;
+        return false;
     }
 
     public void tell(){
@@ -260,20 +319,24 @@ public class ExtractDateService {
                 p = Pattern.compile(s);
                 m = p.matcher(this.in);
                 if (m.find()) {
-
                     this.otherHint = m.group(0);
+                    this.in = m.replaceAll("@");
+                    System.out.println(this.in);
                     break;
                 }
-
             }
 
-            boolean canGetSectionAndHourAndMinuteTogether = sectionAndHourAndMinuteExtract(this.in);
 
+
+            boolean canGetSectionAndHourAndMinuteTogether = sectionAndHourAndMinuteExtract(this.in);
             if (!canGetSectionAndHourAndMinuteTogether) {
+
                 boolean canGetHourAndMinuteTogether = hourAndMinuteExtract(this.in);
                 if (!canGetHourAndMinuteTogether) {
+
                     boolean canGetSectionAndHourTogether = sectionAndHourExtract(this.in);
                     if (!canGetSectionAndHourTogether) {
+
                         hourExtract(this.in);
                     }
                 }
@@ -303,6 +366,24 @@ public class ExtractDateService {
         }
     }
 
+    public String dataExtract2Place(String in){
+        this.in = in;
+        try{
+            for (String s : fixedPlaces) {
+                p = Pattern.compile(s);
+                m = p.matcher(this.in);
+                if (m.find()) {
+                    this.place = m.group(0);
+                    System.out.println(this.place);
+                    break;
+                }
+            }
+        }finally {
+            String data_place= "";
+            data_place = this.place;
+            return data_place;
+        }
+    }
 
 
 }

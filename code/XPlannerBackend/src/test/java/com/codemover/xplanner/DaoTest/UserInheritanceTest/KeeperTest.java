@@ -50,8 +50,7 @@ public class KeeperTest {
 
     private List<KeeperRecommand> keeperRecommandList;
 
-//    @Before
-    
+    @Before
     public void setup() throws ParseException {
         user=new User();
         user.setUserName("lihu");
@@ -69,9 +68,9 @@ public class KeeperTest {
         scheduleitme.setUser(user0);
 
         scheduleitme1 = new Scheduleitme();
-        java.sql.Timestamp start_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-23 14:00").getTime());
+        java.sql.Timestamp start_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-27 14:00").getTime());
         scheduleitme1.setStartTime(start_time1);
-        java.sql.Timestamp end_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-23 15:00").getTime());
+        java.sql.Timestamp end_time1 = new java.sql.Timestamp(simpleDateFormat.parse("2018-07-27 15:00").getTime());
         scheduleitme1.setEndTime(end_time1);
         scheduleitme1.setDescription("软件工程");
         scheduleitme1.setAddress("软件大楼");
@@ -101,6 +100,7 @@ public class KeeperTest {
         keeperService.setSports_number(3);
         keeperService.setCalorie(332);
         keeperService.get_keeperRecommands();
+        System.out.println(keeperService.get_keeperRecommands().size());
     }
 
 

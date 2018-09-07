@@ -225,7 +225,6 @@ public class KeeperService implements IKeeperService {
     //it is used in get_keeperRecommands() whether to refresh recomment-items
     public boolean need_to_fresh() {
         Timestamp last_keeper_fresh = user.getLast_keeper_fresh();
-        System.out.println("user");
         if (last_keeper_fresh == null) {
             return true;
         }
@@ -340,6 +339,7 @@ public class KeeperService implements IKeeperService {
                 user.setLast_keeper_fresh(Calendar2Timestamp(now));
                 userRepository.save(user);
             }
+
             return keeperRecommandRepository.findByUser(user);
         } catch (ParseException e) {
             logger.error("Parse exception, impossible state!!");

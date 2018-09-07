@@ -19,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,26 +34,6 @@ public class ReaderTest {
 
     @Before
     public void setup() {
-    }
-
-    @Test
-    public void getTimeTest() {
-        Calendar calendar = Calendar.getInstance();
-
-        //<--------------------- get time ---------------------->
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DATE);
-
-        //<--------------------- reset time ---------------------->
-        calendar.set(year, month, day, 9, 30, 0);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-        int dayow = calendar.get(Calendar.DAY_OF_WEEK);
-        calendar.set(year, month, -6, 9, 30, 0);
-        String time = df.format(calendar.getTime());
-
-        assertThat(time).isEqualTo("2018-06-24 09:30");
     }
 
     //<--------------------------invalidDayTest0-------------------------->
@@ -196,7 +178,6 @@ public class ReaderTest {
         String s2 = simpleDateFormat.format(calendar.getTime());
         assertThat(s1).isEqualTo(s2);
     }
-/*
 
     @Test
     public void extractDateService7_1() throws ParseException {
@@ -212,7 +193,21 @@ public class ReaderTest {
         String s2 = simpleDateFormat.format(calendar.getTime());
         assertThat(s1).isEqualTo(s2);
     }
-*/
+
+    @Test
+    public void extractDateService7_2() throws ParseException {
+        String s1 = readerService.extractDate("本周六十九点");
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
+        int day = calendar.get(Calendar.DATE);
+        int this_Monday = day-(day_of_week-2);
+        int that_day = this_Monday + (6-1);
+        calendar.set(year,month,that_day,19,00,0);
+        String s2 = simpleDateFormat.format(calendar.getTime());
+        assertThat(s1).isEqualTo(s2);
+    }
 
     @Test
     public void extractDateService8() throws ParseException {
@@ -277,7 +272,7 @@ public class ReaderTest {
         assertThat(s1).isEqualTo(s2);
     }
 
-/*    @Test
+    @Test
     public void extractDateService13_1() throws ParseException {
         String s1 = readerService.extractDate("9-20 九点半");
         Calendar calendar = Calendar.getInstance();
@@ -288,7 +283,6 @@ public class ReaderTest {
         String s2 = simpleDateFormat.format(calendar.getTime());
         assertThat(s1).isEqualTo(s2);
     }
-
     @Test
     public void extractDateService13_2() throws ParseException {
         String s1 = readerService.extractDate("明天九点半");
@@ -308,7 +302,7 @@ public class ReaderTest {
         calendar.set(Calendar.MINUTE,30);
         String s2 = simpleDateFormat.format(calendar.getTime());
         assertThat(s1).isEqualTo(s2);
-    }*/
+    }
 
     @Test
     public void extractDateService14() throws ParseException {
@@ -347,7 +341,7 @@ public class ReaderTest {
     public void extractDateService18() throws ParseException {
         String s1 = readerService.extractDate("【紧急通知】请各位上海户籍的同学（高考时是上海户口），" +
                 "周四（24日）中午12:00之前把兵役登记证的复印件交到电群3-102办公室助管那里，下午上海市过来检查");
-        assertThat(s1).isEqualTo("2018-07-26 12:00");
+        assertThat(s1).isEqualTo("2018-09-24 12:00");
     }
 
     @Test
@@ -356,7 +350,11 @@ public class ReaderTest {
                 "活办公室钥匙】，并且麻烦大家在【今天20:00】" +
                 "以前报给我钥匙的状态，包括【损坏】【遗漏】或者【正常】，" +
                 "秘书处会统计并配好钥匙，在第一次例会上给大家~ 祝还没考完试的同学考试顺利噢！");
-        assertThat(s1).isEqualTo("2018-07-26 20:00");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,20);
+        calendar.set(Calendar.MINUTE,0);
+        String s2 = simpleDateFormat.format(calendar.getTime());
+        assertThat(s1).isEqualTo(s2);
     }
 
     @Test
@@ -364,7 +362,7 @@ public class ReaderTest {
         String s1 = readerService.extractDate("今年第10号台风“安比”正在逼近我国华东沿海地区。18日“安比”生成，" +
                 "19日9时，上海市气象局已启动台风四级应急响应，" +
                 "上海将出现严重的暴风雨天气。请各位学联er注意人身安全，平安度过假期。\n");
-        assertThat(s1).isEqualTo("2018-07-18 09:00");
+        assertThat(s1).isEqualTo("2018-09-18 09:00");
     }
 
     @Test
@@ -409,6 +407,12 @@ public class ReaderTest {
     }
 
     @Test
+    public void extractPlace1(){
+        System.out.println(readerService.extractPlace("4.25下午1点15在软院演播厅开年级会"));
+    }
+
+/*
+    @Test
     public void extractDateService27() throws ParseException {
         String s1 = readerService.extractDate("海选：本周三 13:00—下周二 8:30；\n");
         assertThat(s1).isEqualTo("2018-07-25 13:00");
@@ -420,4 +424,11 @@ public class ReaderTest {
                 "周六下午15：07-16：00体验课：夏冬秋 -  嗨！你会用PS制作音乐视频相册吗？");
         assertThat(s1).isEqualTo("2018-07-28 15:07");
     }
+*/
+
+    @Test
+    public void extractDateService29() throws ParseException{
+
+    }
+
 }

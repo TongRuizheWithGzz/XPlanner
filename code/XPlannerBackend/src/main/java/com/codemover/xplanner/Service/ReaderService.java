@@ -6,4 +6,5 @@ import java.util.HashMap;
 
 public interface ReaderService {
     public String extractDate(String in);
+    public String extractPlace(String in);
 }

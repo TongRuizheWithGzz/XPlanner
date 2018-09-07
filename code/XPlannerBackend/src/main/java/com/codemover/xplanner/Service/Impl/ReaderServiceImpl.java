@@ -326,4 +326,14 @@ public class ReaderServiceImpl implements ReaderService {
         resetInfectHour();
         return result;
     }
+
+    @Override
+    public String extractPlace(String in) {
+        extractDateService.cleanPlace();
+        String result = "你不可能看到我的";
+
+        result = extractDateService.dataExtract2Place(in);
+
+        return result;
+    }
 }
