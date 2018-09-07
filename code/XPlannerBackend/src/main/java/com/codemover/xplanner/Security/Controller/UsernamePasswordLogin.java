@@ -106,29 +106,29 @@ public class UsernamePasswordLogin {
         String strbody = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
         System.out.println(strbody);
         String openId = "";
-        WeixinUser user = weixinUserRepository.findByUserName(openId);
-        if (user == null) {
-            user = new WeixinUser();
-            user.setUserName(openId);
-            user.setLast_keeper_fresh(null);
-            user.setEnabled(true);
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            String encodedPassword = bCryptPasswordEncoder.encode("Weixin" + openId);
-            user.setUserPassword(encodedPassword);
-            Set<Role> roles = new HashSet<>();
-            roles.add(new Role("ROLE_WEIXIN_USER"));
-            user.setRoles(roles);
-
-            weixinUserRepository.save(user);
-
-
-        }
-
-        UsernamePasswordAuthenticationToken authReq =
-                new UsernamePasswordAuthenticationToken(openId, "Weixin" + openId);
-        Authentication auth = authManager.authenticate(authReq);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
+//        WeixinUser user = weixinUserRepository.findByUserName(openId);
+//        if (user == null) {
+//            user = new WeixinUser();
+//            user.setUserName(openId);
+//            user.setLast_keeper_fresh(null);
+//            user.setEnabled(true);
+//            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+//            String encodedPassword = bCryptPasswordEncoder.encode("Weixin" + openId);
+//            user.setUserPassword(encodedPassword);
+//            Set<Role> roles = new HashSet<>();
+//            roles.add(new Role("ROLE_WEIXIN_USER"));
+//            user.setRoles(roles);
+//
+//            weixinUserRepository.save(user);
+//
+//
+//        }
+//
+//        UsernamePasswordAuthenticationToken authReq =
+//                new UsernamePasswordAuthenticationToken(openId, "Weixin" + openId);
+//        Authentication auth = authManager.authenticate(authReq);
+//        SecurityContext sc = SecurityContextHolder.getContext();
+//        sc.setAuthentication(auth);
         return null;
     }
 

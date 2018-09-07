@@ -31,7 +31,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 
 @Controller
-@RequestMapping(value = "api/loginByJAccount")
+@RequestMapping(value = "/api/auth")
 public class JAccountLogin {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -46,6 +46,7 @@ public class JAccountLogin {
     HashMap<String, Object> loginByJAccount() {
         HashMap<String, Object> response = new HashMap<>();
 
+
         try {
             System.out.println(constConfig.authorizationUrl);
             OAuthClientRequest request = OAuthClientRequest
@@ -53,7 +54,7 @@ public class JAccountLogin {
                     .setClientId(constConfig.clientID)
                     .setRedirectURI(constConfig.redirectUrl)
                     .setResponseType("code")
-                    .setState("xyz")
+                    .setState("033tZm1o07f6or1yMBZn05VA1o0tZm1K")
                     .setScope(constConfig.scope)
                     .buildQueryMessage();
             String UrlForGetCode = request.getLocationUri();
@@ -110,7 +111,6 @@ public class JAccountLogin {
             JAccountUser jAccountUser = UserFactory.createJAccountUser(authResourceResponse.getBody());
 
             jAccountUser.setAccessToken(accessToken);
-
 
 
             responseToFrontEnd.put("errMsg", "loginByJAccount:ok");

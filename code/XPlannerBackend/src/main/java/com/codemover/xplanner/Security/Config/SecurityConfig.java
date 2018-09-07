@@ -54,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(myAccessDeniedHandler)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/auth/loginByUsernamePassword").permitAll()
                 .antMatchers("/api/auth/loginByWeixin").permitAll()
                 .anyRequest().authenticated()
