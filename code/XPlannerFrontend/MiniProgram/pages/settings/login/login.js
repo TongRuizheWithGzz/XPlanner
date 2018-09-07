@@ -98,7 +98,8 @@ Page({
   login: function() {
     console.log("login");
     /* 向后端发送用户名和密码 */
-    wrapper.loginByUsernamePassword(this.data.name, this.data.password)
+    // wrapper.loginByUsernamePassword(this.data.name, this.data.password)
+    wrapper.loginByUsernamePassword("tongruizhe","password")
       .then((errno) => {
         console.log(app.globalData);
         return wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {

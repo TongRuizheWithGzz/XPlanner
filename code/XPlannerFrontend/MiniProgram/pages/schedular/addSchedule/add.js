@@ -307,9 +307,12 @@ Page({
         delta: 1,
       });
     } else { // 如果现在是修改页面
-      wx.redirectTo({
-        url: "/pages/schedular/scheduleDetails/scheduleDetails?id=" + this.data.itemIndex,
-      })
+      // wx.redirectTo({
+      //   url: "/pages/schedular/scheduleDetails/scheduleDetails?id=" + this.data.itemIndex,
+      // })
+      wx.navigateBack({
+        delta: 1,
+      });
     }
     this.setData({
       showModal: true,
