@@ -6,7 +6,7 @@
 
   <view class='block line'>
     <text class='title '>标题</text>
-    <input value="{{title}}" placeholder='事项标题' class='ip' placeholder-class='ph' bindinput='titleIp' />
+    <input value="{{title}}" placeholder='事项标题' class='ti' placeholder-class='ph' bindinput='titleIp' />
   </view>
 
 

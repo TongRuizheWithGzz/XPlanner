@@ -1,6 +1,8 @@
 // pages/store/detail/detail.js
 var app = getApp();
-var extensions = app.globalData.extensions;
+var ex_tools = require("../../../common/extension.js")
+
+var extensions = ex_tools.warpExtensions(require("../../../data/extensions.js"))
 Page({
 
   /**
@@ -16,7 +18,8 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
-      extension: extensions[options.id],
+      // extension: extensions[options.id],
+      extension:app.globalData.extensions[options.id],
       id: options.id
     })
   },
@@ -40,5 +43,6 @@ Page({
       icon: "success",
       duration: 3000
     });
+    console.log("dsa",this.data.extension);
   }
 })

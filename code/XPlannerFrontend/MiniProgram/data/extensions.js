@@ -15,13 +15,7 @@ var extensions = [{
   planner_name: "Reader",
   description: "随心所欲，以您喜爱的形式把新的待办事项告诉Reader。无论是图片还是文字，Reader都会尽其所能梳理您的日程计划。",
   picture_path_name: "/icons/icon_tabbar.png",
-},
-{
-  planner_id: 3,
-  planner_name: "Model",
-  description: "使用各种模板来快速地生成个性化事务。",
-  picture_path_name: "/icons/icon_tabbar.png",
-},
+}
 ];
 
 module.exports = extensions;

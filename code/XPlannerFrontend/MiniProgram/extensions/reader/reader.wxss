@@ -11,7 +11,7 @@
 }
 
 .title {
-  font-size: 30px;
+  font-size: 62rpx;
 }
 
 
@@ -32,7 +32,7 @@
 }
 
 .can{
-  font-size:17px;
+  font-size:36rpx;
   color:#888;
 }
 
@@ -55,11 +55,11 @@
 }
 
 .ph{
-  font-size:16px;
+  font-size:34rpx;
 }
 
 .des{
-  font-size:17px;
+  font-size:36rpx;
   font-weight: bold;
   margin-top:30rpx;
   margin-left:43rpx;

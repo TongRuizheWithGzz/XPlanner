@@ -20,7 +20,7 @@
 }
 
 .xplanner-title {
-  font-size: 30px;
+  font-size: 62rpx;
   /* margin-bottom: 10px; */
   padding-top: 5px;
 }
@@ -40,12 +40,13 @@
   display: flex;
   flex-direction: column;
   width: 70%;
+  font-size: 38rpx;
 }
 
 .name-input-panel {
-  height: 50px;
+  height: 110rpx;
   display: flex;
-  padding-left: 20px;
+  padding-left: 40rpx;
   justify-content: flex-start;
   flex-wrap: nowrap;
   align-items: center;
@@ -54,16 +55,16 @@
 .password-input-panel {
   display: flex;
   border-top: 1px solid #ddd;
-  height: 50px;
-  padding-left: 20px;
+  height: 110rpx;
+  padding-left: 40rpx;
   justify-content: flex-start;
   flex-wrap: nowrap;
   align-items: center;
 }
 
 .login-icon {
-  width: 20px;
-  height: 20px;
+  width: 45rpx;
+  height: 45rpx;
 }
 
 .register-link {
@@ -73,5 +74,5 @@
 }
 
 .password-input {
-  width: 88%;
+  width: 84%;
 }

@@ -82,33 +82,38 @@ page {
 .left, .se-left {
   height: 80%;
   justify-content: space-around;
-  width: 75px;
+  width: 25%;
   align-items: center;
-  font-size: 15px;
+  font-size: 32rpx;
   transition: all 0.3s;
 }
 
 .se-left {
   height: 120%;
   transition: all 0.3s;
-  font-size: 16px;  
+  font-size: 34rpx;
+  width:20%;  
 }
 
 .right, .se-right {
-  font-size: 15px;
-  margin-left: 12px;
+  font-size: 34rpx;
+  margin-left: 20rpx;
   transition: all 0.3s;
   font-weight: bold;
 }
 
+.one-button{
+  margin-right:20rpx;
+}
+
 .right {
-  width: 145px;
+  width: 50%;
   transition: all 0.3s;
   margin-top: 20px;
 }
 
 .se-right {
-  width: 210px;
+  width: 63%;
   transition: all 0.3s;
   margin-top: 30px;
   justify-content: flex-start;
@@ -124,7 +129,7 @@ page {
 }
 
 .address {
-  font-size:14px;
+  font-size:30rpx;
   margin-top: 7px;
   font-weight: light;
   color: #a3a3a3;
@@ -136,14 +141,15 @@ page {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+
 }
 
 .title, .se-title {
-  margin-left: 5px;
+  margin-left: 5rpx;
 }
 
 .se-title {
-  font-size: 18px;
+  font-size: 38rpx;
   font-weight: bold;
   transition: all 0.3s;
 }
@@ -153,22 +159,24 @@ page {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  margin-left: 30px;
+  transition: all 0.3s;
+  margin-left:6rpx;
 }
 .button {
   height: 30px;
   width: 30px;
+  transition: all 0.3s;
 }
 
 .description {
-  margin-top: 1px;
+  margin-top: 12rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   font-weight: lighter;
-  font-size:14px;
+  font-size:30rpx;
 }
 
 .operate {
@@ -220,12 +228,18 @@ page {
   justify-content: space-between;
   align-items: center;
   box-shadow: -2px 0px 9px #a3a3a3;
+  font-size:33rpx;
 }
 
 .add-item-word {
   padding-left: 15rpx;
 }
 
-.show-complete-word {
+.show-complete-word,.press {
   padding-right: 15rpx;
+  border-radius:20rpx;
+  
+}
+.press{
+  background-color: #999;
 }

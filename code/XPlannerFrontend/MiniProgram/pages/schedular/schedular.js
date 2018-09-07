@@ -49,9 +49,10 @@ Page({
   onShow: function() {
     console.log("on show");
     console.log(app.globalData.scheduleItems)
-    this.setData({
-      showSelect: -1,
-    });
+
+    app.globalData.ifPressSaveInAddSchedulePage = false;
+
+    this.shrink();
 
     if (app.globalData.ifAddSchedule) { // 从add页面返回并且添加了日程
       if (app.globalData.ifSameDay) { // 添加的日程和目前显示的日期是相同的
@@ -125,6 +126,14 @@ Page({
             showItems: tmp_items,
           })
         } else { // 如果不是当前月
+          var tmp_day_list = this.data.dayList;
+          if (this.data.showItems.length == 1) {
+            // 如果当前的日期只有一个即将被移到别的日期的日程
+            tmp_day_list[app.globalData.day - 1].haveItems = false;
+            this.setData({
+              dayList: tmp_day_list
+            });
+          }
           console.log("sb");
           var tmp_items = app.globalData.scheduleItems;
           // tmp_items.splice(app.globalData.changeScheduleIndex, 1);
@@ -132,6 +141,7 @@ Page({
           this.setData({
             showItems: tmp_items,
           })
+          console.log(this.data.showItems)
         }
       } else { // 如果没有修改开始日期
         this.setData({
@@ -142,6 +152,7 @@ Page({
       app.globalData.changeScheduleIndex = 0;
       app.globalData.ifChangeScheduleStartDate = false;
     } else { // 普通显示或者放弃添加日程
+      //this.setData({ dayList: this.data.dayList })
       console.log("no thing happen after on show");
     }
   },
@@ -161,9 +172,8 @@ Page({
   },
   select: function(event) {
     if (this.data.showSelect == event.currentTarget.dataset.index) {
-      this.setData({
-        showSelect: -1,
-      })
+      this.shrink();
+
       return;
     }
     this.setData({
@@ -253,9 +263,8 @@ Page({
               })
             }
 
-            that.setData({
-              showSelect: -1,
-            })
+            this.shrink();
+
           }).catch((errno) => {
             console.log("服务器删除失败：", errno);
             wx.showModal({
@@ -274,8 +283,15 @@ Page({
     });
   },
 
+  shrink:function(e){
+    this.setData({
+      showSelect: -1,
+    });
+  },
+
 
   changeVisible: function(e) {
+    this.shrink();
     var tmp_show_complete = this.data.showComplete;
     if (tmp_show_complete) {
       var tmp_show_items = this.data.showItems;
@@ -284,6 +300,7 @@ Page({
           tmp_show_items[i].visible = false;
         }
       }
+      app.globalData.showCompletedSchedule = !tmp_show_complete;
       this.setData({
         showItems: tmp_show_items,
         showComplete: !tmp_show_complete
@@ -295,6 +312,7 @@ Page({
           tmp_show_items[i].visible = true;
         }
       }
+      app.globalData.showCompletedSchedule = !tmp_show_complete;
       this.setData({
         showItems: tmp_show_items,
         showComplete: !tmp_show_complete
@@ -586,7 +604,7 @@ Page({
       "day": app.globalData.day,
 
     }).then((data) => {
-      tmp = schedule.warpScheduleItems(data.scheduleitems);
+      tmp = schedule.warpScheduleItems(data.scheduleitems,this.data.showComplete);
       console.log(data.scheduleitems);
       console.log("finish")
       console.log("tmp:", tmp);
@@ -684,7 +702,7 @@ Page({
       "day": app.globalData.day,
 
     }).then((data) => { // 正常返回
-      tmp_items = schedule.warpScheduleItems(data.scheduleitems);
+      tmp_items = schedule.warpScheduleItems(data.scheduleitems,this.data.showComplete);
       console.log(data.scheduleitems);
       console.log("finish")
       console.log("tmp:", tmp_items);

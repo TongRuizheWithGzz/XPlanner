@@ -52,7 +52,6 @@ var get_eaten = function(foodmap) {
 Page({
   data: {
     keeperItems: [], //从后端请求的推荐事项
-    keeper: keeper, //插件信息
     icons: ['/icons/aa.png', '/icons/bb.png', '/icons/cc.png'], //运动事项图标
     addresses: addresses, //所有地址
     address: '第一餐厅', //当前地址
@@ -63,7 +62,7 @@ Page({
 
   //后端有关,后端加载此页面推荐数据和一餐食物
   onShow: function() {
-
+    
     var tmp = 'foodmap.' + this.data.address
     if (this.data.foodmap != undefined &&
       this.data.foodmap[this.data.address] != undefined) {
@@ -139,11 +138,12 @@ Page({
                 'Content-Type': 'application/x-www-form-urlencoded'
               },
               data: {
-                access_token: '24.fe56be76c54ed3a23516812df8559fbd.2592000.1534314608.282335-11541012',
+                access_token: '24.599e356ed1fa21b734907803e84cd415.2592000.1538616705.282335-11767229',
                 image: base64,
                 filter_threshold: 0.95,
               },
               success: function(res) {
+                console.log(res.data)
                 var result = res.data.result[0];
 
                 //图片识别失败， 不发回后端user_food_eaten数据
@@ -156,7 +156,7 @@ Page({
                 }
                 //图片识别成功，向后端发送user_food_eaten
                 else {
-                  console.log("result" , result);
+                  console.log("result", result);
                   var temp = that.data.user_food_eaten;
 
                   temp.push({
@@ -173,18 +173,18 @@ Page({
                     foodPOJOS: [{
                       food_name: result.name,
                       calorie: result.calorie,
-                    }],//向后端发的数组 temp,
+                    }], //向后端发的数组 temp,
                   }).then((data) => {
 
-                    
 
-                  
+
+
                     wx.showToast({
                       title: '成功，已统计',
                       image: "/icons/success.png",
                       duration: 1500
                     })
-                    
+
                   }).catch((errno) => {
                     console.log("用户添加食物失败:", errno);
                     wx.showModal({
@@ -193,7 +193,7 @@ Page({
                       showCancel: false,
                     });
                   })
-                  
+
                 }
               }
             })

@@ -15,6 +15,7 @@ public class WeixinUser extends User {
     private String gender;
 
 
+
 }
 
 

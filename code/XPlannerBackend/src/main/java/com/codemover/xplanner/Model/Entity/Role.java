@@ -7,7 +7,13 @@ public class Role {
     private Integer id;
     private String rolename;
 
+    public Role(String rolename) {
+        this.rolename = rolename;
+    }
 
+    public Role(){
+
+    }
 
     @Id
     @Column(name = "role_id")

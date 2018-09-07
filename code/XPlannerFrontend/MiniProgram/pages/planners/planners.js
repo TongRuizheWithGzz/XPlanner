@@ -8,7 +8,7 @@ Page({
     extensions: extensions,
     move: false,
   },
-  onShow: function () {
+  onShow: function() {
     this.setData({
       extensions: app.globalData.extensions,
     })
@@ -18,7 +18,7 @@ Page({
    * undo
    * 关闭删除模式
    */
-  undo: function () {
+  undo: function() {
     console.log("关闭删除模式");
     this.setData({
       move: false
@@ -29,21 +29,23 @@ Page({
    * remove
    * 开启删除模式
    */
-  remove: function () {
-    this.setData({ move: true })
+  remove: function() {
+    this.setData({
+      move: true
+    })
   },
 
   /*
    * rem
    * 删除扩展
    */
-  rem: function (e) {
+  rem: function(e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
     wx.showModal({
       title: '是否删除插件' + this.data.extensions[id].name,
       content: '模态弹窗',
-      success: function (res) {
+      success: function(res) {
         if (res.confirm) {
           app.globalData.extensions[id].visible = false;
           that.setData({
@@ -57,8 +59,9 @@ Page({
     })
   },
 
-  direct: function (e) {
-    console.log("sb");
+  direct: function(e) {
+    if (this.data.move)
+      return;
     wx.navigateTo({
       url: e.currentTarget.dataset.url,
     })

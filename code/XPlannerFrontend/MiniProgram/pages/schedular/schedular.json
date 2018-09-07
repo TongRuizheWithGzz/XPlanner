@@ -3,6 +3,6 @@
   "navigationBarBackgroundColor": "#ffffff",
   "navigationBarTextStyle": "black",
   "usingComponents": {
-    "calendar": "plugin://calendar/calendar"
+    "calendar": "/pages/schedular/calendar/calendar"
   }
 }
