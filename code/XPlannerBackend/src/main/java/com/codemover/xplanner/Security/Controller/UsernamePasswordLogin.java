@@ -96,22 +96,17 @@ public class UsernamePasswordLogin {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/api/auth/loginByWeixin")
-    public HashMap<String, Object> loginByWeixin(@RequestParam String code) {
+    public HashMap<String, Object> loginByWeixin(@RequestParam String openId) {
+
 
         HashMap<String, Object> result = new HashMap<>();
-        String openId = getOpenId(code);
-
-        //After getting the openId, look up for the user in the database to see
-        //whether the user has tied JAccount to Miniprogram.
-
         JAccountUser jAccountUser = jAccountUserRepository.findByOpenId(openId);
 
         //The user hasn't tied the JAccount, tell it to the frontEnd with the openId.
         //Frontend uses the openId to get qrCode and then, authorize JAccount.
         if (jAccountUser == null) {
-            result.put("errno", 0);
+            result.put("errno", 6);
             result.put("errMsg", "Hasn't tied");
-            result.put("openId", openId);
             return result;
         }
 
@@ -123,15 +118,14 @@ public class UsernamePasswordLogin {
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
         result.put("errno", 0);
-        result.put("errMsg", "Tied. Authentication success");
+        result.put("errMsg", "Obtain cookie success");
         return result;
-
-
+        
     }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/api/auth/getOpenId")
-    public String getOpenId(@RequestParam  String code) {
+    public String getOpenId(@RequestParam String code) {
         //This function is to obtain openId of Weixin in exchange for code.
         //Then, use the code to get the openId of the user.
         String weixinCodeUrl = "https://api.weixin.qq.com/sns/jscode2session?" +
@@ -151,7 +145,7 @@ public class UsernamePasswordLogin {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/api/auth/checkTied")
-    public Boolean checkTied(@RequestParam  String openId) {
+    public Boolean checkTied(@RequestParam String openId) {
         JAccountUser jAccountUser = jAccountUserRepository.findByOpenId(openId);
         return jAccountUser != null;
     }
