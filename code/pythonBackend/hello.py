@@ -6,7 +6,7 @@ import os
 
 #Localhost is with port
 
-localhost="http://10.162.118.2:8082"
+localhost="http://1192.168.1.105:8082"
 app = Flask(__name__)
 
 @app.route('/getQrcode',methods=["GET"])

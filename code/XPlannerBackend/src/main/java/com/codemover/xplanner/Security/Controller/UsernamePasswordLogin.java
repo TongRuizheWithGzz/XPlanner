@@ -120,7 +120,7 @@ public class UsernamePasswordLogin {
         result.put("errno", 0);
         result.put("errMsg", "Obtain cookie success");
         return result;
-        
+
     }
 
     @ResponseBody
