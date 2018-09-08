@@ -11,6 +11,7 @@ public class UserFactory {
 
     public static JAccountUser createJAccountUser(String jsonOfProfile)
             throws ParseException, ParseProfileJsonException {
+
         //Parse JSON
 
         JSONObject json = new JSONObject(jsonOfProfile);
@@ -24,13 +25,11 @@ public class UserFactory {
         String realName = entity.getString("name");
         String studentID = entity.getString("code");
         String classNumber = entity.getString("classNo");
-        JSONArray identities = entity.getJSONArray("identities");
-        JSONObject identity = identities.getJSONObject(0);
 
         //Create the JAccount User
 
         JAccountUser jAccountUser = new JAccountUser();
-        //TODO ADD USER
+
         jAccountUser.setUniqueId(uniqueId);
         jAccountUser.setjAccountName(jAccountName);
         jAccountUser.setStudentId(studentID);

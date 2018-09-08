@@ -38,6 +38,7 @@ function loginByUsernamePassword(username, password) {
 }
 
 function wxRequestWrapper(apiUrl, method, data) {
+    
   return new Promise(function(resolve, reject) {
     let Cookie = wx.getStorageSync("Cookie");
     if (!Cookie) {
@@ -77,13 +78,22 @@ function wxRequestWrapper(apiUrl, method, data) {
             reject(8);
         }
         //wx.request() failed! 可能由于网络错误等原因
-        resolve(4);
+        reject(4);
       }
     })
+  }).then((data)=>{
+      resolve(4)
+  }).catch((errno)=>{
+      switch(errno){
+          case 1:
+          case 2:
+          
+      }
   })
 }
 
 function checkSessionWrapper() {
+
   return new Promise(function(resolve, reject) {
     let Cookie = wx.getStorageSync("Cookie");
     if (!Cookie) {

@@ -65,146 +65,88 @@ Page({
     },
 
     data: {
-        name: "",
-        password: ""
+        qrcodeFileName: "/icons/loading.gif",
     },
     onShow: function() {
-        wrapper
-            .checkSessionWrapper()
-            .then(errno => {
-                console.log("在App.js中检查登录成功");
-                this.fetchUserInfoAfterLogin()
-                    .then(errno => {
-                        wx.switchTab({
-                            url: "/pages/schedular/schedular"
-                        });
-                    })
-                    .catch(errno => {
-                        console.log(
-                            "在App.js中建成登录成功，随后获取用户信息失败：",
-                            errno
-                        );
-                        wx.showModal({
-                            title: "获取用户信息失败",
-                            content: "请检查网络设置",
-                            showCancel: false
-                        });
-                    });
+        console.log("login.onShow")
+        this.setData({
+            qrcodeFileName: "/icons/loading.gif",
+        })
+        console.log(app.globalData.hasTied)
+        let that=this;
+        wrapper.checkSessionWrapper().then()
+        new Promise(function(resolve, reject) {
+            wx.login({
+                fail: function() {
+                    reject(10);
+                },
+                success: function(res) {
+                    if (res.code) {
+                        resolve(res.code);
+                    } else {
+                        reject(10);
+                    }
+                }
             })
-            .catch(errno => {
-                console.log("在App.js中检查登录失败,开始进行微信登录", errno);
-                wx.login({
-                    success: function(res) {
-                        wx.request({
-                            method: "GET",
-                            url: api.LoginByWeixin,
-                            data: {
-                                code: res.code
-                            },
-                            success: function(res) {
-                                if (res.statusCode != 200 || res.data["errMsg"] === "fail") {
-                                    wx.showModal({
-                                        title: "获取用户信息失败",
-                                        content: "请检查网络设置",
-                                        showCancel: false
-                                    });
-                                } else {
-                                    let Cookie = res.header['Set-Cookie'].split(';')[0];
-                                    wx.setStorageSync('Cookie', Cookie);
-                                    
-                                    wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
-                                            year: app.globalData.year,
-                                            month: app.globalData.month,
-                                            day: app.globalData.day
-                                        }).then(data => {
-                                            console.log("得到用户某天的数据", data, "开始请求一个月的日程");
-                                            app.globalData.scheduleItems = schedule.warpScheduleItems(
-                                                data.scheduleitems
-                                            ); // 设置对应全局变量
-                                            return wrapper.wxRequestWrapper(
-                                                api.queryDaysHavingScheduletimesInMonth,
-                                                "GET", {
-                                                    year: app.globalData.year,
-                                                    month: app.globalData.month
-                                                }
-                                            );
-                                        })
-                                        .then(data => {
-                                            console.log("得到一月日程", data, "开始请求用户信息");
-                                            app.globalData.dayWithItem = data.dateMap; // 设置对应全局变量
-                                            return wrapper.wxRequestWrapper(api.queryUserInfo, "GET", {});
-                                        })
-                                        .then(data => {
-                                            console.log("获得用户信息，开始请求用户的设置");
-                                            app.globalData.userInfo = data.userInfo;
-                                            return wrapper.wxRequestWrapper(
-                                                api.queryEnabledExtensionsArray,
-                                                "GET", {}
-                                            );
-                                        })
-                                        .then(data => {
-                                            console.log("获得用户的设置全局变量:", data.userSettings);
-                                            app.globalData.extensions = extension.filterExtensions(
-                                                extension.warpExtensions(extensions),
-                                                data.userSettings
-                                            ); // 设置对应全局变量
-                                            app.globalData.userFoodEaten = [];
-                                            app.globalData.logined = true;
-                                            wx.switchTab({
-                                                url: "/pages/schedular/schedular"
-                                            });
-                                        })
-                                        .catch(errno => {
-                                            app.globalData.logined = false;
-                                            console.log("Get errno when login: ", errno);
-                                            switch (errno) {
-                                                case 1:
-                                                    wx.showModal({
-                                                        title: "用户名或密码错误",
-                                                        content: "请重新输入",
-                                                        showCancel: false
-                                                    });
-                                                    break;
-                                                case 4:
-                                                    wx.showModal({
-                                                        title: "请求失败",
-                                                        content: "请检查网络连接",
-                                                        showCancel: false
-                                                    });
-                                                    break;
-                                                default:
-                                                    wx.showModal({
-                                                        title: "获取用户信息失败",
-                                                        content: "请检查网络连接",
-                                                        showCancel: false
-                                                    });
-                                                    break;
-                                            }
-                                        });
-                                }
-                            },
-                            fail: function() {
-                                wx.showModal({
-                                    title: "获取用户信息失败",
-                                    content: "请检查网络设置",
-                                    showCancel: false
-                                });
-                            }
-                        })
+        }).then((code) => {
+            return new Promise(function(resolve, reject) {
+                wx.request({
+                    url: api.LoginByWeixin,
+                    method: "GET",
+                    data: {
+                        code: code
                     },
                     fail: function() {
-                        wx.showModal({
-                            title: "获取用户信息失败",
-                            content: "请检查网络设置",
-                            showCancel: false
-                        });
+                        reject(10);
+                    },
+                    success: function(res) {
+                        if (res.statusCode != 200)
+                            reject(10)
+                        else {
+                            resolve(res.data["openId"])
+                        }
                     }
                 })
+            })
+        }).then((openId) => {
+            return new Promise(function(resolve, reject) {
+                wx.request({
+                    url: api.getQrcode,
+                    method: "GET",
+                    data: {
+                        openId: openId,
+                    },
+                    fail: function() {
+                        reject(11);
+                    },
+                    success: function(res) {
+                        if (res.statusCode != 200)
+                            reject(11)
+                        else {
+                            that.setData({
+                                qrcodeFileName: api.qrCodePath + openId + ".png"
+                            });
+                            resolve(res.data["imgName"])
+                        }
+                    }
+                })
+            })
+        }).catch((errno) => {
+            let title = "";
+            switch (errno) {
+                case 10:
+                    title = "微信登录失败";
+                    break;
+                case 11:
+                    title = "获取二维码失败"
+                    break;
+            }
+            wx.showModal({
+                title: title,
+                content: "请检查网络连接",
+                showCancel: false
             });
-
-
-
-
+        })
 
 
     },
@@ -214,7 +156,7 @@ Page({
      */
     getName: function(e) {
         console.log(e.detail.value);
-        this.setData({
+        tbat.setData({
             name: e.detail.value
         });
     },

@@ -1,6 +1,7 @@
 package com.codemover.xplanner.Security.Controller;
 
 import com.codemover.xplanner.Model.Entity.JAccountUser;
+import com.codemover.xplanner.Model.Entity.Role;
 import com.codemover.xplanner.Security.Config.ConstConfig;
 import com.codemover.xplanner.Security.Exception.ParseProfileJsonException;
 import com.codemover.xplanner.Security.Util.UserFactory;
@@ -20,6 +21,7 @@ import org.apache.oltu.oauth2.common.token.OAuthToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/api/auth")
@@ -80,6 +84,7 @@ public class JAccountLogin {
         try {
             OAuthAuthzResponse oar = OAuthAuthzResponse.oauthCodeAuthzResponse(servletRequest);
             String code = oar.getCode();
+            String state = oar.getState();
 
             OAuthClientRequest request = OAuthClientRequest
                     .tokenLocation(constConfig.accessTokenUrl)
@@ -90,9 +95,10 @@ public class JAccountLogin {
                     .setCode(code)
                     .buildQueryMessage();
 
+
             OAuthClient clientForAccessToken = new OAuthClient(new URLConnectionClient());
             OAuthJSONAccessTokenResponse jsonAccessTokenResponse = clientForAccessToken.accessToken(request, OAuthJSONAccessTokenResponse.class);
-            logger.info("Response access token from JAccount Authorization Server after sending code:'{}'", jsonAccessTokenResponse.getBody());
+            logger.info("Access token: '{}'", jsonAccessTokenResponse.getBody());
 
 
             OAuthToken oAuthToken = jsonAccessTokenResponse.getOAuthToken();
@@ -105,12 +111,18 @@ public class JAccountLogin {
 
             OAuthClient clientForGetProfile = new OAuthClient(new URLConnectionClient());
             OAuthResourceResponse authResourceResponse = clientForGetProfile.resource(bearerClientRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
-            logger.info("Response User Profile from JAccount Resource Server after sending accessToken:'{}'", authResourceResponse.getBody());
+            logger.info("JAccount user profile: '{}'", authResourceResponse.getBody());
 
 
             JAccountUser jAccountUser = UserFactory.createJAccountUser(authResourceResponse.getBody());
-
             jAccountUser.setAccessToken(accessToken);
+            Set<Role> roles = new HashSet<>();
+            roles.add(new Role("ROLE_JACCOUNT_User"));
+            jAccountUser.setRoles(roles);
+            jAccountUser.setEnabled(true);
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String defaultPassword = bCryptPasswordEncoder.encode(jAccountUser.getUniqueId());
+            jAccountUser.setUserPassword(defaultPassword);
 
 
             responseToFrontEnd.put("errMsg", "loginByJAccount:ok");

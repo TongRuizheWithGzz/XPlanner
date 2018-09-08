@@ -26,6 +26,7 @@ public class JAccountUser extends User {
 
     private String refreshToken;
 
+    private String openId;
 
     @Basic
     @Column(name = "jaccount_name")
@@ -97,5 +98,15 @@ public class JAccountUser extends User {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    @Basic
+    @Column(unique = true, name="open_id")
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 }
