@@ -1,20 +1,15 @@
 <view class="login-panel">
-  <button open-type="getUserInfo">微信一键授权登陆</button> 
-  <view class="xplanner-panel">
-    <image class="xplanner-icon" src="/icons/XPlannerLogo.png" />
-    <view class="xplanner-title">XPlanner</view>
-    <view class="xplanner-description">为你的大学生活设计的可扩展智能日程表</view>
-  </view>
-  <view class="input-panel">
-    <view class="name-input-panel">
-      <input class="name-input" placeholder="名称" bindinput="getName" />
-    </view>
-    <view class="password-input-panel">
-      <input class="password-input" placeholder="密码" bindinput="getPassword" password="{{!password_visible}}" />
-      <image src="/icons/log.png" class="login-icon" bindtap="login" />
+  <view class="card">
+    <view class="xplanner-panel">
+      <image class="xplanner-icon" src="/icons/XPlannerLogo.png" />
+      <view class="xplanner-title">XPlanner</view>
+      <view class="xplanner-description">为你的大学生活设计的可扩展智能日程表</view>
     </view>
   </view>
-  <view class="register-link" bindtap="register">
-    点击此处注册
+  <view class="card down">
+    <image src="{{qrcodeFileName}}" class="qrcode" />
+    <view class="register-link">
+      扫码绑定JAccount
+    </view>
   </view>
 </view>

@@ -4,6 +4,8 @@ import com.codemover.xplanner.Service.Impl.ExtractDateService;
 import com.codemover.xplanner.Service.ReaderService;
 import com.codemover.xplanner.Service.Util.DateUtil;
 import com.codemover.xplanner.Service.Util.ParseDateStringUtil;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,16 @@ public class ReaderTest {
     public void canExtractManyDateFormatTest2() {
         extractDateService.dateExtract("2018年7月15日9:13分");
     }
+
+
+//    @Test
+//    public void getAuthorizeUrl() throws OAuthSystemException {
+//        OAuthClientRequest request = OAuthClientRequest
+//                .authorizationLocation("https://graph.facebook.com/oauth/authorize")
+//                .setClientId("your-facebook-application-client-id")
+//                .setRedirectURI("http://www.example.com/redirect")
+//                .buildQueryMessage();
+//    }
 
     @Test
     public void canExtractManyDateFormatTest3() {

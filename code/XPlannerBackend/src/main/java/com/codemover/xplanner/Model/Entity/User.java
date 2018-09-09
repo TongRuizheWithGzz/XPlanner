@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,7 +20,7 @@ public class User {
     @JsonIgnore
     private Set<UserFoodEaten> foodEatens;
     @JsonIgnore
-    private Set<Role> roles;
+    private List<Role> roles;
     @JsonIgnore
     private boolean enabled;
     @JsonIgnore
@@ -30,7 +31,7 @@ public class User {
 
 
     @JsonIgnore
-    private Set<Plannerstore> plannerstores;
+    private List<Plannerstore> plannerstores;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,11 +91,11 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
@@ -105,11 +106,11 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "plannerid")}
     )
-    public Set<Plannerstore> getPlannerstores() {
+    public List<Plannerstore> getPlannerstores() {
         return plannerstores;
     }
 
-    public void setPlannerstores(Set<Plannerstore> plannerstores) {
+    public void setPlannerstores(List<Plannerstore> plannerstores) {
         this.plannerstores = plannerstores;
     }
 

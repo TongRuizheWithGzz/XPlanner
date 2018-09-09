@@ -1,13 +1,19 @@
-<<<<<<< HEAD
+page{
+  background-color:white;
+}
+
 .login-panel {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: white;
+}
+page{
+  height: 100%;
 }
 
 .xplanner-panel {
-  height: 270px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -15,101 +21,25 @@
 }
 
 .xplanner-icon {
-  padding-top: 60px;
-  height: 70px;
-  width: 70px;
+  padding-top: 170rpx;
+  height: 150rpx;
+  width: 150rpx;
 }
 
 .xplanner-title {
-  font-size: 30px;
+  font-size: 65rpx;
   /* margin-bottom: 10px; */
-  padding-top: 5px;
+  padding-top:25rpx;
+  padding-bottom:25rpx;
 }
 
 .xplanner-description {
   /* margin-top: 20px; */
-   margin-bottom: 30px; 
+  margin-bottom: 60rpx;
   color: gray;
   width:60%;
   text-align: center;
-}
-
-.input-panel {
-  border-radius: 15px;
-  border: 1px solid #ddd;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-}
-
-.name-input-panel {
-  height: 50px;
-  display: flex;
-  padding-left: 20px;
-  justify-content: flex-start;
-  flex-wrap: nowrap;
-  align-items: center;
-}
-
-.password-input-panel {
-  display: flex;
-  border-top: 1px solid #ddd;
-  height: 50px;
-  padding-left: 20px;
-  justify-content: flex-start;
-  flex-wrap: nowrap;
-  align-items: center;
-}
-
-.login-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.register-link {
-  padding-top: 15px;
-  text-decoration: underline;
-  color: blue;
-}
-
-.password-input {
-  width: 88%;
-}
-=======
-.login-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.xplanner-panel {
-  height: 270px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.xplanner-icon {
-  padding-top: 60px;
-  height: 70px;
-  width: 70px;
-}
-
-.xplanner-title {
-  font-size: 62rpx;
-  /* margin-bottom: 10px; */
-  padding-top: 5px;
-}
-
-.xplanner-description {
-  /* margin-top: 20px; */
-   margin-bottom: 30px; 
-  color: gray;
-  width:60%;
-  text-align: center;
+  font-size:30rpx;
 }
 
 .input-panel {
@@ -147,12 +77,34 @@
 }
 
 .register-link {
-  padding-top: 15px;
-  text-decoration: underline;
-  color: blue;
+  padding-top: 30rpx;
+  font-size:30rpx;
 }
 
 .password-input {
   width: 84%;
 }
->>>>>>> 1a942e1776aad064a1a82311c2ab803c0c8c9023
+
+.qrcode{
+  height:300rpx;
+  width:300rpx;
+}
+
+.card {
+  background-color: white;
+  transition: all 0.3s;
+  box-shadow: 0px 0px 15rpx #b3b3b3;
+  border-radius: 10px;
+  z-index: 0;
+  width:89%;
+  margin-top:20rpx;
+  margin-bottom:30rpx;
+}
+
+.down{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height:470rpx;
+}

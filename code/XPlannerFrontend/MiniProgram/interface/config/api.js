@@ -1,5 +1,6 @@
-const ApiRootUrl = 'http://127.0.0.1:8082/api/';
-
+const localhost = "http://10.163.61.235"
+const ApiRootUrl = localhost + ":8082/api/";
+const PythonUrl = localhost + ":5000/"
 module.exports = {
   LoginByWeixin: ApiRootUrl + 'auth/loginByWeixin', //微信登录
   LoginByUsernamePassword: ApiRootUrl + 'auth/loginByUsernamePassword', //用户名密码登录
@@ -21,4 +22,8 @@ module.exports = {
   keeperApi: ApiRootUrl + "keeper",
   readerApi: ApiRootUrl + "reader",
   getFoodByDinningHall: ApiRootUrl + 'food',
+  getQrcode: PythonUrl + "getQrcode",
+  qrCodePath: PythonUrl + "static/",
+  getOpenId: ApiRootUrl + "auth/getOpenId",
+  checkTied: ApiRootUrl + "auth/checkTied"
 }
