@@ -1,6 +1,7 @@
 package com.codemover.xplanner.Service.Impl.Spider;
 
 import com.codemover.xplanner.Model.Entity.Notification;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -50,7 +51,6 @@ public class ElectsysSpider implements ISpider {
     @Async
     public CompletableFuture<Collection<Notification>> getInfoFromWebsite(Integer offset, Integer number)
             throws IOException {
-
         String allInfoXml = getAllInfo(EleAllInfoUrl);
         String patternForTitle = "<title>(.+?)</title>";
         String patternForLink = "<link>(.+?)</link>";
@@ -68,12 +68,16 @@ public class ElectsysSpider implements ISpider {
         ArrayList<Notification> notifications = new ArrayList<>();
         Integer count = 0;
         Integer hasParsed = 0;
-
+        Boolean continueFlag=false;
+        m1.find();
+        m2.find();
         while (m1.find() && m2.find() && m3.find()) {
             Notification notification = new Notification();
+            continueFlag=false;
             try {
                 if (count < offset) {
                     count++;
+                    continueFlag=true;
                     continue;
                 }
                 if (hasParsed >= number)
@@ -100,13 +104,23 @@ public class ElectsysSpider implements ISpider {
                 notification.description = table.text().substring(0, Integer.min(1024, table.text().length()));
                 notification.setNotificationId(notification.hashCode());
                 notifications.add(notification);
+                ObjectMapper mapper = new ObjectMapper();
+                String what = mapper.writeValueAsString(notification);
+                logger.info("来自教务处的信息:here "+ what);
             } catch (IndexOutOfBoundsException e) {
+                ObjectMapper mapper = new ObjectMapper();
+                String what = mapper.writeValueAsString(notification);
+                logger.info("来自教务处的信息:there "+what);
                 notification.setNotificationId(notification.hashCode());
                 notifications.add(notification);
             } catch (Exception e) {
+                ObjectMapper mapper = new ObjectMapper();
+                String what = mapper.writeValueAsString(notification);
+                logger.info("来自教务处的信息: here there"+what);
                 logger.warn(e.getMessage());
             } finally {
-                hasParsed++;
+                if(!continueFlag)
+                    hasParsed++;
             }
         }
         return CompletableFuture.completedFuture(notifications);

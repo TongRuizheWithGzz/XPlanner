@@ -328,7 +328,8 @@ Page({
     /* 设置月历的样式，注意所有有日程的日子均为蓝色，选中的日子为橙色 */
     var tmp_day_list = [];
     var new_day = 0;
-    const days_count = new Date(app.globalData.year, app.globalData.month, 0).getDate();
+    // const days_count = new Date(app.globalData.year, app.globalData.month, 0).getDate();
+    const days_count = new Date(selected_year, selected_month, 0).getDate();
     /* 设置普通日期 */
     for (var i = 1; i <= days_count; i++) {
       tmp_day_list.push({
@@ -397,8 +398,7 @@ Page({
           showYear: year,
           showMonth: month,
         });
-        console.log("change to month " + this.data.showYear + " " + this.data.showMonth);
-        console.log(this.data.dayList);
+       
       }).catch((errno) => {
         concole.log("在prevMonth函数里面调用失败", errno)
       });
@@ -432,8 +432,7 @@ Page({
         showYear: year,
         showMonth: month,
       });
-      console.log("change to month " + this.data.showYear + " " + this.data.showMonth);
-      console.log(this.data.dayList);
+  
     }).catch((errno) => {
       console.log("在nextMonth里面调用错误:", errno);
     });
@@ -597,7 +596,6 @@ Page({
     //   return [];
     // }
     var tmp;
-    console.log("SB");
     wrapper.wxRequestWrapper(api.queryScheduleitemByDay, "GET", {
       "year": app.globalData.year,
       "month": app.globalData.month,
@@ -679,9 +677,11 @@ Page({
         new_month != old_month) ||
       ((show_month != old_month || show_year != old_year)) && // 判断是否点击非已选择日期所在页上非主月日期
       (show_month != new_month)) {
-      console.log("Do nothing.");
+      console.log("打印 Do nothing.");
       return;
     }
+
+    console.log("打印同页上不同月份情况 ", show_year + "-" + show_month, show_year + "-" + new_month);
 
     app.globalData.year = new_year;
     app.globalData.month = new_month;

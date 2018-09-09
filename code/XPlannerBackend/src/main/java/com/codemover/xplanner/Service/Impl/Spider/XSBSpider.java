@@ -2,6 +2,7 @@ package com.codemover.xplanner.Service.Impl.Spider;
 
 import com.codemover.xplanner.Model.Entity.Notification;
 import com.codemover.xplanner.Service.Exception.SpiderRequestParamException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -39,10 +40,12 @@ public class XSBSpider implements ISpider {
     @Override
     public CompletableFuture<Collection<Notification>> getInfoFromWebsite(Integer offset, Integer number)
             throws IOException {
+        offset = offset + 5;
         if (number > itemPerPage) {
             logger.warn("Require for too much notifications per time. Will ignore this request");
             throw new SpiderRequestParamException("Require for too much a time");
         }
+
 
         Integer startPageNumber = offset / itemPerPage;
         Integer endPageNumber = (offset + number - 1) / itemPerPage;
@@ -63,6 +66,7 @@ public class XSBSpider implements ISpider {
 
     public ArrayList<Notification> ParseHTMLFromXSB(Integer pageNumber, Integer startIndex, Integer number)
             throws IOException {
+
         if (startIndex + number > itemPerPage) {
             logger.warn("require too many items from XSB on a single page!");
             throw new SpiderRequestParamException("Require for too much a time");
@@ -104,11 +108,17 @@ public class XSBSpider implements ISpider {
                 }
                 notification.setNotificationId(notification.hashCode());
                 notifications.add(notification);
+
+
             } catch (Exception e) {
-                logger.warn(e.getMessage());
+                logger.warn("在学生办Spider里出错:", e.getMessage());
                 continue;
             }
         }
+        ObjectMapper mapper = new ObjectMapper();
+        String what = mapper.writeValueAsString(notifications);
+        logger.info("来自学生办的信息: ", what);
+
         return notifications;
     }
 

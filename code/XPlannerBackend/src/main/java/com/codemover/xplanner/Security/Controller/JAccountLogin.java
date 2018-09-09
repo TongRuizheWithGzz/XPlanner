@@ -9,6 +9,7 @@ import com.codemover.xplanner.Model.Entity.Role;
 import com.codemover.xplanner.Security.Config.ConstConfig;
 import com.codemover.xplanner.Security.Exception.ParseProfileJsonException;
 import com.codemover.xplanner.Security.Util.UserFactory;
+import com.codemover.xplanner.Service.Impl.JAccountParseService;
 import com.codemover.xplanner.Service.ScheduleService;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -58,6 +59,9 @@ public class JAccountLogin {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    JAccountParseService jAccountParseService;
 
     @ResponseBody
     @RequestMapping(value = "/getJAccountLoginUrl", method = RequestMethod.GET)
@@ -121,12 +125,27 @@ public class JAccountLogin {
             String accessToken = oAuthToken.getAccessToken();
             String refreshToken = oAuthToken.getRefreshToken();
             Long expiresIn = oAuthToken.getExpiresIn();
+
+
             OAuthClientRequest bearerClientRequest =
                     new OAuthBearerClientRequest(constConfig.profileUrl)
                             .setAccessToken(accessToken).buildQueryMessage();
 
-            OAuthClient clientForGetProfile = new OAuthClient(new URLConnectionClient());
-            OAuthResourceResponse authResourceResponse = clientForGetProfile.resource(bearerClientRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
+            //Get the profile of the user
+            OAuthClient clientToGetInfo = new OAuthClient(new URLConnectionClient());
+            OAuthResourceResponse authResourceResponse = clientToGetInfo.resource(bearerClientRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
+
+
+            OAuthClientRequest bearerClientRequest2 =
+                    new OAuthBearerClientRequest(constConfig.lessonsUrl)
+                            .setAccessToken(accessToken).buildQueryMessage();
+
+            //Get the lessons of the user
+            OAuthClient clientToGetLessons = new OAuthClient(new URLConnectionClient());
+            OAuthResourceResponse lesson = clientToGetLessons.resource(bearerClientRequest2, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
+            String lessonJson = lesson.getBody();
+
+
             logger.info("JAccount user profile: '{}'", authResourceResponse.getBody());
 
 
@@ -144,10 +163,14 @@ public class JAccountLogin {
             List<Plannerstore> plannerstores = plannerStoreRepository.findAll();
             jAccountUser.setPlannerstores(plannerstores);
 
+
             jAccountUser.setOpenId(state);
+
+
             jAccountUserRepository.save(jAccountUser);
 
 
+            jAccountParseService.JAccountLesson(lessonJson, jAccountUser);
 
 
             logger.info("用户扫码后获取用户信息成功，用户名: '{}'", jAccountUser.getjAccountName());

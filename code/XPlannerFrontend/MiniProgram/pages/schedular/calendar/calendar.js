@@ -50,12 +50,12 @@ Component({
             },
             showMonth: tmp_month
           });
-          console.log("asd",newVal);
-          console.log("sdf",oldVal);
+        
+        
           return;
         }
-        console.log("new val :: =----",newVal)
-        console.log("old val :: =----", oldVal)
+        
+        
         
         switch (this.data.index) {
           case 0: {
@@ -94,6 +94,7 @@ Component({
   },
   data: {
     showMonth: "",
+    showDate: "",
     weekTypes: WEEK_LIST,
     index: 1,
     prevIndex: 1,
@@ -105,7 +106,8 @@ Component({
   },
   lifetimes: {
     attached: function() {
-      console.log("Launching calendar.");
+     
+     
       // let tmp_month =
       //   "" +
       //   this.properties.year +
@@ -125,7 +127,9 @@ Component({
       //   },
       //   showMonth: tmp_month
       // });
-      console.log(this.data.content);
+    
+
+    
     }
   },
   methods: {
@@ -242,20 +246,25 @@ Component({
       //   }
       // }
       // return result;
-      console.log("given typelist:---",givenTypeList);
+    
       let result = monthObj;
       for (let i = 0; i < result.dayList.length; i++) {
         if (result.dayList[i].day === 1) {
           for (let j = 0; j < givenTypeList.length; j++) {
             if (givenTypeList[j].selected) {
               result.dayList[i + j].type = SELECTED_DAY;
+            
+              let date_str = (j + 1) < 9 ? ("0" + (j + 1)) : (j + 1);
+              this.setData({
+                showDate: monthObj.month + "-" + date_str
+              });
             } else if (givenTypeList[j].haveItems) {
               result.dayList[i + j].type = HAVE_ITEM_DAY;
             } else {
               result.dayList[i + j].type = NORMAL_DAY;
             }
           }
-          console.log("changed monthObj ", result);
+         
           return result;
         }
       }
@@ -423,6 +432,9 @@ Component({
         month: parseInt(this.data.showMonth.slice(5, 7)),
         day: e.currentTarget.dataset.day
       };
+      if (e.currentTarget.dataset.type === NOT_CURRENT_MONTH_DAY) {
+        return;
+      }
       this.triggerEvent("dayClick", detail, {});
     }
   }

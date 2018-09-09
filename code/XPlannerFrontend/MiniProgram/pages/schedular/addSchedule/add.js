@@ -54,13 +54,10 @@ Page({
       });
     } else if (options.spiderIndex) {
       // 如果是添加spider项目
-      console.log(options.spiderIndex);
-      console.log("add spider item");
-      console.log(options.pageNumber);
-      console.log(app.globalData.spiderItems);
+     
       var tmp_item =
         app.globalData.spiderItems[options.pageNumber - 1][options.spiderIndex];
-      console.log(tmp_item);
+      
       this.setData({
         startDate: tmp_item.start_time.slice(0, 10),
         startTime: tmp_item.start_time.slice(11, 16),

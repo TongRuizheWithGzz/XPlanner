@@ -1,4 +1,4 @@
-const localhost = "http://10.163.61.235"
+const localhost = "http://172.20.10.2"
 const ApiRootUrl = localhost + ":8082/api/";
 const PythonUrl = localhost + ":5000/"
 module.exports = {

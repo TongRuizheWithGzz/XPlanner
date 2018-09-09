@@ -3,7 +3,7 @@
     <view class="calendar-arrow-box" bindtap="prevMonth">
       <image class="calendar-arrow" src="/icons/left.png" />
     </view>
-    <view class="calendar-title-month">{{showMonth}}</view>
+    <view class="calendar-title-month">{{showDate}}</view>
     <view class="calendar-arrow-box" bindtap="nextMonth">
       <image class="calendar-arrow" src="/icons/right.png" />
     </view>
@@ -18,7 +18,7 @@
       <swiper-item>
         <view class="calendar-content">
           <view class="calendar-day-box" wx:for="{{content.a.dayList}}" wx:key="{{item}}">
-            <view catchtap="selectDay" data-day="{{item.day}}">
+            <view catchtap="selectDay" data-day="{{item.day}}" data-type="{{item.type}}">
               <view class="{{item.type}}">
                 {{item.day}}
               </view>
@@ -29,7 +29,7 @@
       <swiper-item>
         <view class="calendar-content">
           <view class="calendar-day-box" wx:for="{{content.b.dayList}}" wx:key="{{item}}">
-            <view catchtap="selectDay" data-day="{{item.day}}">
+            <view catchtap="selectDay" data-day="{{item.day}}" data-type="{{item.type}}">
               <view class="{{item.type}}">
                 {{item.day}}
               </view>
@@ -40,7 +40,7 @@
       <swiper-item>
         <view class="calendar-content">
           <view class="calendar-day-box" wx:for="{{content.c.dayList}}" wx:key="{{item}}">
-            <view catchtap="selectDay" data-day="{{item.day}}">
+            <view catchtap="selectDay" data-day="{{item.day}}" data-type="{{item.type}}">
               <view class="{{item.type}}">
                 {{item.day}}
               </view>

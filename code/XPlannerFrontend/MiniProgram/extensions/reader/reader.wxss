@@ -63,4 +63,11 @@
   font-weight: bold;
   margin-top:30rpx;
   margin-left:43rpx;
+  background-color:#eee;
+  border-radius:10rpx;
+  height:60rpx;
+  width:300rpx;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }

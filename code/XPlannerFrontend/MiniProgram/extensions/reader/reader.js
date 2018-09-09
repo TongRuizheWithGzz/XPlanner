@@ -79,7 +79,7 @@ Page({
                     var end_time = data["end_time"];
                     wx.showModal({
                       title: '生成日程成功(#^.^#)',
-                      content: '开始时间----' + start_time + '\r\n 结束时间: ' + end_time,
+                      content: '开始时间: ' + start_time + '\r\n 结束时间: ' + end_time,
                       confirmText: "导入日程",
                       cancelText: "放弃",
                       success: function(res) {
@@ -141,7 +141,7 @@ Page({
       var end_time = data["end_time"];
       wx.showModal({
         title: '生成日程成功(#^.^#)',
-        content: '开始时间----' + start_time + ' 结束时间: ' + end_time,
+        content: '开始时间:    ' + start_time + ' 结束时间: ' + end_time,
         confirmText: "导入日程",
         cancelText: "放弃",
         success: function(res) {
