@@ -1,6 +1,10 @@
 package com.codemover.xplanner.Security.Controller;
 
+import com.codemover.xplanner.DAO.JAccountUserRepository;
+import com.codemover.xplanner.DAO.PlannerStoreRepository;
+import com.codemover.xplanner.DAO.RoleRepository;
 import com.codemover.xplanner.Model.Entity.JAccountUser;
+import com.codemover.xplanner.Model.Entity.Plannerstore;
 import com.codemover.xplanner.Model.Entity.Role;
 import com.codemover.xplanner.Security.Config.ConstConfig;
 import com.codemover.xplanner.Security.Exception.ParseProfileJsonException;
@@ -32,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -44,6 +49,15 @@ public class JAccountLogin {
 
     @Autowired
     private ScheduleService scheduleService;
+
+    @Autowired
+    private PlannerStoreRepository plannerStoreRepository;
+
+    @Autowired
+    JAccountUserRepository jAccountUserRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @ResponseBody
     @RequestMapping(value = "/getJAccountLoginUrl", method = RequestMethod.GET)
@@ -86,6 +100,7 @@ public class JAccountLogin {
             String code = oar.getCode();
             String state = oar.getState();
 
+            logger.info(code);
             OAuthClientRequest request = OAuthClientRequest
                     .tokenLocation(constConfig.accessTokenUrl)
                     .setGrantType(GrantType.AUTHORIZATION_CODE)
@@ -95,6 +110,7 @@ public class JAccountLogin {
                     .setCode(code)
                     .buildQueryMessage();
 
+            logger.info(request.getLocationUri());
 
             OAuthClient clientForAccessToken = new OAuthClient(new URLConnectionClient());
             OAuthJSONAccessTokenResponse jsonAccessTokenResponse = clientForAccessToken.accessToken(request, OAuthJSONAccessTokenResponse.class);
@@ -116,15 +132,25 @@ public class JAccountLogin {
 
             JAccountUser jAccountUser = UserFactory.createJAccountUser(authResourceResponse.getBody());
             jAccountUser.setAccessToken(accessToken);
-            Set<Role> roles = new HashSet<>();
-            roles.add(new Role("ROLE_JACCOUNT_User"));
+
+            List<Role> roles = roleRepository.findAll();
             jAccountUser.setRoles(roles);
+
+
             jAccountUser.setEnabled(true);
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             String defaultPassword = bCryptPasswordEncoder.encode(jAccountUser.getUniqueId());
             jAccountUser.setUserPassword(defaultPassword);
+            List<Plannerstore> plannerstores = plannerStoreRepository.findAll();
+            jAccountUser.setPlannerstores(plannerstores);
+
+            jAccountUser.setOpenId(state);
+            jAccountUserRepository.save(jAccountUser);
 
 
+
+
+            logger.info("用户扫码后获取用户信息成功，用户名: '{}'", jAccountUser.getjAccountName());
             responseToFrontEnd.put("errMsg", "loginByJAccount:ok");
             return responseToFrontEnd;
         } catch (OAuthSystemException | OAuthProblemException e) {
@@ -132,6 +158,10 @@ public class JAccountLogin {
             responseToFrontEnd.put("errMsg", "loginByJAccount:fail");
             return responseToFrontEnd;
         } catch (ParseException | ParseProfileJsonException e) {
+            logger.error("error occurred in handling the profile response", e);
+            responseToFrontEnd.put("errMsg", "loginByJAccount:fail");
+            return responseToFrontEnd;
+        } catch (Exception e) {
             logger.error("error occurred in handling the profile response", e);
             responseToFrontEnd.put("errMsg", "loginByJAccount:fail");
             return responseToFrontEnd;

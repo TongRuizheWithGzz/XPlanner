@@ -29,7 +29,7 @@ public class UserFactory {
         //Create the JAccount User
 
         JAccountUser jAccountUser = new JAccountUser();
-
+        jAccountUser.setUserName(jAccountName);
         jAccountUser.setUniqueId(uniqueId);
         jAccountUser.setjAccountName(jAccountName);
         jAccountUser.setStudentId(studentID);

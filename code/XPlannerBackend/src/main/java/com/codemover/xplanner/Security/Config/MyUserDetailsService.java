@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -31,7 +32,7 @@ public class MyUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User Not Found");
         }
-        Set<Role> roles = user.getRoles();
+        List<Role> roles = user.getRoles();
         Collection<GrantedAuthority> grantedAuthority = new ArrayList<>();
 
         for (Role role : roles) {

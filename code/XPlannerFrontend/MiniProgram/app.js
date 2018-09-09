@@ -10,6 +10,7 @@ var api = require("/interface/config/api.js");
 //app.js
 App({
     onLaunch: function() {
+      console.log("app.onLaunch STARTs");
         var date = wx.getStorageSync('date');
         if (date) {
             console.log("Date found in Local storage");
@@ -27,112 +28,9 @@ App({
             console.log(this.globalData.date);
             wx.setStorageSync('date', this.globalData.date);
         }
+  
 
-
-        // var openId = this.globalData.openId;
-        // var that = this;
-        // new Promise(function(resolve, reject) {
-        //     let errorFlag = false;
-        //     if (openId === "" || !openId) {
-        //         new Promise(function(resolve, reject) {
-        //             wx.login({
-        //                 fail: function() {
-        //                     reject(10);
-        //                 },
-        //                 success: function(res) {
-        //                     if (res.code) {
-        //                         resolve(res.code);
-        //                     } else {
-        //                         reject(10);
-        //                     }
-        //                 }
-        //             })
-        //         }).then((code) => {
-        //             return new Promise(function(resolve, reject) {
-        //                 wx.request({
-        //                     url: api.getOpenId,
-        //                     data: {
-        //                         code,
-        //                     },
-        //                     success: function(res) {
-        //                         if (res.statusCode = 200)
-        //                             resolve(res.data);
-        //                         else {
-        //                             reject(11);
-        //                         }
-        //                     },
-        //                     fail: function() {
-
-        //                         reject(11);
-        //                     }
-        //                 })
-        //             })
-        //         }).then((openId) => {
-        //             that.globalData.openId = openId;
-        //         }).catch((errno) => {
-        //             errorFlag = true;
-        //         })
-        //         if (errorFlag)
-        //             reject(11);
-        //         resolve(that.globalData.openId);
-        //     } else {
-        //         resolve(openId);
-        //     }
-        // }).then((openId) => {
-        //     return new Promise(function(resolve, reject) {
-        //         wx.request({
-        //             url: api.checkTied,
-        //             method: "GET",
-        //             data: {
-        //                 openId,
-        //             },
-                    
-        //             success: function(res) {
-        //                 if (res.statusCode != 200)
-        //                     reject(12);
-        //                 resolve(res.data)
-        //             },
-        //             fail: function() {
-        //                 reject(12);
-        //             }
-
-        //         })
-        //     })
-        // }).then((res) => {
-        //     return new Promise(function(resolve, reject) {
-        //         if (!res) {
-        //             console.log("JAccount账号未绑定");
-        //             that.globalData.hasTied = false;
-        //         } else {
-        //             console.log("JAccount账号绑定！");
-        //             that.globalData.hasTied = true;
-        //             wx.request({
-        //                 url: api.LoginByWeixin,
-        //                 method: "GET",
-        //                 data: {
-        //                     openId: that.globalData.openId,
-        //                 },
-        //                 success: function(res) {
-        //                     if (res.statusCode != 200 || res.data.errno != 0)
-        //                         reject(12);
-        //                     else {
-        //                         let Cookie = res.header['Set-Cookie'].split(';')[0];
-        //                         wx.setStorageSync('Cookie', Cookie);
-        //                         resolve(0);
-        //                     }
-        //                 }
-        //             })
-        //         }
-        //         console.log("app.onLaunch finish");
-        //     })
-        // }).catch((errno) => {
-        //     console.log(errno)
-        //     wx.showModal({
-        //         title: "服务器连接失败",
-        //         content: "请检查网络连接",
-        //         showCancel: false
-        //     });
-        // })
+       
 
     },
     onShow: function() {
@@ -161,5 +59,6 @@ App({
         showCompletedSchedule: true,
         openId: "",
         hasTied: true,
+        Cookie:"",
     }
 })

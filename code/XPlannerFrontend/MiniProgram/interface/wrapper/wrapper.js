@@ -37,13 +37,14 @@ function loginByUsernamePassword(username, password) {
   })
 }
 
+
+
 function wxRequestWrapper(apiUrl, method, data) {
-    
   return new Promise(function(resolve, reject) {
     let Cookie = wx.getStorageSync("Cookie");
     if (!Cookie) {
-      //本地存储没有Cookie 用户尚未登录
-      reject(5);
+      //本地存储没有Cookie
+      reject("本地存储没有Cookie Request请求被拒绝");
     }
     wx.request({
       url: apiUrl,
@@ -52,10 +53,10 @@ function wxRequestWrapper(apiUrl, method, data) {
       header: {
         'Cookie': Cookie,
         'content-Type': 'application/json;charset=UTF-8',
-
       },
       success: function(res) {
-
+        if (res.statusCode != 200)
+          reject("statuscode错误: " + res.statusCode)
         switch (res.data.errno) {
           case (0):
             //接口调用成功
@@ -63,34 +64,75 @@ function wxRequestWrapper(apiUrl, method, data) {
             break;
           case (1):
             //用户权限认证过期(Cookie无效)
+            reject("Bad credentials: 用户权限认证无效")
+            break;
           case (2):
             //没有权限访问该接口
-            reject(res.data.errno);
+            reject("Permission Denied: 没有权限访问该接口");
             break;
         }
       },
       fail: function(res) {
-        console.log(res);
-        switch (res.statusCode) {
-          case 400:
-            reject(7);
-          case 404:
-            reject(8);
-        }
-        //wx.request() failed! 可能由于网络错误等原因
-        reject(4);
+        reject("wx.request() 失败！")
       }
     })
-  }).then((data)=>{
-      resolve(4)
-  }).catch((errno)=>{
-      switch(errno){
-          case 1:
-          case 2:
-          
-      }
   })
 }
+
+// function wxequestWrapper(apiUrl, method, data) {
+
+//   return new Promise(function(resolve, reject) {
+//     let Cookie = wx.getStorageSync("Cookie");
+//     if (!Cookie) {
+//       //本地存储没有Cookie 用户尚未登录
+//       reject(5);
+//     }
+//     wx.request({
+//       url: apiUrl,
+//       method,
+//       data,
+//       header: {
+//         'Cookie': Cookie,
+//         'content-Type': 'application/json;charset=UTF-8',
+
+//       },
+//       success: function(res) {
+
+//         switch (res.data.errno) {
+//           case (0):
+//             //接口调用成功
+//             resolve(res.data);
+//             break;
+//           case (1):
+//             //用户权限认证过期(Cookie无效)
+//           case (2):
+//             //没有权限访问该接口
+//             reject(res.data.errno);
+//             break;
+//         }
+//       },
+//       fail: function(res) {
+//         console.log(res);
+//         switch (res.statusCode) {
+//           case 400:
+//             reject(7);
+//           case 404:
+//             reject(8);
+//         }
+//         //wx.request() failed! 可能由于网络错误等原因
+//         reject(4);
+//       }
+//     })
+//   }).then((data) => {
+//     resolve(4)
+//   }).catch((errno) => {
+//     switch (errno) {
+//       case 1:
+//       case 2:
+
+//     }
+//   })
+// }
 
 function checkSessionWrapper() {
 

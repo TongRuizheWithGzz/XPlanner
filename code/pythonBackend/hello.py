@@ -6,7 +6,7 @@ import os
 
 #Localhost is with port
 
-localhost="http://1192.168.1.105:8082"
+localhost="http://10.163.61.235:8082"
 app = Flask(__name__)
 
 @app.route('/getQrcode',methods=["GET"])
@@ -19,7 +19,7 @@ def getQrcode():
     response_type="code"
     client_id="ajebOnLZZi7Uk7y3Jbze"
     redirect_uri=localhost+"/api/auth/authorize"
-
+ 
     #build url
     params={"scope":scope,"response_type":response_type,"redirect_uri":redirect_uri,"state":openId,"client_id":client_id}
 

@@ -1,9 +1,15 @@
 <view class="login-panel">
+  <view class="card">
     <view class="xplanner-panel">
-        <!-- <image src="/icons/loading.gif"/> -->
-        <image class="xplanner-icon" src="/icons/XPlannerLogo.png" />
-        <view class="xplanner-title">XPlanner</view>
-        <view class="xplanner-description">为你的大学生活设计的可扩展智能日程表</view>
+      <image class="xplanner-icon" src="/icons/XPlannerLogo.png" />
+      <view class="xplanner-title">XPlanner</view>
+      <view class="xplanner-description">为你的大学生活设计的可扩展智能日程表</view>
     </view>
-    <image src="{{qrcodeFileName}}"/>
+  </view>
+  <view class="card down">
+    <image src="{{qrcodeFileName}}" class="qrcode" />
+    <view class="register-link">
+      扫码绑定JAccount
+    </view>
+  </view>
 </view>
