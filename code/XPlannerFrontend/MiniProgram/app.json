@@ -9,7 +9,8 @@
     "pages/store/store",
     "pages/store/detail/detail",
     "extensions/reader/reader",
-    "extensions/keeper/keeper"
+    "extensions/keeper/keeper",
+    "pages/me/me"
   ],
   "tabBar": {
     "color": "#515151",
@@ -23,16 +24,15 @@
         "text": "日程"
       },
       {
-        "selectedIconPath": "icons/puzzle-selected.png",
-        "iconPath": "icons/puzzle.png",
-        "pagePath": "pages/planners/planners",
-        "text": "扩展"
-      },
-      {
         "selectedIconPath": "icons/bag.png",
         "iconPath": "icons/bag2.png",
         "pagePath": "pages/store/store",
-        "text": "商城"
+        "text": "扩展"
+      },{
+        "selectedIconPath": "icons/personal.png",
+        "iconPath": "icons/personal-selected.png",
+        "pagePath": "pages/me/me",
+        "text": "我的"
       }
     ]
   },

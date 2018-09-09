@@ -1,0 +1,75 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname{
+  color: #aaa;
+}
+
+.container11,.press {
+  height: 270rpx;
+  width:270rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background-color:#f0f0f0;
+  transition: 0.5s all;
+  font-size:33rpx;
+} 
+
+.press{
+  background-color:#f4f4f4;
+  height: 450rpx;
+  width:450rpx;
+  transition: 0.1s all;
+  font-size:60rpx;
+}
+
+.link{
+  width:100%;
+  height:450rpx;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-around;
+}
+
+.classnum{
+  font-weight: 500;
+}
+
+.stunum{
+  font-size:28rpx;
+  color:#aaa;
+}
+
+.all{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.des{
+  margin-top:10rpx;
+  font-size:32rpx;
+  color:#999;
+  width:50%;
+  text-align: center;
+  font-weight: 600;
+}
+
+.xp{
+  font-size:70rpx;
+}

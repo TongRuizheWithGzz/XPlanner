@@ -1,0 +1,29 @@
+<view class='all'>
+  <view class="link">
+    <view class="container11" hover-class='press'>
+      <view class="userinfo">
+        <block>
+          <image class="userinfo-avatar" src="{{avatarUrl}}" mode="cover"></image>
+          <view class="userinfo-nickname">{{nickName}}</view>
+        </block>
+      </view>
+    </view>
+
+    <view class="container11" hover-class='press'>
+      <view class="userinfo">
+        <block>
+          <view class='classnum'>{{classNumber}}</view>
+          <view class="stunum">{{studentId}}</view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <view class='xp'>
+    XPlanner
+  </view>
+
+  <view class='des'>
+    连接你的微信和Jaccount 连接你的学习和生活
+  </view>
+</view>

@@ -3,7 +3,7 @@
     {{time}}
   </view>
   <view class='title'>
-    插件商城
+    扩展列表
   </view>
 </view>
 <view class='list'>
