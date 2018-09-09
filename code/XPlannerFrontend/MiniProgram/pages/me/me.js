@@ -1,13 +1,13 @@
 //index.js
 //获取应用实例
 const app = getApp()
-
+var api = require("../../interface/config/api.js");
 Page({
   data: {
     avatarUrl: "/icons/loading.gif",
-    nickName:"",
-    classNumber:"",
-    studentId:"",
+    nickName: "",
+    classNumber: "",
+    studentId: "",
     motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
@@ -19,40 +19,34 @@ Page({
       url: '../logs/logs'
     })
   },
-  onLoad: function () {
-    if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUse){
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
+
+  onLoad: function() {
+    var that = this;
+    wx.getUserInfo({
+      success: (res) => {
+        that.setData({
+          nickName: res.userInfo.nickName,
+          avatarUrl: res.userInfo.avatarUrl,
         })
       }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
+    })
+    if (app.globalData.openId) {
+      wx.request({
+        url: api.getClassAndId,
+        method: 'GET',
+        data: {
+          openId: app.globalData.openId,
+        },
+        success: (res) => {
+          if (res.code = 200) {
+            this.setData({
+              classNumber: res.data.user.classNumber,
+              studentId: res.data.user.studentId,
+            })
+          }
         }
       })
     }
   },
-  getUserInfo: function(e) {
-    console.log(e)
-    app.globalData.userInfo = e.detail.userInfo
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
-  }
+
 })

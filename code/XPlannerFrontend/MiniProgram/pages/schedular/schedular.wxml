@@ -31,7 +31,7 @@
   </view>
 </view>
 <view class="controller">
-  <view class="add-item-word" hover-class='press' bindtap="add">添加事务</view>
-  <view class="show-complete-word" hover-class='press' bindtap="changeVisible" wx:if="{{!showComplete}}">显示已完成事务</view>
+  <view class="add-item-word" bindtap="add">添加事务</view>
+  <view class="show-complete-word" bindtap="changeVisible" wx:if="{{!showComplete}}">显示已完成事务</view>
   <view class="show-complete-word" bindtap="changeVisible" wx:if="{{showComplete}}">不显示已完成事务</view>
 </view>

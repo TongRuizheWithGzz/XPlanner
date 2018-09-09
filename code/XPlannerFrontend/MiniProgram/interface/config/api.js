@@ -1,4 +1,4 @@
-const localhost = "http://172.20.10.2"
+const localhost = "http://10.162.33.90"
 const ApiRootUrl = localhost + ":8082/api/";
 const PythonUrl = localhost + ":5000/"
 module.exports = {
@@ -25,5 +25,8 @@ module.exports = {
   getQrcode: PythonUrl + "getQrcode",
   qrCodePath: PythonUrl + "static/",
   getOpenId: ApiRootUrl + "auth/getOpenId",
-  checkTied: ApiRootUrl + "auth/checkTied"
+  checkTied: ApiRootUrl + "auth/checkTied",
+  getClassAndId: ApiRootUrl + "auth/getClassAndId",
+  getTodayFood: ApiRootUrl + "getTodayFood",
+  toBase64: PythonUrl + "toBase64",
 }

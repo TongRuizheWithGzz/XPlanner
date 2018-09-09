@@ -62,7 +62,23 @@ Page({
 
   //后端有关,后端加载此页面推荐数据和一餐食物
   onShow: function() {
-    
+    var that = this;
+    app.globalData.ifPressSaveInAddSchedulePage = false;
+
+    wrapper.wxRequestWrapper(api.getTodayFood, "GET", {})
+      .then((res) => {
+        that.setData({
+          user_food_eaten: res["userFoodEaten"],
+        })
+      })
+      .catch((errMsh) => {
+        console.log(errMsh);
+        wx.showModal({
+          title: '请求失败',
+          content: '请检查网络设置',
+          showCancel: false,
+        })
+      })
     var tmp = 'foodmap.' + this.data.address
     if (this.data.foodmap != undefined &&
       this.data.foodmap[this.data.address] != undefined) {
@@ -89,6 +105,7 @@ Page({
       that.setData({
         keeperItems: temp,
       })
+      console.log("得到推荐事项:", app.globalData.keeperItems);
       app.globalData.keeperItems = that.data.keeperItems;
     }).catch((errno) => {
       console.log("获取事务列表或推荐运动事项失败: ", errno);
@@ -125,12 +142,12 @@ Page({
       sourceType: ["album", "camera"],
       success: function(res) {
         var tempFilePaths = res.tempFilePaths;
-        wx.request({
-          url: tempFilePaths[0],
-          method: 'GET',
-          responseType: 'arraybuffer',
-          success: function(res) {
-            var base64 = wx.arrayBufferToBase64(res.data);
+        wx.uploadFile({
+          url: api.toBase64,
+          filePath: tempFilePaths[0],
+          name: 'file',
+          success: (res) => {
+            var base64 = res.data;
             wx.request({
               url: 'https://aip.baidubce.com/rest/2.0/image-classify/v2/dish',
               method: 'POST',
@@ -177,8 +194,6 @@ Page({
                   }).then((data) => {
 
 
-
-
                     wx.showToast({
                       title: '成功，已统计',
                       image: "/icons/success.png",
@@ -193,12 +208,14 @@ Page({
                       showCancel: false,
                     });
                   })
-
                 }
               }
             })
+
           }
-        });
+        })
+
+
       },
     })
   },

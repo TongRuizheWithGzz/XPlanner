@@ -20,5 +20,6 @@ public interface IKeeperService {
 
     List<FoodDTO> getFoodList(String dininghall);
 
+    List<HashMap<String, Object>> getTodayFood(String username);
 }
 

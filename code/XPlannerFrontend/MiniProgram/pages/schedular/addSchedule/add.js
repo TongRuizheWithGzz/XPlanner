@@ -142,8 +142,10 @@ Page({
     });
   },
   save: function() {
-    if (app.globalData.ifPressSaveInAddSchedulePage) return; // 如果已经点击确认过了，就不响应。
-    app.globalData.ifPressSaveInAddSchedulePage = true; // 设置防止多次点击发送请求的flag
+    if (app.globalData.ifPressSaveInAddSchedulePage) {
+      console.log("锁定保存按钮");
+      return; // 如果已经点击确认过了，就不响应。
+    }
 
     console.log("go into save...");
 
@@ -190,7 +192,7 @@ Page({
       //   this.data.description,
       //   this.data.address
       // );
-
+      app.globalData.ifPressSaveInAddSchedulePage = true; // 设置防止多次点击发送请求的flag
 
       /* 向后端发送请求，获取schduleItem_id，增加对应的项目，注意可能有错误处理 */
       wx.showLoading({
@@ -294,6 +296,9 @@ Page({
         });
         return;
       }
+
+      app.globalData.ifPressSaveInAddSchedulePage = true; // 设置防止多次点击发送请求的flag
+      
 
       /* 向后端发送请求，无论如何都需要更新globalData中的日程数组 */
       console.log("试图修改日程");

@@ -1,5 +1,6 @@
 package com.codemover.xplanner.Service.Impl;
 
+import afu.org.checkerframework.checker.oigj.qual.O;
 import com.codemover.xplanner.Converter.UploadFood.FoodPOJO;
 import com.codemover.xplanner.DAO.*;
 import com.codemover.xplanner.Model.DTO.FoodDTO;
@@ -226,17 +227,23 @@ public class KeeperService implements IKeeperService {
     public boolean need_to_fresh() {
         Timestamp last_keeper_fresh = user.getLast_keeper_fresh();
         if (last_keeper_fresh == null) {
+            System.out.println("不需要推荐，因为last_keeper_refresh为null");
             return true;
         }
         Calendar now = Calendar.getInstance();
         int interval = (int) ((Calendar2Timestamp(now).getTime() - last_keeper_fresh.getTime()) / (60 * 1000));
-        if (interval > 10) return true;
+        if (interval > 10) {
+            System.out.println("需要推荐，interval很长");
+            return true;
+        }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String s_now = simpleDateFormat.format(now.getTime());
         String s_fresh = simpleDateFormat.format(last_keeper_fresh.getTime());
         if (!s_now.substring(0, 10).equals(s_fresh.substring(0, 10))) {
+            System.out.println("需要推荐，跨天了");
             return true;
         }
+        System.out.println("需要推荐，interval足够短且在同一天");
         return false;
     }
 
@@ -317,7 +324,7 @@ public class KeeperService implements IKeeperService {
     }
 
     //it is used to calculate calorie to consume
-    public int get_calorie(){
+    public int get_calorie() {
         int calorie = 0;
         int metabolic_consumption_coefficient = 37;//代谢消耗系数,1kcal = 4.2kj
         int weight = 65;
@@ -335,16 +342,16 @@ public class KeeperService implements IKeeperService {
         calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
         calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
         Timestamp end_of_day = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
-        List<UserFoodEaten> userFoodEatenList = userFoodEatenRepository.findByUserAndAteTimeBetweenOrderByAteTime(user,begin_of_day,end_of_day);
-        for(UserFoodEaten userFoodEaten:userFoodEatenList){
-            calorie_in+=userFoodEaten.getCalorie();
+        List<UserFoodEaten> userFoodEatenList = userFoodEatenRepository.findByUserAndAteTimeBetweenOrderByAteTime(user, begin_of_day, end_of_day);
+        for (UserFoodEaten userFoodEaten : userFoodEatenList) {
+            calorie_in += userFoodEaten.getCalorie();
         }
         System.out.println("calorie_in:");
         System.out.println(calorie_in);
 
         calorie = calorie_in - weight * metabolic_consumption_coefficient;
-        if(calorie<200)calorie=200;
-        if(calorie>400)calorie=400;
+        if (calorie < 200) calorie = 200;
+        if (calorie > 400) calorie = 400;
         return calorie;
     }
 
@@ -359,6 +366,7 @@ public class KeeperService implements IKeeperService {
             if (need_to_fresh()) {
                 System.out.println("删除user的过期推荐项目");
                 keeperRecommandRepository.deleteByUser(user);
+
 
                 //计算需要消耗的卡路里
                 setCalorie(get_calorie());
@@ -441,6 +449,31 @@ public class KeeperService implements IKeeperService {
             foodDTOS.add(food.toFoodDTO());
         }
         return foodDTOS;
+    }
+
+    public List<HashMap<String, Object>> getTodayFood(String username) {
+
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        //get begin and end of today
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMinimum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMinimum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMinimum(Calendar.SECOND));
+        Timestamp begin_of_day = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+        Timestamp end_of_day = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+        List<UserFoodEaten> userFoodEatenList = userFoodEatenRepository.findByUserAndAteTimeBetweenOrderByAteTime(user, begin_of_day, end_of_day);
+        List<HashMap<String, Object>> s = new LinkedList<>();
+        for (UserFoodEaten eaten : userFoodEatenList) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("food_name", eaten.getFoodName());
+            map.put("calorie", eaten.getCalorie());
+            s.add(map);
+        }
+        return s;
     }
 
 }

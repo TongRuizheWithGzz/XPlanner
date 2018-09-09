@@ -68,4 +68,13 @@ public class KeeperController {
         response.put("foodInfo", foods);
         return ControllerUtil.successHandler(response);
     }
+
+
+    @GetMapping(value="/api/getTodayFood")
+    Map<String,Object>  getTodayFood(Principal principal){
+        List<HashMap<String, Object>> foodDTOS=keeperService.getTodayFood(principal.getName());
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("userFoodEaten", foodDTOS);
+        return ControllerUtil.successHandler(response);
+    }
 }
