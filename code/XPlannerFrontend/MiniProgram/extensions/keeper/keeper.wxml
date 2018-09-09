@@ -8,7 +8,7 @@
       <view class='item'>
         <view class='top'>
           <image src="{{icons[0]}}" class='icon'></image>
-          <view class='name1'>今天没有运动安排</view>
+          <view class='name1'>今天没有推荐运动安排</view>
         </view>
         
       </view>

@@ -1,6 +1,6 @@
 var api = require("../../interface/config/api.js");
 var wrapper = require("../../interface/wrapper/wrapper.js");
-
+var app = getApp();
 
 var date_string = function() {
   var dates = new Date();
@@ -33,18 +33,22 @@ Page({
    */
   choosePicture: function() {
     var that = this;
+    app.globalData.ifPressSaveInAddSchedulePage = false;
+
     wx.chooseImage({
       count: 1,
       sizeType: ["original", "compressed"],
       sourceType: ["album", "camera"],
       success: function(res) {
+
+        console.log("选取照片成功!");
         var tempFilePaths = res.tempFilePaths;
-        wx.request({
-          url: tempFilePaths[0],
-          method: 'GET',
-          responseType: 'arraybuffer',
-          success: function(res) {
-            var base64 = wx.arrayBufferToBase64(res.data);
+        wx.uploadFile({
+          url: api.toBase64,
+          filePath: tempFilePaths[0],
+          name: 'file',
+          success: function(base64) {
+            console.log("Python后端成功返回Base64数据: ", base64);
             wx.request({
               url: 'https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic',
               method: 'POST',
@@ -53,7 +57,7 @@ Page({
               },
               data: {
                 access_token: '24.599e356ed1fa21b734907803e84cd415.2592000.1538616705.282335-11767229',
-                image: base64,
+                image: base64.data,
                 probability: true
               },
               success: function(res) {
@@ -63,7 +67,7 @@ Page({
                 for (var i = 0; i < words_reslt.length; i++) {
                   upload += words_reslt[i]["words"];
                 }
-              console.log("连接起来的字符创",upload)
+                console.log("连接起来的字符创", upload)
                 console.log(result)
                 wx.showToast({
                   title: '图片识别成功',
@@ -73,7 +77,7 @@ Page({
                 setTimeout(() => {
                   wrapper.wxRequestWrapper(api.readerApi, "GET", {
                     "in": upload,
-        
+
                   }).then((data) => {
                     var start_time = data["start_time"];
                     var end_time = data["end_time"];
@@ -93,7 +97,6 @@ Page({
                         }
                       }
                     })
-
                   }).catch((errno) => {
                     console.log("通过识图api提取日期失败：", errno);
                     wx.showModal({
@@ -102,13 +105,11 @@ Page({
                       showCancel: false,
                     })
                   })
-                },1500);
+                }, 1500);
               }
             })
           }
-        });
-
-        console.log("choose image succeed");
+        })
       },
     })
   },

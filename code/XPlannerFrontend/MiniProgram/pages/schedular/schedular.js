@@ -263,7 +263,7 @@ Page({
               })
             }
 
-            this.shrink();
+            that.shrink();
 
           }).catch((errno) => {
             console.log("服务器删除失败：", errno);
@@ -283,7 +283,7 @@ Page({
     });
   },
 
-  shrink:function(e){
+  shrink: function(e) {
     this.setData({
       showSelect: -1,
     });
@@ -398,7 +398,7 @@ Page({
           showYear: year,
           showMonth: month,
         });
-       
+
       }).catch((errno) => {
         concole.log("在prevMonth函数里面调用失败", errno)
       });
@@ -432,7 +432,7 @@ Page({
         showYear: year,
         showMonth: month,
       });
-  
+
     }).catch((errno) => {
       console.log("在nextMonth里面调用错误:", errno);
     });
@@ -602,7 +602,7 @@ Page({
       "day": app.globalData.day,
 
     }).then((data) => {
-      tmp = schedule.warpScheduleItems(data.scheduleitems,this.data.showComplete);
+      tmp = schedule.warpScheduleItems(data.scheduleitems, this.data.showComplete);
       console.log(data.scheduleitems);
       console.log("finish")
       console.log("tmp:", tmp);
@@ -702,7 +702,7 @@ Page({
       "day": app.globalData.day,
 
     }).then((data) => { // 正常返回
-      tmp_items = schedule.warpScheduleItems(data.scheduleitems,this.data.showComplete);
+      tmp_items = schedule.warpScheduleItems(data.scheduleitems, this.data.showComplete);
       console.log(data.scheduleitems);
       console.log("finish")
       console.log("tmp:", tmp_items);

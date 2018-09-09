@@ -3,10 +3,10 @@ from MyQR import myqr
 import urllib
 import json
 import os
-
+import base64
 #Localhost is with port
 
-localhost="http://172.20.10.2:8082"
+localhost="http://10.162.33.90:8082"
 app = Flask(__name__)
 
 @app.route('/getQrcode',methods=["GET"])
@@ -40,6 +40,16 @@ def getQrcode():
     save_dir=os.getcwd()+'/static'
 	)
     return json.dumps({"errMsg":"success","errno":0})
+
+@app.route('/toBase64',methods=["POST"])
+def toBase64():
+
+    file = request.files['file']
+    print("Successfully get the image")
+
+    result=base64.b64encode(file.read())
+    print("Convert to base64 successfully")
+    return result
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)

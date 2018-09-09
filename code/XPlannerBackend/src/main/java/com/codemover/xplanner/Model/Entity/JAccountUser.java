@@ -1,5 +1,8 @@
 package com.codemover.xplanner.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -35,6 +38,9 @@ public class JAccountUser extends User {
     }
 
 
+
+
+
     public void setjAccountName(String jAccountName) {
         this.jAccountName = jAccountName;
     }
@@ -52,6 +58,7 @@ public class JAccountUser extends User {
 
     @Basic
     @Column(name = "unique_id")
+    @JsonIgnore
     public String getUniqueId() {
         return uniqueId;
     }
@@ -83,6 +90,7 @@ public class JAccountUser extends User {
 
     @Basic
     @Column(name = "access_token")
+    @JsonIgnore
     public String getAccessToken() {
         return accessToken;
     }
@@ -92,6 +100,7 @@ public class JAccountUser extends User {
     }
     @Basic
     @Column(name = "refresh_token")
+    @JsonIgnore
     public String getRefreshToken() {
         return refreshToken;
     }
@@ -102,6 +111,7 @@ public class JAccountUser extends User {
 
     @Basic
     @Column(unique = true, name="open_id")
+    @JsonIgnore
     public String getOpenId() {
         return openId;
     }

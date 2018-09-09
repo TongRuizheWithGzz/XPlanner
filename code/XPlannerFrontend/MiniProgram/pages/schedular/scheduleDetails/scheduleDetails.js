@@ -33,6 +33,7 @@ Page({
         item: app.globalData.scheduleItems[app.globalData.changeScheduleIndex],
       });
     }
+    app.globalData.ifPressSaveInAddSchedulePage = false;
   },
 
   edit: function () {

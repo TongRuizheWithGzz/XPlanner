@@ -89,4 +89,11 @@ public class RandomKeeperServiceImpl implements IKeeperService {
     public List<FoodDTO> getFoodList(String dininghall) {
         return null;
     }
+
+    @Override
+    public List<HashMap<String, Object>> getTodayFood(String username) {
+        return null;
+    }
+
+
 }

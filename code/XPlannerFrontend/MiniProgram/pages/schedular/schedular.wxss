@@ -238,8 +238,9 @@ page {
 .show-complete-word,.press {
   padding-right: 15rpx;
   border-radius:20rpx;
-  
+  transform:1s all;
 }
 .press{
-  background-color: #999;
+  background-color: #ddd;
+  
 }

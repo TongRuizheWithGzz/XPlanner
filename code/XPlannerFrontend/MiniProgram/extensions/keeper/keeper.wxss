@@ -67,7 +67,7 @@ swiper{
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 80rpx;
+  height: 120rpx;
   margin-top:20rpx;
   margin-bottom:20rpx;
 }
@@ -91,6 +91,7 @@ swiper{
   display: -webkit-box;
   font-weight: lighter;
   font-size: 32rpx;
+  height:500rpx;
 }
 
 .in {

@@ -150,4 +150,12 @@ public class UsernamePasswordLogin {
         return jAccountUser != null;
     }
 
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "api/auth/getClassAndId")
+    public HashMap<String, Object> getClassAndId(@RequestParam String openId) {
+        HashMap<String, Object> result = new HashMap<>();
+        JAccountUser jAccountUser = jAccountUserRepository.findByOpenId(openId);
+        result.put("user", jAccountUser);
+        return result;
+    }
 }
