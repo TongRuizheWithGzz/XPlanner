@@ -6,7 +6,7 @@
 }
 
 .top {
-  margin-left: 26px;
+  margin-left: 51rpx;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -27,7 +27,7 @@
 }
 
 .item, .se-item {
-  margin: 10px 26px 10px 26px;
+  margin: 22rpx 51rpx 22rpx 51rpx;
   width: 90%;
   height: 650rpx;
   position: relative;
@@ -63,8 +63,8 @@
 }
 
 .icon {
-  width: 50px;
-  height: 50px;
+  width: 110rpx;
+  height: 110rpx;
   border-radius: 10px;
 }
 
@@ -76,8 +76,8 @@
   align-items: center;
   color: white;
   position: absolute;
-  bottom: 0;
-  height: 20%;
+  bottom: 15rpx;
+  height: 17%;
 }
 
 .right {
@@ -86,7 +86,7 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: space-around;
-  margin-left: -90rpx;
+  margin-left:20rpx;
 }
 
 .button, .press {
@@ -108,7 +108,7 @@
 }
 
 .name {
-  font-size: 22px;
+  font-size: 46rpx;
   font-weight: bold;
 }
 
@@ -128,4 +128,10 @@
 .description {
   background-color: white;
   color: black;
+}
+
+.ll{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
 }

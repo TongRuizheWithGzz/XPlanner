@@ -316,18 +316,52 @@ public class KeeperService implements IKeeperService {
         }
     }
 
+    //it is used to calculate calorie to consume
+    public int get_calorie(){
+        int calorie = 0;
+        int metabolic_consumption_coefficient = 37;//代谢消耗系数,1kcal = 4.2kj
+        int weight = 65;
+        int calorie_in = 0;
+        //calculate calorie_in
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        //get begin and end of today
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMinimum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMinimum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMinimum(Calendar.SECOND));
+        Timestamp begin_of_day = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getActualMaximum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getActualMaximum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getActualMaximum(Calendar.SECOND));
+        Timestamp end_of_day = Timestamp.valueOf(simpleDateFormat.format(calendar.getTime()));
+        List<UserFoodEaten> userFoodEatenList = userFoodEatenRepository.findByUserAndAteTimeBetweenOrderByAteTime(user,begin_of_day,end_of_day);
+        for(UserFoodEaten userFoodEaten:userFoodEatenList){
+            calorie_in+=userFoodEaten.getCalorie();
+        }
+        System.out.println("calorie_in:");
+        System.out.println(calorie_in);
+
+        calorie = calorie_in - weight * metabolic_consumption_coefficient;
+        if(calorie<200)calorie=200;
+        if(calorie>400)calorie=400;
+        return calorie;
+    }
+
     /* <---------------------------methods-------------------------->*/
     //whether to refresh recommend-items and refresh recommend-items if needed
     //String username,int sports_number
     public List<KeeperRecommand> get_keeperRecommands() {
 
-        //TODO get User
+        //todo get User
         try {
             System.out.println("进入need_to_fresh");
             if (need_to_fresh()) {
                 System.out.println("删除user的过期推荐项目");
                 keeperRecommandRepository.deleteByUser(user);
 
+                //计算需要消耗的卡路里
+                setCalorie(get_calorie());
                 setSports_number(3);
 
                 //set calorie
@@ -339,7 +373,6 @@ public class KeeperService implements IKeeperService {
                 user.setLast_keeper_fresh(Calendar2Timestamp(now));
                 userRepository.save(user);
             }
-
             return keeperRecommandRepository.findByUser(user);
         } catch (ParseException e) {
             logger.error("Parse exception, impossible state!!");
@@ -389,11 +422,10 @@ public class KeeperService implements IKeeperService {
     }
 
     @Override
-    public void setState(String username, Integer sportsItemNumber, Integer caloriee) {
+    public void setState(String username, Integer sportsItemNumber) {
         this.username = username;
         this.setUsername(username);
         this.sports_number = sportsItemNumber;
-        this.calorie = caloriee;
     }
 
     //to get food by dininghall and foodtype

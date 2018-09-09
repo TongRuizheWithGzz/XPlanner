@@ -1,10 +1,9 @@
-<view class="calendar card">
-  <calendar year="{{showYear}}" month="{{showMonth}}" days-color="{{dayList}}" show-more-days="{{true}}" binddayClick="selectDay"
-    bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
+<view class="calendar card" bindtap='shrink'>
+  <calendar year="{{showYear}}" month="{{showMonth}}" typeList="{{dayList}}" show-more-days="{{true}}" binddayClick="selectDay" bindnextMonth="nextMonth" bindprevMonth="prevMonth" />
 </view>
-<view class='items'>
+<view class='items' bindtap='shrink'>
   <view class='list' bindtap='unselect'>
-    <view wx:for="{{showItems}}" wx:key="{{*this}}" wx:if="{{item.visible}}" class="{{showSelect == index ? 'se-item':'item'}}" catchtap='select' data-index='{{index}}'>
+    <view wx:for="{{showItems}}" wx:if="{{item.visible}}" class="{{showSelect == index ? 'se-item':'item'}}" catchtap='select' data-index='{{index}}' wx:key="{{key}}">
       <view class="{{showSelect == index ? 'se-left':'left'}}">
         <view class='start_time'>{{item.start_concret_time}}</view>
         <view wx:if="{{showSelect != index}}" class='plain'></view>
@@ -14,19 +13,17 @@
       <view class="{{showSelect == index ? 'se-right':'right'}}">
         <view class="{{showSelect == index ? 'se-title':'title'}}">{{item.title}}</view>
         <view wx:if="{{showSelect == index}}" class='address'>
-          <image src="/icons/loc.png" style="height:15px;width:15px;margin-right:3px;"></image>
+          <image src="/icons/loc.png" style="height:56rpx;width:56rpx;margin-right:16rpx; margin-left:-5rpx; margin-bottom:-10rpx;"></image>
           <text>{{item.address}}</text>
         </view>
         <view wx:if="{{showSelect == index}}" class='description'>
-          <image src="/icons/des.png" style="height:13px;width:13px;margin-right:5px;"></image>
+          <image src="/icons/des.png" style="height:48rpx;width:48rpx;margin-right:10rpx;margin-bottom:-8rpx;"></image>
           <text>{{item.description}}</text>
         </view>
       </view>
       <view class="{{showSelect == index ? 'buttons':'one-button'}}">
-        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}"
-          wx:if="{{item.completed}}" src="/icons/checkbox-checked.png"></image>
-        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}"
-          wx:if="{{!item.completed}}" src="/icons/checkbox.png"></image>
+        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{item.completed}}" src="/icons/checkbox-checked.png"></image>
+        <image class="{{showSelect == index ? 'se-checkbox-icon':'checkbox-icon'}}" catchtap="selectCheckbox" data-index="{{index}}" wx:if="{{!item.completed}}" src="/icons/checkbox.png"></image>
         <image wx:if="{{showSelect == index}}" src='/icons/detail.png' class='button' catchtap='detail' data-index="{{index}}"></image>
         <image wx:if="{{showSelect == index}}" src='/icons/delete.png' class='button' catchtap='delete' data-index="{{index}}"></image>
       </view>
@@ -34,7 +31,7 @@
   </view>
 </view>
 <view class="controller">
-  <view class="add-item-word" bindtap="add">添加事务</view>
-  <view class="show-complete-word" bindtap="changeVisible" wx:if="{{!showComplete}}">显示已完成事务</view>
+  <view class="add-item-word" hover-class='press' bindtap="add">添加事务</view>
+  <view class="show-complete-word" hover-class='press' bindtap="changeVisible" wx:if="{{!showComplete}}">显示已完成事务</view>
   <view class="show-complete-word" bindtap="changeVisible" wx:if="{{showComplete}}">不显示已完成事务</view>
 </view>

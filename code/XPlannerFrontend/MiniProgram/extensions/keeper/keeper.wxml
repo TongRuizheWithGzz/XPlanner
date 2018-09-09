@@ -1,13 +1,22 @@
 <view class='all'>
   <view class='title'>健身计划</view>
-  <image src="{{keeper.icon}}" class='keeper'></image>
+  <image src="/icons/keeper.png" class='keeper'></image>
 </view>
 <view class=''>
-  <swiper class='movie-swiper' previous-margin="37rpx" next-margin="37rpx" duration='400'>
+  <swiper class='{{keeperItems.length == 0 ? blank : movie-swiper}}' previous-margin="37rpx" next-margin="37rpx" duration='400'>
+    <swiper-item class='movie' wx:if="{{keeperItems.length == 0}}">
+      <view class='item'>
+        <view class='top'>
+          <image src="{{icons[0]}}" class='icon'></image>
+          <view class='name1'>今天没有运动安排</view>
+        </view>
+        
+      </view>
+    </swiper-item>
     <swiper-item class='movie' wx:for="{{keeperItems}}" wx:key="key">
       <view class='item'>
         <view class='top'>
-          <image src="{{icons[index + 1]}}" class='icon'></image>
+          <image src="{{icons[index]}}" class='icon'></image>
           <view class='name'>{{item.title}}</view>
         </view>
         <view class='movie-card'>
@@ -18,7 +27,7 @@
               <text class='time'>{{"开始："+item.start_time + "\n" +"结束："+item.end_time}}</text>
             </view>
             <view class='address'>
-              <image src="/icons/loc.png" style="height:25px;width:25px;margin-right:10px;"></image>
+              <image src="/icons/loc.png" style="height:52rpx;width:52rpx;margin-right:18rpx;"></image>
               <text>{{item.address}}</text>
             </view>
             <view>

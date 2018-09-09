@@ -4,8 +4,7 @@
       <view class='intro card'>
         <view class='top-line'>
           <text class='name'>{{item.title}}</text>
-          <image src="/icons/edit.png" class="pen" catchtap='edit' wx:if="{{!ifSpider}}"></image>
-          <image src="/icons/edit.png" class="pen" catchtap='add' wx:if="{{ifSpider}}"></image>
+
         </view>
         <view class='block'>
           <image src="/icons/time.png" class="icon1"></image>
@@ -16,13 +15,17 @@
           <text class='address'>{{item.address}}</text>
         </view>
       </view>
-      <image wx:if="{{!ifSpider || item.imageUrl == ''}}" class='flower card' src='http://img.zcool.cn/community/010ce158a169b2a801219c77585e19.jpg@2o.jpg' /> 
+      <image wx:if="{{!ifSpider || item.imageUrl == ''}}" class='flower card' src='http://img.zcool.cn/community/010ce158a169b2a801219c77585e19.jpg@2o.jpg' />
       <image wx:if="{{ifSpider && item.imageUrl != ''}}" class='flower card' src='{{item.imageUrl}}' />
     </view>
     <view class='down card'>
       <view class='top  top1'>
+      <view>
         <image src="/icons/des.png" class="icon"></image>
         <text class='title'>详情</text>
+        </view>
+        <image src="/icons/edit.png" class="pen" catchtap='edit' wx:if="{{!ifSpider}}" />
+        <image src="/icons/edit.png" class="pen" catchtap='add' wx:if="{{ifSpider}}" />
       </view>
       <text class='des'>{{item.description}}</text>
     </view>

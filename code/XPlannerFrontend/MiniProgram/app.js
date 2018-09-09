@@ -97,6 +97,7 @@ App({
     spiderItems: [],
     keeperItems:[],
     newItemDate:"",
-
+    ifPressSaveInAddSchedulePage: false,
+    showCompletedSchedule:true,
   }
 })

@@ -1,0 +1,83 @@
+.register-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.xplanner-panel {
+  height: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.xplanner-icon {
+  padding-top: 60px;
+  height: 70px;
+  width: 70px;
+}
+
+.xplanner-title {
+  font-size: 30px;
+  /* margin-bottom: 10px; */
+  padding-top: 5px;
+}
+
+.xplanner-description {
+  /* margin-top: 20px; */
+  font-size: 15px;
+  margin-bottom: 30px;
+  color: gray;
+  width: 60%;
+  text-align: center;
+}
+
+.input-panel {
+  border-radius: 15px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+}
+
+.name-input-panel {
+  height: 50px;
+  display: flex;
+  padding-left: 20px;
+  font-size: 15px;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.password-input-panel {
+  display: flex;
+  border-top: 1px solid #ddd;
+  height: 50px;
+  font-size: 15px;
+  padding-left: 20px;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.register-icon-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    height: 50px;
+}
+
+.register-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.password-input {
+  width: 88%;
+}

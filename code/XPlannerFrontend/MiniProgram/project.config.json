@@ -8,12 +8,13 @@
 		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"nodeModules": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.0",
+	"libVersion": "2.2.5",
 	"appid": "wx91d784d2361ebf7c",
-	"projectname": "XPlanner",
+	"projectname": "xplanner5",
 	"isGameTourist": false,
 	"condition": {
 		"search": {

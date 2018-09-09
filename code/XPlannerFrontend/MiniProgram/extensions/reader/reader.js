@@ -52,7 +52,7 @@ Page({
                 'Content-Type': 'application/x-www-form-urlencoded'
               },
               data: {
-                access_token: '24.8cc9ce430d27729ba7d725b2b3e4245e.2592000.1535118010.282335-11588118',
+                access_token: '24.599e356ed1fa21b734907803e84cd415.2592000.1538616705.282335-11767229',
                 image: base64,
                 probability: true
               },

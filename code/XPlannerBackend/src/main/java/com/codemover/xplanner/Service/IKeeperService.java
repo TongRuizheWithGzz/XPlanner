@@ -16,8 +16,9 @@ public interface IKeeperService {
 
     HashMap<String, Object> addUserFoodEaten(String username, LinkedList<FoodPOJO> foodPOJOS);
 
-    public void setState(String username, Integer sportsItemNumber, Integer caloriee);
+    public void setState(String username, Integer sportsItemNumber);
 
     List<FoodDTO> getFoodList(String dininghall);
 
 }
+

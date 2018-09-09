@@ -92,8 +92,14 @@ Page({
     if (this.data.x1 > this.data.x2) {
       this.spiderRequestWrapper(this.data.pageNumber + 1);
     } else if (this.data.x1 < this.data.x2) {
-      if (this.data.pageNumber === 1)
+      if (this.data.pageNumber === 1){
+        wx.showModal({
+          title: '到第一页啦↖(^ω^)↗',
+          content: '不能再翻了',
+          showCancel: false,
+        })
         return;
+      }
       this.spiderRequestWrapper(this.data.pageNumber - 1);
     }
     this.slidethis()
@@ -208,7 +214,11 @@ Page({
     }).catch((errno) => {
       this.spiderRequestErrorWrapper(errno);
     })
-
+    wx.showModal({
+      title: '到第一页啦↖(^ω^)↗',
+      content: '已经刷新',
+      showCancel: false,
+    })
   },
   detail: function (e) {
     wx.navigateTo({

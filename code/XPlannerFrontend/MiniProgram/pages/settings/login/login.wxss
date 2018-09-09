@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .login-panel {
   display: flex;
   flex-direction: column;
@@ -75,3 +76,83 @@
 .password-input {
   width: 88%;
 }
+=======
+.login-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.xplanner-panel {
+  height: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.xplanner-icon {
+  padding-top: 60px;
+  height: 70px;
+  width: 70px;
+}
+
+.xplanner-title {
+  font-size: 62rpx;
+  /* margin-bottom: 10px; */
+  padding-top: 5px;
+}
+
+.xplanner-description {
+  /* margin-top: 20px; */
+   margin-bottom: 30px; 
+  color: gray;
+  width:60%;
+  text-align: center;
+}
+
+.input-panel {
+  border-radius: 15px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  font-size: 38rpx;
+}
+
+.name-input-panel {
+  height: 110rpx;
+  display: flex;
+  padding-left: 40rpx;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.password-input-panel {
+  display: flex;
+  border-top: 1px solid #ddd;
+  height: 110rpx;
+  padding-left: 40rpx;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.login-icon {
+  width: 45rpx;
+  height: 45rpx;
+}
+
+.register-link {
+  padding-top: 15px;
+  text-decoration: underline;
+  color: blue;
+}
+
+.password-input {
+  width: 84%;
+}
+>>>>>>> 1a942e1776aad064a1a82311c2ab803c0c8c9023

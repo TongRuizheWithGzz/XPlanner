@@ -1,5 +1,8 @@
+var app = getApp();
+
 var schedule = {
-  warpScheduleItems: function(scheduleItem_raw) {
+  warpScheduleItems: function (scheduleItem_raw, if_show_complete
+) {
     var array = [];
     console.log("Length of scheduleItems in a day:", scheduleItem_raw.length);
     for (var i = 0; i < scheduleItem_raw.length; i++) {
@@ -15,7 +18,8 @@ var schedule = {
       tmp.end_concret_time = tmp.end_time.slice(11, 16);
       tmp.start_date = tmp.start_time.slice(0, 10);
       tmp.completed = scheduleItem_raw[i].completed;
-      tmp.visible = true;
+      tmp.visible = if_show_complete ? true : !tmp.completed;
+      //tmp.visible = true;
       array.push(tmp);
     }
     console.log("处理结束完后端传来的schedule:",array);

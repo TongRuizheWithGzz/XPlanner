@@ -20,27 +20,27 @@ public class ReaderServiceImpl implements ReaderService {
 
 
     //<--------Tools-------->
-    public boolean valid_day(int day_in){
+    public boolean valid_day(int day_in) {
         Calendar calendar = Calendar.getInstance();
         calendar.setLenient(false);
-        try{
-            calendar.set(Calendar.DATE,day_in);
+        try {
+            calendar.set(Calendar.DATE, day_in);
             calendar.getTime();
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
-    public boolean valid_month_and_day(int month_in,int day_in){
+    public boolean valid_month_and_day(int month_in, int day_in) {
         Calendar calendar = Calendar.getInstance();
         calendar.setLenient(false);
-        try{
-            calendar.set(Calendar.DATE,day_in);
-            calendar.set(Calendar.MONTH,month_in-1);
+        try {
+            calendar.set(Calendar.DATE, day_in);
+            calendar.set(Calendar.MONTH, month_in - 1);
             calendar.getTime();
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -51,12 +51,12 @@ public class ReaderServiceImpl implements ReaderService {
         return time;
     }
 
-    public int trimHour(int hour){
-        if(infectHour == true && hour <12) hour += 12;
+    public int trimHour(int hour) {
+        if (infectHour == true && hour < 12) hour += 12;
         return hour;
     }
 
-    private DateUtil dateUtil= new DateUtil();
+    private DateUtil dateUtil = new DateUtil();
 
     @Autowired
     private ExtractDateService extractDateService;
@@ -70,7 +70,7 @@ public class ReaderServiceImpl implements ReaderService {
     private Matcher m;
 
     //<--------Variables-------->
-    public void setInfectHour(Boolean infects){
+    public void setInfectHour(Boolean infects) {
         this.infectHour = infects;
     }
 
@@ -79,65 +79,61 @@ public class ReaderServiceImpl implements ReaderService {
     }
 
     //<--------Executable-------->
-    public String calculateDateWithoutHint(Integer month,Integer day,Integer hour,boolean half,Integer minute,String section) throws ParseException {
+    public String calculateDateWithoutHint(Integer month, Integer day, Integer hour, boolean half, Integer minute, String section) throws ParseException {
         Calendar calendar = Calendar.getInstance();
         int c_year = calendar.get(Calendar.YEAR);
         int c_month = calendar.get(Calendar.MONTH);
         int c_day = calendar.get(Calendar.DATE);
 
         //check section
-        if(section=="早上"||section=="早晨"){
-            calendar.set(c_year,c_month,c_day,8,00,0);
-        }
-        else if(section=="上午"){
-            calendar.set(c_year,c_month,c_day,10,00,0);
-        }
-        else if(section=="中午"){
-            calendar.set(c_year,c_month,c_day,12,00,0);
-        }
-        else if(section =="下午"){
-            calendar.set(c_year,c_month,c_day,14,00,0);
+        if (section == "早上" || section == "早晨") {
+            calendar.set(c_year, c_month, c_day, 8, 00, 0);
+        } else if (section == "上午") {
+            calendar.set(c_year, c_month, c_day, 10, 00, 0);
+        } else if (section == "中午") {
+            calendar.set(c_year, c_month, c_day, 12, 00, 0);
+        } else if (section == "下午") {
+            calendar.set(c_year, c_month, c_day, 14, 00, 0);
             setInfectHour(true);
-        }
-        else if(section == "晚上"){
-            calendar.set(c_year,c_month,c_day,18,00,0);
+        } else if (section == "晚上") {
+            calendar.set(c_year, c_month, c_day, 18, 00, 0);
             setInfectHour(true);
         }
 
         //check date
-        if(day!=null){
-            calendar.set(c_year,c_month,day);
-            if(month!=null){
-                calendar.set(c_year,month-1,day);
+        if (day != null) {
+            calendar.set(c_year, c_month, day);
+            if (month != null) {
+                calendar.set(c_year, month - 1, day);
             }
         }
 
         //check hour
-        if(hour!=null){
-            calendar.set(Calendar.HOUR_OF_DAY,trimHour(hour));
+        if (hour != null) {
+            calendar.set(Calendar.HOUR_OF_DAY, trimHour(hour));
         }
 
         //check half
-        if(half==true){
-            calendar.set(Calendar.MINUTE,30);
+        if (half == true) {
+            calendar.set(Calendar.MINUTE, 30);
         }
 
-        if(minute!=null){
-            calendar.set(Calendar.MINUTE,minute);
+        if (minute != null) {
+            calendar.set(Calendar.MINUTE, minute);
         }
 
         return Calendar2String(calendar);
 
     }
 
-    public String calculateDateWithHint(Integer month,Integer day,Integer hour,boolean half,Integer minute,String section,String otherhint) throws ParseException {
+    public String calculateDateWithHint(Integer month, Integer day, Integer hour, boolean half, Integer minute, String section, String otherhint) throws ParseException {
         Calendar calendar = Calendar.getInstance();
         int c_year = calendar.get(Calendar.YEAR);
         int c_month = calendar.get(Calendar.MONTH);
         int c_day = calendar.get(Calendar.DATE);
         String pattern = "(早上|上午|早晨|中午|下午|晚上)";
         p = Pattern.compile(pattern);
-        if(otherhint!=null){
+        if (otherhint != null) {
             m = p.matcher(otherhint);
             if (m.find()) {
                 //find hint_section
@@ -145,25 +141,21 @@ public class ReaderServiceImpl implements ReaderService {
                 otherhint = m.replaceAll("");
                 //fake_time
 
-                if (hint_section==null){}
-                else if(hint_section.equals("早上")||hint_section.equals("早晨")){
-                    calendar.set(c_year,c_month,c_day,8,00,0);
+                if (hint_section == null) {
+                } else if (hint_section.equals("早上") || hint_section.equals("早晨")) {
+                    calendar.set(c_year, c_month, c_day, 8, 00, 0);
                     setInfectHour(false);
-                }
-                else if(hint_section.equals("上午")){
-                    calendar.set(c_year,c_month,c_day,10,00,0);
+                } else if (hint_section.equals("上午")) {
+                    calendar.set(c_year, c_month, c_day, 10, 00, 0);
                     setInfectHour(false);
-                }
-                else if(hint_section.equals("中午")){
-                    calendar.set(c_year,c_month,c_day,12,00,0);
+                } else if (hint_section.equals("中午")) {
+                    calendar.set(c_year, c_month, c_day, 12, 00, 0);
                     setInfectHour(false);
-                }
-                else if(hint_section.equals("下午")){
-                    calendar.set(c_year,c_month,c_day,14,00,0);
+                } else if (hint_section.equals("下午")) {
+                    calendar.set(c_year, c_month, c_day, 14, 00, 0);
                     setInfectHour(true);
-                }
-                else if(hint_section.equals("晚上")){
-                    calendar.set(c_year,c_month,c_day,18,00,0);
+                } else if (hint_section.equals("晚上")) {
+                    calendar.set(c_year, c_month, c_day, 18, 00, 0);
                     setInfectHour(true);
                 }
             }
@@ -173,74 +165,73 @@ public class ReaderServiceImpl implements ReaderService {
         //可能fake会影响到正确时间
         //fake date
 
-        HashMap<String,String> fake_date = dateUtil.default_time(otherhint);
-        if(fake_date.get("errmsg").equals("200")){
+        HashMap<String, String> fake_date = dateUtil.default_time(otherhint);
+        if (fake_date.get("errmsg").equals("200")) {
             String s_time = fake_date.get("start_time");
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            Date d_date =df.parse(s_time);
+            Date d_date = df.parse(s_time);
             Calendar c_fake_date = Calendar.getInstance();
             c_fake_date.setTime(d_date);
             int cf_year = c_fake_date.get(Calendar.YEAR);
             int cf_month = c_fake_date.get(Calendar.MONTH);
             int cf_day = c_fake_date.get(Calendar.DATE);
-            calendar.set(cf_year,cf_month,cf_day);
-        }else {
+            calendar.set(cf_year, cf_month, cf_day);
+        } else {
             System.out.println("otherhint: 404");
         }
 
         //check section
-        if(section==null){}
-        else if(section.equals("早上")||section.equals("早晨")){
-            calendar.set(Calendar.HOUR_OF_DAY,8);
-            calendar.set(Calendar.MINUTE,0);
-            calendar.set(Calendar.SECOND,0);
+        if (section == null) {
+        } else if (section.equals("早上") || section.equals("早晨")) {
+            calendar.set(Calendar.HOUR_OF_DAY, 8);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
             setInfectHour(false);
-        }
-        else if(section.equals("上午")){
-            calendar.set(Calendar.HOUR_OF_DAY,10);
-            calendar.set(Calendar.MINUTE,0);
-            calendar.set(Calendar.SECOND,0);            setInfectHour(false);
-        }
-        else if(section.equals("中午")){
-            calendar.set(Calendar.HOUR_OF_DAY,12);
-            calendar.set(Calendar.MINUTE,0);
-            calendar.set(Calendar.SECOND,0);            setInfectHour(false);
-        }
-        else if(section.equals("下午")){
-            calendar.set(Calendar.HOUR_OF_DAY,14);
-            calendar.set(Calendar.MINUTE,0);
-            calendar.set(Calendar.SECOND,0);            setInfectHour(true);
-        }
-        else if(section.equals("晚上")){
-            calendar.set(Calendar.HOUR_OF_DAY,18);
-            calendar.set(Calendar.MINUTE,0);
-            calendar.set(Calendar.SECOND,0);            setInfectHour(true);
+        } else if (section.equals("上午")) {
+            calendar.set(Calendar.HOUR_OF_DAY, 10);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            setInfectHour(false);
+        } else if (section.equals("中午")) {
+            calendar.set(Calendar.HOUR_OF_DAY, 12);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            setInfectHour(false);
+        } else if (section.equals("下午")) {
+            calendar.set(Calendar.HOUR_OF_DAY, 14);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            setInfectHour(true);
+        } else if (section.equals("晚上")) {
+            calendar.set(Calendar.HOUR_OF_DAY, 18);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            setInfectHour(true);
         }
 
         //check date
-        if(day!=null){
-            calendar.set(c_year,c_month,day);
-            if(month!=null){
-                calendar.set(c_year,month-1,day);
+        if (day != null) {
+            calendar.set(c_year, c_month, day);
+            if (month != null) {
+                calendar.set(c_year, month - 1, day);
             }
         }
 
         //check hour
-        if(hour!=null){
-            calendar.set(Calendar.HOUR_OF_DAY,trimHour(hour));
-            if(minute!=null){
-                calendar.set(Calendar.MINUTE,minute);
-            }else{
-                calendar.set(Calendar.MINUTE,0);
+        if (hour != null) {
+            calendar.set(Calendar.HOUR_OF_DAY, trimHour(hour));
+            if (minute != null) {
+                calendar.set(Calendar.MINUTE, minute);
+            } else {
+                calendar.set(Calendar.MINUTE, 0);
                 System.out.println(calendar.getTime());
             }
         }
 
         //check half
-        if(half==true){
-            calendar.set(Calendar.MINUTE,30);
+        if (half == true) {
+            calendar.set(Calendar.MINUTE, 30);
         }
-
 
 
         return Calendar2String(calendar);
@@ -248,7 +239,7 @@ public class ReaderServiceImpl implements ReaderService {
     }
 
     public String extractDatewithParseException(String in) throws ParseException {
-        HashMap<String,String> date_map = extractDateService.dateExtract2hash(in);
+        HashMap<String, String> date_map = extractDateService.dateExtract2hash(in);
 
         String month = date_map.get("month");
         String day = date_map.get("day");
@@ -259,68 +250,67 @@ public class ReaderServiceImpl implements ReaderService {
         String otherhint = date_map.get("otherhint");
 
         Boolean halfhour_in = false;
-        if(halfhour==null){
+        if (halfhour == null) {
             halfhour_in = false;
-        }
-        else if(halfhour.equals("半")){
+        } else if (halfhour.equals("半")) {
             halfhour_in = true;
         }
 
         Integer hour_in = null;
         Integer minute_in = null;
-        if(hour!=null){
-            try{
+        if (hour != null) {
+            try {
                 hour_in = parseDateStringUtil.parseDay(hour);
-                if(hour_in>24)hour_in=null;
-                else{
-                    if(minute!=null){
-                        try{
+                if (hour_in > 24) hour_in = null;
+                else {
+                    if (minute != null) {
+                        try {
                             minute_in = parseDateStringUtil.parseDay(minute);
-                            if(minute_in>60)minute_in=null;
-                        }catch (NumberFormatException e){
+                            if (minute_in > 60) minute_in = null;
+                        } catch (NumberFormatException e) {
                             //do nothing
                         }
                     }
                 }
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 //do nothing
             }
         }
 
         Integer month_in = null;
         Integer day_in = null;
-        if(day != null){
-            try{
+        if (day != null) {
+            try {
                 day_in = parseDateStringUtil.parseDay(day);
-                if(valid_day(day_in)){
-                    if(month!=null){
-                        try{
+                if (valid_day(day_in)) {
+                    if (month != null) {
+                        try {
                             month_in = parseDateStringUtil.parseDay(month);
-                            if(!valid_month_and_day(month_in,day_in)) month_in = null;
-                        }catch (NumberFormatException e){
+                            if (!valid_month_and_day(month_in, day_in)) month_in = null;
+                        } catch (NumberFormatException e) {
                             month_in = null;
                         }
                     }
-                }
-                else{
+                } else {
                     day_in = null;
                 }
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 //do nothing
             }
         }
 
-        return calculateDateWithHint(month_in,day_in,hour_in,halfhour_in,minute_in,section,otherhint);
+        return calculateDateWithHint(month_in, day_in, hour_in, halfhour_in, minute_in, section, otherhint);
     }
 
     //<--------Methods-------->
     @Override
-    public String extractDate(String in){
+    public String extractDate(String in) {
         extractDateService.clean();
+        resetInfectHour();
         String result = "你不可能看到我的";
-        try{
+        try {
             result = extractDatewithParseException(in);
-        }catch (ParseException e){
+        } catch (ParseException e) {
             System.out.println("不可能出现的ParseException");
         }
         resetInfectHour();

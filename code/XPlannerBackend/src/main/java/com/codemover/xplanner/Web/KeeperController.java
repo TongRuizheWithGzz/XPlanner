@@ -4,6 +4,7 @@ package com.codemover.xplanner.Web;
 import com.codemover.xplanner.Converter.UploadFood.FoodPOJO;
 import com.codemover.xplanner.Converter.UploadFood.UploadFoodRequest;
 import com.codemover.xplanner.Model.DTO.FoodDTO;
+import com.codemover.xplanner.Model.DTO.RecommandDTO;
 import com.codemover.xplanner.Model.Entity.Food;
 import com.codemover.xplanner.Model.Entity.KeeperRecommand;
 import com.codemover.xplanner.Service.IKeeperService;
@@ -15,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,14 +33,25 @@ public class KeeperController {
 
     @PostMapping(value = "/api/keeper")
     Map<String, Object> getUserRecommendation(Principal principal) throws Exception {
-        keeperService.setState(principal.getName(), 3, 332);
+        keeperService.setState(principal.getName(), 3);
 
         HashMap<String, Object> response = new HashMap<>();
 
         List<KeeperRecommand> keeperRecommands = keeperService.get_keeperRecommands();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        List<RecommandDTO> recommandDTOList = new LinkedList<>();
+        for(KeeperRecommand keeperRecommand:keeperRecommands){
+            RecommandDTO recommandDTO = new RecommandDTO();
+            recommandDTO.setStart_time(df.format(keeperRecommand.getStart_time()));
+            recommandDTO.setEnd_time(df.format(keeperRecommand.getEnd_time()));
+            recommandDTO.setAddress(keeperRecommand.getAddress());
+            recommandDTO.setTitle(keeperRecommand.getTitle());
+            recommandDTO.setDescription(keeperRecommand.getDescription());
+            recommandDTOList.add(recommandDTO);
+        }
 
-        logger.info(new ObjectMapper().writeValueAsString(keeperRecommands));
-        response.put("recommands", keeperRecommands);
+        response.put("recommands", recommandDTOList);
+
         return ControllerUtil.successHandler(response);
     }
 

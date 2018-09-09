@@ -81,7 +81,7 @@ public class RandomKeeperServiceImpl implements IKeeperService {
     }
 
     @Override
-    public void setState(String username, Integer sportsItemNumber, Integer caloriee) {
+    public void setState(String username, Integer sportsItemNumber) {
 
     }
 

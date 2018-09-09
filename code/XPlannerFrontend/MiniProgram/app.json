@@ -8,8 +8,6 @@
     "pages/planners/planners",
     "pages/store/store",
     "pages/store/detail/detail",
-    "pages/settings/settings",
-    "pages/settings/userSettings/userSettings",
     "extensions/reader/reader",
     "extensions/keeper/keeper"
   ],
@@ -35,12 +33,6 @@
         "iconPath": "icons/bag2.png",
         "pagePath": "pages/store/store",
         "text": "商城"
-      },
-      {
-        "selectedIconPath": "icons/personal-selected.png",
-        "iconPath": "icons/personal.png",
-        "pagePath": "pages/settings/settings",
-        "text": "我的"
       }
     ]
   },

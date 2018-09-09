@@ -407,7 +407,7 @@ public class KeeperServiceTest {
 
     @Test
     public void cTest() throws ParseException {
-        setUsername("lihu");
+        setUsername("tongruizhe");
         setSports_number(3);
         setCalorie(332);
 
@@ -425,4 +425,20 @@ public class KeeperServiceTest {
             System.out.println(keeperRecommand.getEnd_time());
         }
     }
+
+    @Test
+    public void dTest() throws ParseException {
+        setUsername("tongruizhe");
+
+        List<KeeperRecommand> list = keeperRecommandRepository.findByUser(user);
+        for (KeeperRecommand keeperRecommand:list) {
+            System.out.println("now recommands");
+            System.out.println(keeperRecommand.getTitle());
+            System.out.println(keeperRecommand.getDescription());
+            System.out.println(keeperRecommand.getAddress());
+            System.out.println(keeperRecommand.getStart_time());
+            System.out.println(keeperRecommand.getEnd_time());
+        }
+    }
+
 }

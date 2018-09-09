@@ -55,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/loginByUsernamePassword").permitAll()
+                .antMatchers("/api/auth/loginByWeixin").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout().logoutUrl("/api/logout")

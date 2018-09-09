@@ -1,27 +1,39 @@
 package com.codemover.xplanner.Security.Controller;
 
 import com.codemover.xplanner.DAO.UserRepository;
+import com.codemover.xplanner.DAO.WeixinUserRepository;
+import com.codemover.xplanner.Model.Entity.Role;
 import com.codemover.xplanner.Model.Entity.User;
+import com.codemover.xplanner.Model.Entity.WeixinUser;
 import com.codemover.xplanner.Security.Config.MyUserDetailsService;
 import com.codemover.xplanner.Security.Exception.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import sun.net.www.http.HttpClient;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class UsernamePasswordLogin {
@@ -35,6 +47,9 @@ public class UsernamePasswordLogin {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private WeixinUserRepository weixinUserRepository;
 
     @Resource(name = "authenticationManager")
     private AuthenticationManager authManager;
@@ -74,4 +89,47 @@ public class UsernamePasswordLogin {
         }
         return result;
     }
+
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/api/auth/loginByWeixin")
+    public HashMap<String, Object> loginByWeixin(@RequestParam String code)
+            throws AuthenticationException {
+        System.out.println("Get code" + " " + code);
+        String url = "https://api.weixin.qq.com/sns/jscode2session?" +
+                "appid=wx91d784d2361ebf7c&secret=2a7e5c8ff322e9b76d03cf8a97c5dccc&js_code=" +
+                code + "&grant_type=authorization_code\n";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        String strbody = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+        System.out.println(strbody);
+        String openId = "";
+        WeixinUser user = weixinUserRepository.findByUserName(openId);
+        if (user == null) {
+            user = new WeixinUser();
+            user.setUserName(openId);
+            user.setLast_keeper_fresh(null);
+            user.setEnabled(true);
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String encodedPassword = bCryptPasswordEncoder.encode("Weixin" + openId);
+            user.setUserPassword(encodedPassword);
+            Set<Role> roles = new HashSet<>();
+            roles.add(new Role("ROLE_WEIXIN_USER"));
+            user.setRoles(roles);
+
+            weixinUserRepository.save(user);
+
+
+        }
+
+        UsernamePasswordAuthenticationToken authReq =
+                new UsernamePasswordAuthenticationToken(openId, "Weixin" + openId);
+        Authentication auth = authManager.authenticate(authReq);
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(auth);
+        return null;
+    }
+
 }
