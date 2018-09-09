@@ -372,16 +372,6 @@ Page({
       wx.navigateBack({
         delta: 1
       });
-<<<<<<< HEAD
-    } else { // 如果现在是修改页面
-      // wx.redirectTo({
-      //   url: "/pages/schedular/scheduleDetails/scheduleDetails?id=" + this.data.itemIndex,
-      // })
-      wx.navigateBack({
-        delta: 1,
-      });
-=======
->>>>>>> 1a942e1776aad064a1a82311c2ab803c0c8c9023
     }
     this.setData({
       showModal: true,
