@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-{
-  "navigationBarTitleText": "日程",
-  "navigationBarBackgroundColor": "#ffffff",
-  "navigationBarTextStyle": "black"
-}
-=======
 {
   "navigationBarTitleText": "XPlanner登录",
   "navigationBarBackgroundColor": "#ffffff",
   "navigationBarTextStyle": "black"
 }
->>>>>>> 1a942e1776aad064a1a82311c2ab803c0c8c9023
